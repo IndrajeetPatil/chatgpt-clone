@@ -1,95 +1,83 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import ChatInput from "./components/ChatInput";
+import ChatMessage from "./components/ChatMessage";
+import ModelSelector from "./components/ModelSelector";
+import TemperatureSelector from "./components/TemperatureSelector";
+import Button from "@mui/material/Button";
+import RefreshIcon from "@mui/icons-material/Refresh";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
+
+const theme = createTheme({
+  palette: {
+    mode: "light",
+  },
+});
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [model, setModel] = useState<"gpt-4o" | "gpt-4o-mini">("gpt-4o");
+  const [temperature, setTemperature] = useState<0.2 | 0.7 | 0.9>(0.7);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const handleSendMessage = async (message: string) => {
+    const newMessage: Message = { role: "user", content: message };
+    setMessages([...messages, newMessage]);
+
+    // TODO: make an API call to Django backend
+    // for now, simulate a response
+    const assistantMessage: Message = {
+      role: "assistant",
+      content: `This is a simulated response for "${message}" using ${model} with temperature ${temperature}.`,
+    };
+    setMessages((prev) => [...prev, assistantMessage]);
+  };
+
+  const handleRegenerateResponse = async () => {
+    // TODO
+    console.log("Regenerating response...");
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="md">
+        <Box sx={{ my: 4 }}>
+          <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
+            <ModelSelector model={model} setModel={setModel} />
+            <TemperatureSelector
+              temperature={temperature}
+              setTemperature={setTemperature}
             />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
+          </Paper>
+          <Paper
+            elevation={3}
+            sx={{ p: 2, mb: 2, maxHeight: "60vh", overflowY: "auto" }}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            {messages.map((message, index) => (
+              <ChatMessage key={index} message={message} />
+            ))}
+          </Paper>
+          <ChatInput onSendMessage={handleSendMessage} />
+          <Button
+            variant="contained"
+            startIcon={<RefreshIcon />}
+            onClick={handleRegenerateResponse}
+            sx={{ mt: 2 }}
+          >
+            Regenerate Response
+          </Button>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
