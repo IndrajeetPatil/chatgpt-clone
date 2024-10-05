@@ -1,24 +1,52 @@
+import requests
+
+from typing import Literal
 from typing import Optional
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from openai import AzureOpenAI, ChatCompletion
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from django.conf import settings
-from openai import AzureOpenAI
+from .serializers import (
+    ChatRequestSerializer,
+    ChatResponseSerializer,
+)
 
 
-@csrf_exempt  # TODO: use proper CSRF protection in production
-def openai_api_view(
+class ChatView(APIView):
+    def get(self, request):
+        serializer = ChatRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            prompt = serializer.validated_data["prompt"]
+            model = serializer.validated_data["model"]
+            temperature = serializer.validated_data["temperature"]
+            response: str = _get_azure_openai_response(
+                prompt=prompt, model=model, temperature=temperature
+            )
+            response_serializer = ChatResponseSerializer(data={"response": response})
+            if response_serializer.is_valid():
+                return Response(response_serializer.data)
+            else:
+                return Response(
+                    response_serializer.errors,
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def _get_azure_openai_response(
     prompt: str,
+    model: Optional[str] = "gpt-4o",
     temperature: Optional[float] = 0.7,
-    deployment_name: Optional[str] = None,
-) -> JsonResponse:
+) -> str:
     client = AzureOpenAI(
         azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
-        api_version=settings.AZURE_OPENAI_API_KEY,
-        api_key=settings.AZURE_OPENAI_API_VERSION,
+        api_version=settings.AZURE_OPENAI_API_VERSION,
+        api_key=settings.AZURE_OPENAI_API_KEY,
     )
-    print("prompt", prompt)
-    completion = client.chat.completions.create(
-        model=deployment_name or settings.AZURE_OPENAI_DEPLOYMENT_NAME,
+    completion: ChatCompletion = client.chat.completions.create(
+        model=model,
         messages=[
             {
                 "role": "user",
@@ -27,5 +55,4 @@ def openai_api_view(
             },
         ],
     )
-
-    return JsonResponse(completion)
+    return completion.choices[0].message.content
