@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "rm -rf .next && next build",
     "start": "next start",
+    "lint": "next lint --dir .",
+    "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint --fix --ext=.js,.jsx,.tsx .",
     "format": "prettier --write .",
-    "lint": "next lint"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -25,9 +27,13 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-gtm-module": "^2.0.3",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "eslint": "^8",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "eslint": "^8.56.0",
     "eslint-config-next": "14.2.14",
+    "eslint-config-prettier": "^9.1.0",
     "typescript": "^5"
   }
 }
