@@ -26,7 +26,9 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
           fullWidth
           variant="outlined"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setMessage(e.target.value)
+          }
           placeholder="Type your message..."
           multiline
           rows={2}

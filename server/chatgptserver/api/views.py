@@ -1,16 +1,12 @@
-import requests
-
-from typing import Literal
 from typing import Optional
-from openai import AzureOpenAI, ChatCompletion
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+
 from django.conf import settings
-from .serializers import (
-    ChatRequestSerializer,
-    ChatResponseSerializer,
-)
+from openai import AzureOpenAI, ChatCompletion
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serializers import ChatRequestSerializer, ChatResponseSerializer
 
 
 class ChatView(APIView):
@@ -47,11 +43,11 @@ def _get_azure_openai_response(
     )
     completion: ChatCompletion = client.chat.completions.create(
         model=model,
+        temperature=temperature,
         messages=[
             {
                 "role": "user",
                 "content": prompt,
-                "temperature": temperature,
             },
         ],
     )
