@@ -29,15 +29,14 @@ export default function ChatMessage({ message }: ChatMessageProps) {
     >
       <ReactMarkdown
         components={{
-          code({ inline, className, children, ...props }) {
+          code({ className, children, ...props }) {
             const match = /language-(\w+)/.exec(className ?? "");
-            return !inline && match ? (
+            return match ? (
               <Box sx={{ position: "relative" }}>
                 <SyntaxHighlighter
                   style={materialDark}
                   language={match[1]}
                   PreTag="div"
-                  {...props}
                 >
                   {String(children).replace(/\n$/, "")}
                 </SyntaxHighlighter>
