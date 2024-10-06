@@ -3,8 +3,8 @@ from rest_framework import serializers
 
 class ChatRequestSerializer(serializers.Serializer):
     prompt = serializers.CharField(
-        required=False,
-        default="What is the meaning of life?",
+        required=True,
+        # default="What is the meaning of life?",
         help_text="The message to send to the chat model.",
     )
     model = serializers.ChoiceField(
