@@ -31,7 +31,6 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
           }
           placeholder="Type your message..."
           multiline
-          rows={2}
           sx={{ mr: 1 }}
         />
         <Button

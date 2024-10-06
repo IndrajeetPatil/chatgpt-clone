@@ -17,7 +17,7 @@ payload = json.dumps(
     }
 )
 
-conn.request("GET", "/", payload, headersList)
+conn.request("POST", "/", payload, headersList)
 response = conn.getresponse()
 result = response.read()
 

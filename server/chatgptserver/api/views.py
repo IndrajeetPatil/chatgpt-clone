@@ -10,7 +10,9 @@ from .serializers import ChatRequestSerializer, ChatResponseSerializer
 
 
 class ChatView(APIView):
-    def get(self, request):
+    def post(self, request):
+        print("request", request)
+        print("request.data", request.data)
         serializer = ChatRequestSerializer(data=request.data)
         if serializer.is_valid():
             prompt = serializer.validated_data["prompt"]

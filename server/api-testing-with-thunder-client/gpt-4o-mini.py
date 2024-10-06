@@ -13,7 +13,7 @@ payload = json.dumps(
     {"prompt": "What is life?", "model": "gpt-4o-mini", "temperature": "0.2"}
 )
 
-conn.request("GET", "/", payload, headersList)
+conn.request("POST", "/", payload, headersList)
 response = conn.getresponse()
 result = response.read()
 

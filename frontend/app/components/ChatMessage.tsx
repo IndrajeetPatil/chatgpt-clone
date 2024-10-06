@@ -24,7 +24,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
       sx={{
         my: 2,
         p: 2,
-        bgcolor: message.role === "user" ? "grey.100" : "primary.light",
+        bgcolor: message.role === "user" ? "grey.100" : "#ECDFCC",
       }}
     >
       <ReactMarkdown
@@ -62,14 +62,11 @@ export default function ChatMessage({ message }: ChatMessageProps) {
       </ReactMarkdown>
       {message.role === "assistant" && (
         <Button
-          variant="outlined"
           size="small"
           startIcon={<ContentCopyIcon />}
           onClick={() => copyToClipboard(message.content)}
           sx={{ mt: 1 }}
-        >
-          Copy entire response
-        </Button>
+        ></Button>
       )}
     </Paper>
   );
