@@ -18,7 +18,7 @@ class ChatView(APIView):
             prompt = serializer.validated_data["prompt"]
             model = serializer.validated_data["model"]
             temperature = serializer.validated_data["temperature"]
-            response: str = _get_azure_openai_response(
+            response: str = get_azure_openai_response(
                 prompt=prompt, model=model, temperature=temperature
             )
             response_serializer = AssistantResponseSerializer(
@@ -35,7 +35,7 @@ class ChatView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def _get_azure_openai_response(
+def get_azure_openai_response(
     prompt: str,
     model: Optional[str] = "gpt-4o",
     temperature: Optional[float] = 0.7,
