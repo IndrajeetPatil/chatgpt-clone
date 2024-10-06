@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export default async function fetchAssistantResponse(
   url: string,
@@ -12,5 +12,5 @@ export default async function fetchAssistantResponse(
     prompt,
   });
 
-  return response.data; 
+  return response.data;
 }

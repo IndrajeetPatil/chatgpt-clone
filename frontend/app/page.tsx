@@ -69,7 +69,7 @@ export default function Home() {
   const handleRegenerateResponse = async () => {
     if (lastPrompt) {
       // Remove the last assistant message
-      setMessages((prev) => prev.filter((msg, idx) => idx !== prev.length - 1));
+      setMessages((prev) => prev.slice(0, -1));
 
       await triggerAssistantResponse({
         model,
