@@ -6,10 +6,10 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import ChatInput from "./components/ChatInput";
-import ChatMessage from "./components/ChatMessage";
-import ModelSelector from "./components/ModelSelector";
-import TemperatureSelector from "./components/TemperatureSelector";
+import ChatInput from "../components/messages/ChatInput";
+import ChatMessage from "../components/messages/ChatMessage";
+import ModelSelector from "../components/parameters/ModelSelector";
+import TemperatureSelector from "../components/parameters/TemperatureSelector";
 import Button from "@mui/material/Button";
 import RefreshIcon from "@mui/icons-material/Refresh";
 

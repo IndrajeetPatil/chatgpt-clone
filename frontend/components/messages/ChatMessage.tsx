@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Box from "@mui/material/Box";
 
+import useChatResponse from "@/client/hooks/useChatResponse";
+
 interface ChatMessageProps {
   message: {
     role: "user" | "assistant";
@@ -14,6 +16,9 @@ interface ChatMessageProps {
 }
 
 export default function ChatMessage({ message }: ChatMessageProps) {
+  const { assistantResponse, assistantError, assistantIsLoading } =
+    useChatResponse("gpt-3.5-turbo", 0.7, message.content);
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
