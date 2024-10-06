@@ -1,47 +1,42 @@
-import { useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import React, { useState } from "react";
+import { Box, TextField, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import Box from "@mui/material/Box";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
 }
 
-export default function ChatInput({ onSendMessage }: ChatInputProps) {
+const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     if (message.trim()) {
-      onSendMessage(message);
+      onSendMessage(message.trim());
       setMessage("");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-        <TextField
-          fullWidth
-          variant="outlined"
-          value={message}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setMessage(e.target.value)
-          }
-          placeholder="Type your message..."
-          multiline
-          sx={{ mr: 1 }}
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          endIcon={<SendIcon />}
-          sx={{ height: "100%" }}
-        >
-          Send
-        </Button>
-      </Box>
-    </form>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      display="flex"
+      alignItems="center"
+      mt={2}
+    >
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder="Type your message..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
+      <IconButton type="submit" color="primary">
+        <SendIcon />
+      </IconButton>
+    </Box>
   );
-}
+};
+
+export default ChatInput;

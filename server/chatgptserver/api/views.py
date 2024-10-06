@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import ChatRequestSerializer, ChatResponseSerializer
+from .serializers import ChatRequestSerializer, AssistantResponseSerializer
 
 
 class ChatView(APIView):
@@ -21,7 +21,9 @@ class ChatView(APIView):
             response: str = _get_azure_openai_response(
                 prompt=prompt, model=model, temperature=temperature
             )
-            response_serializer = ChatResponseSerializer(data={"response": response})
+            response_serializer = AssistantResponseSerializer(
+                data={"response": response}
+            )
             if response_serializer.is_valid():
                 return Response(response_serializer.data)
             else:

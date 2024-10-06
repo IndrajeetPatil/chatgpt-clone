@@ -1,19 +1,24 @@
 "use client";
 
-import { useState, React } from "react";
+import { useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import ChatInput from "../components/messages/ChatInput";
-import ChatMessage from "../components/messages/ChatMessage";
+import {
+  CssBaseline,
+  Container,
+  Box,
+  Paper,
+  Stack,
+  Button,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import ModelSelector from "../components/parameters/ModelSelector";
 import TemperatureSelector from "../components/parameters/TemperatureSelector";
-import Button from "@mui/material/Button";
-import RefreshIcon from "@mui/icons-material/Refresh";
-
-import getChatResponse from "./external-api";
+import ChatInput from "../components/messages/ChatInput";
+import UserMessage from "../components/messages/UserMessage";
+import AssistantMessage from "../components/messages/AssistantMessage";
+import useAssistantResponse from "@/client/hooks/useAssistantResponse";
 
 interface Message {
   role: "user" | "assistant";
@@ -30,19 +35,48 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [model, setModel] = useState<"gpt-4o" | "gpt-4o-mini">("gpt-4o");
   const [temperature, setTemperature] = useState<0.2 | 0.7 | 0.9>(0.7);
+  const [lastPrompt, setLastPrompt] = useState<string | null>(null);
+
+  const {
+    triggerAssistantResponse,
+    assistantResponse,
+    assistantError,
+    assistantIsLoading,
+  } = useAssistantResponse();
 
   const handleSendMessage = async (message: string) => {
     const newMessage: Message = { role: "user", content: message };
     setMessages([...messages, newMessage]);
-    const response = await getChatResponse(model, temperature, message);
-    const assistantMessage: Message = await response.json();
+    setLastPrompt(message);
 
-    setMessages((prev) => [...prev, assistantMessage]);
+    await triggerAssistantResponse({
+      model,
+      temperature,
+      prompt: message,
+    });
   };
 
+  useEffect(() => {
+    if (assistantResponse) {
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: assistantResponse.response,
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+    }
+  }, [assistantResponse]);
+
   const handleRegenerateResponse = async () => {
-    // TODO
-    console.log("Regenerating response...");
+    if (lastPrompt) {
+      // Remove the last assistant message
+      setMessages((prev) => prev.filter((msg, idx) => idx !== prev.length - 1));
+
+      await triggerAssistantResponse({
+        model,
+        temperature,
+        prompt: lastPrompt,
+      });
+    }
   };
 
   return (
@@ -50,33 +84,68 @@ export default function Home() {
       <CssBaseline />
       <Container maxWidth="md">
         <Box sx={{ my: 4 }}>
+          {/* Settings Panel */}
           <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
-            <ModelSelector model={model} setModel={setModel} />
-            <TemperatureSelector
-              temperature={temperature}
-              setTemperature={setTemperature}
-            />
+            <Stack spacing={2}>
+              <ModelSelector model={model} setModel={setModel} />
+              <TemperatureSelector
+                temperature={temperature}
+                setTemperature={setTemperature}
+              />
+            </Stack>
           </Paper>
+
+          {/* Chat Messages */}
           {messages.length > 0 && (
             <>
               <Paper
                 elevation={3}
-                sx={{ p: 2, mb: 2, maxHeight: "60vh", overflowY: "auto" }}
+                sx={{
+                  p: 2,
+                  mb: 2,
+                  maxHeight: "60vh",
+                  overflowY: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
-                {messages.map((message, index) => (
-                  <ChatMessage key={index} message={message} />
-                ))}
+                <Stack spacing={2}>
+                  {messages.map((message, index) =>
+                    message.role === "user" ? (
+                      <UserMessage key={index} content={message.content} />
+                    ) : (
+                      <AssistantMessage key={index} content={message.content} />
+                    )
+                  )}
+                  {assistantIsLoading && (
+                    <Box
+                      sx={{ display: "flex", justifyContent: "center", mt: 2 }}
+                    >
+                      <CircularProgress />
+                    </Box>
+                  )}
+                  {assistantError && (
+                    <Alert severity="error">
+                      Error: {assistantError.message}
+                    </Alert>
+                  )}
+                </Stack>
               </Paper>
+
+              {/* Regenerate Response Button */}
               <Button
                 variant="contained"
                 startIcon={<RefreshIcon />}
                 onClick={handleRegenerateResponse}
                 sx={{ mt: 2 }}
+                disabled={assistantIsLoading}
               >
                 Regenerate Response
               </Button>
             </>
           )}
+
+          {/* Chat Input */}
           <ChatInput onSendMessage={handleSendMessage} />
         </Box>
       </Container>
