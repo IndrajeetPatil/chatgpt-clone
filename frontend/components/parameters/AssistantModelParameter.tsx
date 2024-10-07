@@ -2,12 +2,15 @@ import React from "react";
 
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-interface ModelSelectorProps {
+interface AssistantModelParameterProps {
   model: "gpt-4o" | "gpt-4o-mini";
   setModel: (model: "gpt-4o" | "gpt-4o-mini") => void;
 }
 
-const ModelSelector: React.FC<ModelSelectorProps> = ({ model, setModel }) => (
+const AssistantModelParameter: React.FC<AssistantModelParameterProps> = ({
+  model,
+  setModel,
+}) => (
   <FormControl fullWidth sx={{ mb: 2 }}>
     <InputLabel>Model</InputLabel>
     <Select
@@ -21,4 +24,4 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ model, setModel }) => (
   </FormControl>
 );
 
-export default ModelSelector;
+export default AssistantModelParameter;

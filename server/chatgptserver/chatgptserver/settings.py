@@ -7,7 +7,8 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+# python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())' # noqa
+SECRET_KEY = "6eza00@ycc*!%a$-$hl6qhbk5$(zkgnp75d_qfgd^a4eu_lkia"
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
@@ -80,7 +81,6 @@ WSGI_APPLICATION = "chatgptserver.wsgi.application"
 AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
 AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 AZURE_OPENAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION")
-AZURE_OPENAI_DEPLOYMENT_NAME = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
 
 # Internationalization
 LANGUAGE_CODE = "en-us"

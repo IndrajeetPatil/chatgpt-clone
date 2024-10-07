@@ -19,8 +19,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AssistantMessage from "../components/messages/AssistantMessage";
 import ChatInput from "../components/messages/ChatInput";
 import UserMessage from "../components/messages/UserMessage";
-import ModelSelector from "../components/parameters/ModelSelector";
-import TemperatureSelector from "../components/parameters/TemperatureSelector";
+import AssistantModelParameter from "../components/parameters/AssistantModelParameter";
+import AssistantTemperatureParameter from "../components/parameters/AssistantTemperatureParameter";
 
 interface Message {
   role: "user" | "assistant";
@@ -89,8 +89,8 @@ export default function Home() {
           {/* Settings Panel */}
           <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
             <Stack spacing={2}>
-              <ModelSelector model={model} setModel={setModel} />
-              <TemperatureSelector
+              <AssistantModelParameter model={model} setModel={setModel} />
+              <AssistantTemperatureParameter
                 temperature={temperature}
                 setTemperature={setTemperature}
               />

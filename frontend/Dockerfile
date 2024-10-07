@@ -1,16 +1,12 @@
-# frontend/Dockerfile
+FROM node:22-alpine
 
-# Use an official Node.js runtime as a parent image
-FROM node:20-alpine
-
-# Set the working directory
 WORKDIR /app
 
-# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the project files
+# Copy the project files 
+# (remember that Dockerfile is in the frontend directory)
 COPY . .
 
 # Build the Next.js app

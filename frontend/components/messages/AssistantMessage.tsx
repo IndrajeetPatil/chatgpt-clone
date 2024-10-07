@@ -30,7 +30,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({ content }) => {
       className?: string;
       children?: React.ReactNode;
     }): React.JSX.Element {
-      const match = /language-(\w+)/.exec(className || "");
+      const match = /language-(\w+)/.exec(className ?? "");
       return !inline && match ? (
         <SyntaxHighlighter style={darcula} language={match[1]} PreTag="div">
           {String(children).replace(/\n$/, "")}

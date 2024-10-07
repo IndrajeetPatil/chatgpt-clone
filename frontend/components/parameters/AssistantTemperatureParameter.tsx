@@ -2,15 +2,14 @@ import React from "react";
 
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-interface TemperatureSelectorProps {
+interface AssistantTemperatureParameterProps {
   temperature: 0.2 | 0.7 | 0.9;
   setTemperature: (temp: 0.2 | 0.7 | 0.9) => void;
 }
 
-const TemperatureSelector: React.FC<TemperatureSelectorProps> = ({
-  temperature,
-  setTemperature,
-}) => (
+const AssistantTemperatureParameter: React.FC<
+  AssistantTemperatureParameterProps
+> = ({ temperature, setTemperature }) => (
   <FormControl fullWidth>
     <InputLabel>Temperature</InputLabel>
     <Select
@@ -27,4 +26,4 @@ const TemperatureSelector: React.FC<TemperatureSelectorProps> = ({
   </FormControl>
 );
 
-export default TemperatureSelector;
+export default AssistantTemperatureParameter;

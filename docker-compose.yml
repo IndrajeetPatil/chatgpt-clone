@@ -4,7 +4,7 @@ services:
   backend:
     build:
       context: ./server
-    container_name: django-backend
+    container_name: chatgpt-clone-backend
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./server:/app
@@ -12,13 +12,11 @@ services:
       - "8000:8000"
     env_file:
       - .env
-    depends_on:
-      - db
 
   frontend:
     build:
       context: ./frontend
-    container_name: nextjs-frontend
+    container_name: chatgpt-clone-frontend
     volumes:
       - ./frontend:/app
     ports:
