@@ -11,7 +11,8 @@ This is a clone of the [ChatGPT website](https://chat.openai.com/). It was built
 The docker-compose file is used to run the frontend and backend services. The frontend service is built using Next.js and the backend service is built using Django.
 
 ```bash
-docker-compose up
+docker-compose up --build --force-recreate # if running for the first time
+docker-compose up                          # if images already built
 ```
 
 The frontend service is available at `http://localhost:3000` and the backend service is available at `http://localhost:8000`.
