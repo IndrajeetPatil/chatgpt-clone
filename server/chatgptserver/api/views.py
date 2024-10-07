@@ -6,13 +6,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import ChatRequestSerializer, AssistantResponseSerializer
+from .serializers import AssistantResponseSerializer, ChatRequestSerializer
 
 
 class ChatView(APIView):
     def post(self, request):
-        print("request", request)
-        print("request.data", request.data)
         serializer = ChatRequestSerializer(data=request.data)
         if serializer.is_valid():
             prompt = serializer.validated_data["prompt"]
