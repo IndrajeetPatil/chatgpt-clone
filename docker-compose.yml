@@ -1,24 +1,19 @@
-version: "3"
-
 services:
   backend:
     build:
       context: ./server
+      dockerfile: Dockerfile
     container_name: chatgpt-clone-backend
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./server:/app
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - ./server/.env
 
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     container_name: chatgpt-clone-frontend
-    volumes:
-      - ./frontend:/app
     ports:
       - "3000:3000"
     depends_on:
