@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Box, Paper, Avatar, IconButton, Tooltip } from "@mui/material";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
+import { Avatar, Box, IconButton, Paper, Tooltip } from "@mui/material";
 
 interface AssistantMessageProps {
   content: string;

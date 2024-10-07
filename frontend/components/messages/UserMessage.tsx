@@ -1,6 +1,7 @@
 import React from "react";
-import { Box, Typography, Paper, Avatar } from "@mui/material";
+
 import PersonIcon from "@mui/icons-material/Person";
+import { Avatar, Box, Paper, Typography } from "@mui/material";
 
 interface UserMessageProps {
   content: string;

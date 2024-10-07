@@ -1,5 +1,6 @@
 import React from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 interface ModelSelectorProps {
   model: "gpt-4o" | "gpt-4o-mini";

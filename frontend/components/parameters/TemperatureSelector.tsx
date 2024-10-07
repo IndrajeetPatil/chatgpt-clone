@@ -1,5 +1,6 @@
 import React from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 interface TemperatureSelectorProps {
   temperature: 0.2 | 0.7 | 0.9;

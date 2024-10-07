@@ -1,24 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { useEffect, useState } from "react";
+
+import useAssistantResponse from "@/client/hooks/useAssistantResponse";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import {
-  CssBaseline,
-  Container,
+  Alert,
   Box,
-  Paper,
-  Stack,
   Button,
   CircularProgress,
-  Alert,
+  Container,
+  CssBaseline,
+  Paper,
+  Stack,
 } from "@mui/material";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import ModelSelector from "../components/parameters/ModelSelector";
-import TemperatureSelector from "../components/parameters/TemperatureSelector";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import AssistantMessage from "../components/messages/AssistantMessage";
 import ChatInput from "../components/messages/ChatInput";
 import UserMessage from "../components/messages/UserMessage";
-import AssistantMessage from "../components/messages/AssistantMessage";
-import useAssistantResponse from "@/client/hooks/useAssistantResponse";
+import ModelSelector from "../components/parameters/ModelSelector";
+import TemperatureSelector from "../components/parameters/TemperatureSelector";
 
 interface Message {
   role: "user" | "assistant";
