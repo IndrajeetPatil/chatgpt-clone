@@ -6,6 +6,27 @@ This is a clone of the [ChatGPT website](https://chat.openai.com/). It was built
 
 - Chat with GPT-4
 
+## Running locally
+
+The docker-compose file is used to run the frontend and backend services. The frontend service is built using Next.js and the backend service is built using Django.
+
+```bash
+docker-compose up
+```
+
+The frontend service is available at `http://localhost:3000` and the backend service is available at `http://localhost:8000`.
+
+You only need to create `server/.env` file. You can copy the `server/.env.example` file and update the values.
+
+## Quality Assurance
+
+The frontend and backend services have their own quality checks (linters, formatters, static type checkers, unit testing, code coverage).
+These checks can be run using the following commands:
+
+```bash
+make qa
+```
+
 ## Tech Stack
 
 - Frontend: Next.js/TypeScript
