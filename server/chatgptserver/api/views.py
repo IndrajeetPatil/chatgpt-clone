@@ -1,7 +1,7 @@
 from typing import Optional
 
 from django.conf import settings
-from openai import AzureOpenAI, ChatCompletion
+from openai import AzureOpenAI
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,9 +13,9 @@ class ChatView(APIView):
     def post(self, request):
         serializer = ChatRequestSerializer(data=request.data)
         if serializer.is_valid():
-            prompt = serializer.validated_data["prompt"]
-            model = serializer.validated_data["model"]
-            temperature = serializer.validated_data["temperature"]
+            prompt: str = serializer.validated_data["prompt"]
+            model: str = serializer.validated_data["model"]
+            temperature: float = float(serializer.validated_data["temperature"])
             response: str = get_azure_openai_response(
                 prompt=prompt, model=model, temperature=temperature
             )
@@ -43,7 +43,7 @@ def get_azure_openai_response(
         api_version=settings.AZURE_OPENAI_API_VERSION,
         api_key=settings.AZURE_OPENAI_API_KEY,
     )
-    completion: ChatCompletion = client.chat.completions.create(
+    completion = client.chat.completions.create(
         model=model,
         temperature=temperature,
         messages=[
