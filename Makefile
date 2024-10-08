@@ -17,6 +17,7 @@ PYCOVERAGE=coverage run --source='.' chatgptserver/manage.py test && coverage re
 ESLINT=npm run lint:fix
 PRETTIER=npm run format
 TSC=npm run build
+JEST=npm run test
 
 # Targets
 .PHONY: all lint format type-check backend-lint backend-format backend-type-check frontend-lint frontend-format frontend-type-check
@@ -29,6 +30,9 @@ format: backend-format frontend-format
 
 # Run type checkers for both backend and frontend
 type-check: backend-type-check frontend-type-check
+
+# Run tests for both backend and frontend
+test: backend-test frontend-test
 
 # Linting, formatting, and type-checking for backend
 backend-lint:
@@ -60,5 +64,9 @@ frontend-type-check:
 	@echo "$(COLOR_BLUE_BG)Running frontend static type checking with TypeScript...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(TSC)
 
+frontend-test:
+	@echo "$(COLOR_BLUE_BG)Running frontend unit tests...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(JEST)
+
 # Run all QA tools
-qa: format lint type-check
+qa: format lint type-check test

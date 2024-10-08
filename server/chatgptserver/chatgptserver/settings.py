@@ -77,6 +77,7 @@ DATABASES = {
 
 WSGI_APPLICATION = "chatgptserver.wsgi.application"
 
+
 # Settings for the API
 AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
 AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")

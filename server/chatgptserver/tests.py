@@ -1,7 +1,10 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
+import pytest
+from api.entities import AssistantModel, AssistantTemperature
+from api.views import ChatView
 from rest_framework import status
-from rest_framework.test import APIClient, APITestCase
+from rest_framework.test import APIClient, APIRequestFactory, APITestCase
 
 
 class ChatViewTests(APITestCase):
@@ -10,8 +13,8 @@ class ChatViewTests(APITestCase):
         self.url = ""
         self.valid_payload = {
             "prompt": "What is the capital of France?",
-            "model": "gpt-4o",
-            "temperature": 0.7,
+            "model": AssistantModel.FULL.value,
+            "temperature": str(AssistantTemperature.BALANCED.value),
         }
 
     @patch("api.views.get_azure_openai_response")
@@ -22,7 +25,9 @@ class ChatViewTests(APITestCase):
 
         # Assert that the mock was called with expected parameters
         mock_get_azure_openai_response.assert_called_once_with(
-            prompt="What is the capital of France?", model="gpt-4o", temperature=0.7
+            prompt="What is the capital of France?",
+            model=AssistantModel.FULL,
+            temperature=AssistantTemperature.BALANCED,
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -31,8 +36,6 @@ class ChatViewTests(APITestCase):
     def test_post_chat_view_invalid_payload(self):
         invalid_payload = {
             "prompt": None,
-            "model": "gpt-4o",
-            "temperature": 0.7,
         }
 
         response = self.client.post(self.url, invalid_payload, format="json")
@@ -40,23 +43,46 @@ class ChatViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("prompt", response.data)
 
-    @patch("api.views.AssistantResponseSerializer")
-    @patch("api.views.get_azure_openai_response")
-    def test_post_chat_view_response_serializer_invalid(
-        self, mock_get_azure_openai_response, mock_assistant_response_serializer
-    ):
-        mock_get_azure_openai_response.return_value = "The capital of France is Paris."
 
-        # Create a mock instance for AssistantResponseSerializer with invalid data
-        mock_serializer_instance = MagicMock()
-        mock_serializer_instance.is_valid.return_value = False
-        mock_serializer_instance.errors = {"response": ["Invalid response format."]}
+@patch("api.views.get_azure_openai_response")
+@pytest.mark.parametrize(
+    "request_data, expected_errors",
+    [
+        # Case: Invalid 'model' value
+        (
+            {"prompt": "Hello", "model": "InvalidModel", "temperature": "0.7"},
+            {"model": ['"InvalidModel" is not a valid choice.']},
+        ),
+        # Case: Invalid 'temperature' value
+        (
+            {
+                "prompt": "Hello",
+                "model": AssistantModel.FULL.value,
+                "temperature": "invalid",
+            },
+            {"temperature": ['"invalid" is not a valid choice.']},
+        ),
+        # Case: Both 'model' and 'temperature' invalid
+        (
+            {"prompt": "Hello", "model": "InvalidModel", "temperature": "invalid"},
+            {
+                "model": ['"InvalidModel" is not a valid choice.'],
+                "temperature": ['"invalid" is not a valid choice.'],
+            },
+        ),
+    ],
+)
+def test_chat_view_invalid_serializer(
+    mock_get_azure_openai_response, request_data, expected_errors
+):
+    # Setup request factory and ChatView instance
+    factory = APIRequestFactory()
+    view = ChatView.as_view()
 
-        # When the view calls serializer, it should use the mocked instance
-        mock_assistant_response_serializer.return_value = mock_serializer_instance
+    mock_get_azure_openai_response.return_value = "Mocked response"
 
-        response = self.client.post(self.url, self.valid_payload, format="json")
-        mock_serializer_instance.is_valid.assert_called_once()
+    request = factory.post("/chat/", data=request_data, format="json")
+    response = view(request)
 
-        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
-        self.assertEqual(response.data, {"response": ["Invalid response format."]})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.data == expected_errors
