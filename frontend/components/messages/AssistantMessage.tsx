@@ -13,11 +13,18 @@ interface AssistantMessageProps {
 
 const AssistantMessage: React.FC<AssistantMessageProps> = ({ content }) => {
   const [copied, setCopied] = useState(false);
+  const [codeCopied, setCodeCopied] = useState<string | null>(null);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(content);
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset copy status after 2 seconds
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleCodeCopy = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCodeCopied(code);
+    setTimeout(() => setCodeCopied(null), 2000);
   };
 
   const renderers = {
@@ -31,10 +38,31 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({ content }) => {
       children?: React.ReactNode;
     }): React.JSX.Element {
       const match = /language-(\w+)/.exec(className ?? "");
+      const codeContent = String(children).replace(/\n$/, "");
+
       return !inline && match ? (
-        <SyntaxHighlighter style={darcula} language={match[1]} PreTag="div">
-          {String(children).replace(/\n$/, "")}
-        </SyntaxHighlighter>
+        <Box position="relative">
+          <SyntaxHighlighter style={darcula} language={match[1]} PreTag="div">
+            {codeContent}
+          </SyntaxHighlighter>
+          <Tooltip title={codeCopied === codeContent ? "Copied!" : "Copy code"}>
+            <IconButton
+              onClick={() => handleCodeCopy(codeContent)}
+              sx={{
+                position: "absolute",
+                top: 4,
+                right: 4,
+                backgroundColor: "#ff9800",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#e65100",
+                },
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ) : (
         <code
           style={{
@@ -67,9 +95,9 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({ content }) => {
         }}
       >
         <ReactMarkdown components={renderers}>{content}</ReactMarkdown>
-        <Tooltip title={copied ? "Copied!" : "Copy"}>
+        <Tooltip title={copied ? "Copied!" : "Copy entire message"}>
           <IconButton
-            onClick={handleCopy}
+            onClick={() => handleCopy(content)}
             sx={{
               position: "absolute",
               bottom: 8,
