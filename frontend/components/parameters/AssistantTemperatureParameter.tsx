@@ -2,9 +2,11 @@ import React from "react";
 
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
+type Temperature = 0.2 | 0.7 | 0.9;
+
 interface AssistantTemperatureParameterProps {
-  temperature: 0.2 | 0.7 | 0.9;
-  setTemperature: (temp: 0.2 | 0.7 | 0.9) => void;
+  temperature: Temperature;
+  setTemperature: (temp: Temperature) => void;
 }
 
 const AssistantTemperatureParameter: React.FC<
