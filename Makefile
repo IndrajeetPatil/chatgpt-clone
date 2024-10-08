@@ -1,4 +1,4 @@
-# Define paths
+# Define paths (note that the paths are relative to the Makefile location)
 SERVER_DIR=./server
 FRONTEND_DIR=./frontend
 VENV_ACTIVATE=source .venv/bin/activate 
@@ -12,15 +12,20 @@ MYPY=mypy
 ISORT=isort
 PYTEST=pytest chatgptserver/tests.py
 PYCOVERAGE=coverage run --source='.' chatgptserver/manage.py test && coverage report && coverage html
+DJANGO_MANAGE=chatgptserver/manage.py
 
 # Frontend tools
 ESLINT=npm run lint:fix
 PRETTIER=npm run format
 TSC=npm run build
 JEST=npm run test
+START=npm start
 
 # Targets
-.PHONY: all lint format type-check backend-lint backend-format backend-type-check frontend-lint frontend-format frontend-type-check
+.PHONY: all lint format type-check backend-lint backend-format \
+	backend-type-check frontend-lint frontend-format \
+	frontend-type-check test backend-test frontend-test qa \
+	run-backend run-frontend run
 
 # Run linters for both backend and frontend
 lint: backend-lint frontend-lint
@@ -34,7 +39,7 @@ type-check: backend-type-check frontend-type-check
 # Run tests for both backend and frontend
 test: backend-test frontend-test
 
-# Linting, formatting, and type-checking for backend
+# Linting, formatting, type-checking, and unit testing for backend
 backend-lint:
 	@echo "$(COLOR_BLUE_BG)Running backend linting with ruff...$(COLOR_RESET)"
 	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(RUFF) check --fix .
@@ -51,7 +56,7 @@ backend-test:
 	@echo "$(COLOR_BLUE_BG)Running backend unit tests...$(COLOR_RESET)"
 	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(PYTEST) && $(PYCOVERAGE)
 
-# Linting, formatting, and type-checking for frontend
+# Linting, formatting, type-checking, and unit testing for frontend
 frontend-lint:
 	@echo "$(COLOR_BLUE_BG)Running frontend linting...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(ESLINT) .
@@ -70,3 +75,20 @@ frontend-test:
 
 # Run all QA tools
 qa: format lint type-check test
+
+# Run backend server
+run-backend:
+	@echo "$(COLOR_BLUE_BG)Running backend server...$(COLOR_RESET)"
+	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(DJANGO_MANAGE) runserver
+
+# Run frontend server
+run-frontend:
+	@echo "$(COLOR_BLUE_BG)Running frontend server...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(START)
+
+# Run backend and frontend servers
+run:
+	@$(MAKE) run-backend &
+	@$(MAKE) run-frontend
+
+all: qa run
