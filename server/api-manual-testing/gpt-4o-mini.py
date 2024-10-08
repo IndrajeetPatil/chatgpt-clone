@@ -9,9 +9,11 @@ headersList = {
     "Content-Type": "application/json",
 }
 
-payload = json.dumps(
-    {"prompt": "What is life?", "model": "gpt-4o-mini", "temperature": "0.2"}
-)
+payload = json.dumps({
+    "prompt": "What is life?",
+    "model": "gpt-4o-mini",
+    "temperature": "0.2",
+})
 
 conn.request("POST", "/", payload, headersList)
 response = conn.getresponse()

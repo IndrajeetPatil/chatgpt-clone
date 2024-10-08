@@ -5,19 +5,23 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "coverage>=7.6.1",
     "django-cors-headers>=4.4.0",
     "django-stubs>=5.1.0",
     "django>=5.1.1",
     "djangorestframework-stubs>=3.15.1",
     "djangorestframework>=3.15.2",
-    "isort>=5.13.2",
-    "mypy>=1.11.2",
     "openai>=1.51.0",
-    "pytest-django>=4.9.0",
-    "pytest>=8.3.3",
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "coverage>=7.6.1",
+    "isort>=5.13.2",
+    "mypy>=1.11.2",
+    "pytest-django>=4.9.0",
+    "pytest>=8.3.3",
     "ruff>=0.6.9",
 ]
 
@@ -26,4 +30,8 @@ line-length = 88
 indent-width = 4
 
 [tool.ruff.lint]
+preview = true
 ignore = ["D100"]
+
+[tool.ruff.format]
+preview = true

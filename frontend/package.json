@@ -9,7 +9,8 @@
     "lint": "next lint --dir .",
     "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint --fix --ext=.js,.jsx,.tsx .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "jest"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -17,26 +18,36 @@
     "@mui/icons-material": "^6.1.2",
     "@mui/material": "^6.1.2",
     "axios": "^1.7.7",
-    "jest": "^29.7.0",
     "next": "14.2.14",
     "react": "^18",
     "react-dom": "^18",
     "react-markdown": "^9.0.1",
     "react-syntax-highlighter": "^15.5.0",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/jest": "^29.5.13",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-gtm-module": "^2.0.3",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/react-test-renderer": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "@typescript-eslint/parser": "^8.8.0",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.2.14",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^28.8.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react-test-renderer": "^18.3.1",
+    "ts-jest": "^29.2.5",
     "typescript": "^5"
   }
 }
