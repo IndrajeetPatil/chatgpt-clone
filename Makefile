@@ -78,8 +78,12 @@ frontend-test:
 	@echo "$(COLOR_BLUE_BG)Running frontend unit tests...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(JEST)
 
+lint-markdown:
+	@echo "$(COLOR_BLUE_BG)Linting markdown files...$(COLOR_RESET)"
+	markdownlint README.md
+
 # Run all QA tools
-qa: format lint type-check backend-validate-api-schema test
+qa: format lint type-check backend-validate-api-schema lint-markdown test
 
 # Run backend server
 run-backend:
