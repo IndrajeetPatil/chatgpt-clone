@@ -97,3 +97,8 @@ run:
 	@$(MAKE) run-frontend
 
 all: qa run
+
+# Run all services
+run-services:
+	@echo "$(COLOR_BLUE_BG)Running containerized services...$(COLOR_RESET)"
+	docker-compose up --build --force-recreate
