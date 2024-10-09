@@ -4,10 +4,33 @@ info:
   version: 1.0.0
   description: Backend API for ChatGPT
 paths:
-  /:
+  /api/v1/chat/{model}/:
     post:
-      operationId: root_create
+      operationId: v1_chat_create
       description: Generate a chat response based on the provided prompt and settings.
+      parameters:
+      - in: path
+        name: model
+        schema:
+          type: string
+          enum:
+          - gpt-4o
+          - gpt-4o-mini
+        description: Model to use for response generation
+        required: true
+      - in: query
+        name: temperature
+        schema:
+          type: string
+          enum:
+          - BALANCED
+          - CREATIVE
+          - DETERMINISTIC
+          default: BALANCED
+        description: 'Temperature for response generation: 0.2 (deterministic), 0.7
+          (balanced), 0.9 (creative)'
+      tags:
+      - v1
       requestBody:
         content:
           application/json:
@@ -19,6 +42,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/ChatRequest'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -37,7 +61,6 @@ components:
       properties:
         response:
           type: string
-          description: The generated response from the chat model.
       required:
       - response
     ChatRequest:
@@ -45,45 +68,8 @@ components:
       properties:
         prompt:
           type: string
-          default: What is the meaning of life?
-          description: The message to send to the chat model.
-        model:
-          allOf:
-          - $ref: '#/components/schemas/ModelEnum'
-          default: gpt-4o
-          description: |-
-            The assistant GPT-4 model to use for generating the response.
-
-            * `gpt-4o` - FULL
-            * `gpt-4o-mini` - MINI
-        temperature:
-          allOf:
-          - $ref: '#/components/schemas/TemperatureEnum'
-          default: '0.7'
-          description: |-
-            The model temperature setting for response generation.
-
-            * `0.2` - DETERMINISTIC
-            * `0.7` - BALANCED
-            * `0.9` - CREATIVE
-    ModelEnum:
-      enum:
-      - gpt-4o
-      - gpt-4o-mini
-      type: string
-      description: |-
-        * `gpt-4o` - FULL
-        * `gpt-4o-mini` - MINI
-    TemperatureEnum:
-      enum:
-      - '0.2'
-      - '0.7'
-      - '0.9'
-      type: string
-      description: |-
-        * `0.2` - DETERMINISTIC
-        * `0.7` - BALANCED
-        * `0.9` - CREATIVE
+      required:
+      - prompt
   securitySchemes:
     basicAuth:
       type: http

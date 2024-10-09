@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import useAssistantResponse from "@/client/hooks/useAssistantResponse";
+import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
   Alert,
@@ -35,8 +36,10 @@ const theme = createTheme({
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [model, setModel] = useState<"gpt-4o" | "gpt-4o-mini">("gpt-4o");
-  const [temperature, setTemperature] = useState<0.2 | 0.7 | 0.9>(0.7);
+  const [model, setModel] = useState<AssistantModel>(AssistantModel.FULL);
+  const [temperature, setTemperature] = useState<AssistantTemperature>(
+    AssistantTemperature.BALANCED
+  );
   const [lastPrompt, setLastPrompt] = useState<string | null>(null);
 
   const {

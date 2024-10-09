@@ -1,15 +1,12 @@
 from api.views import ChatView
 from django.contrib import admin
 from django.urls import path
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
+from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
+                                   SpectacularSwaggerView)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", ChatView.as_view(), name="chat"),
+    path("api/v1/chat/<str:model>/", ChatView.as_view(), name="chat"),
     # OpenAPI schema docs
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(

@@ -1,10 +1,11 @@
 import React from "react";
 
+import { AssistantModel } from "@/client/types/assistant";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 interface AssistantModelParameterProps {
-  model: "gpt-4o" | "gpt-4o-mini";
-  setModel: (model: "gpt-4o" | "gpt-4o-mini") => void;
+  model: AssistantModel;
+  setModel: (model: AssistantModel) => void;
 }
 
 const AssistantModelParameter: React.FC<AssistantModelParameterProps> = ({
@@ -16,7 +17,7 @@ const AssistantModelParameter: React.FC<AssistantModelParameterProps> = ({
     <Select
       value={model}
       label="Model"
-      onChange={(e) => setModel(e.target.value as "gpt-4o" | "gpt-4o-mini")}
+      onChange={(e) => setModel(e.target.value as AssistantModel)}
     >
       <MenuItem value="gpt-4o">GPT-4o</MenuItem>
       <MenuItem value="gpt-4o-mini">GPT-4o Mini</MenuItem>

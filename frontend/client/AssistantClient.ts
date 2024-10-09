@@ -1,20 +1,22 @@
 import axios from "axios";
 
+import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 import { logger } from "@/utils/logger";
 
 const log = logger.child({ module: "totoro" });
 
 export default async function fetchAssistantResponse(
   url: string,
-  model: string,
-  temperature: number,
+  model: AssistantModel,
+  temperature: AssistantTemperature,
   prompt: string
 ) {
-  log.debug(`Fetching assistant response from ${url}`);
+  const fullUrl = `${url}/api/v1/chat/${model}/?temperature=${temperature}`;
+
   log.debug(`Model: ${model}, Temperature: ${temperature}, Prompt: ${prompt}`);
-  const response = await axios.post(url, {
-    model,
-    temperature,
+  log.debug(`Fetching assistant response from ${fullUrl}`);
+
+  const response = await axios.post(fullUrl, {
     prompt,
   });
 

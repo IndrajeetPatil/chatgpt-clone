@@ -1,10 +1,12 @@
 import useSWRMutation from "swr/mutation";
 
+import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
+
 import fetchAssistantResponse from "../AssistantClient";
 
 interface AssistantResponseArgs {
-  model: string;
-  temperature: number;
+  model: AssistantModel;
+  temperature: AssistantTemperature;
   prompt: string;
 }
 
@@ -13,7 +15,7 @@ export default function useAssistantResponse() {
     "assistant-response", // A unique key for the mutation
     (_, { arg }: { arg: AssistantResponseArgs }) =>
       fetchAssistantResponse(
-        "http://localhost:8000/",
+        "http://localhost:8000",
         arg.model,
         arg.temperature,
         arg.prompt
