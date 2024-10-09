@@ -1,0 +1,94 @@
+openapi: 3.0.3
+info:
+  title: chatgptserver
+  version: 1.0.0
+  description: Backend API for ChatGPT
+paths:
+  /:
+    post:
+      operationId: root_create
+      description: Generate a chat response based on the provided prompt and settings.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistantResponse'
+          description: ''
+components:
+  schemas:
+    AssistantResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: The generated response from the chat model.
+      required:
+      - response
+    ChatRequest:
+      type: object
+      properties:
+        prompt:
+          type: string
+          default: What is the meaning of life?
+          description: The message to send to the chat model.
+        model:
+          allOf:
+          - $ref: '#/components/schemas/ModelEnum'
+          default: gpt-4o
+          description: |-
+            The assistant GPT-4 model to use for generating the response.
+
+            * `gpt-4o` - FULL
+            * `gpt-4o-mini` - MINI
+        temperature:
+          allOf:
+          - $ref: '#/components/schemas/TemperatureEnum'
+          default: '0.7'
+          description: |-
+            The model temperature setting for response generation.
+
+            * `0.2` - DETERMINISTIC
+            * `0.7` - BALANCED
+            * `0.9` - CREATIVE
+    ModelEnum:
+      enum:
+      - gpt-4o
+      - gpt-4o-mini
+      type: string
+      description: |-
+        * `gpt-4o` - FULL
+        * `gpt-4o-mini` - MINI
+    TemperatureEnum:
+      enum:
+      - '0.2'
+      - '0.7'
+      - '0.9'
+      type: string
+      description: |-
+        * `0.2` - DETERMINISTIC
+        * `0.7` - BALANCED
+        * `0.9` - CREATIVE
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

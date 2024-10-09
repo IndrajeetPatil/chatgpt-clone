@@ -13,6 +13,7 @@ ISORT=isort
 PYTEST=pytest chatgptserver/tests.py
 PYCOVERAGE=coverage run --source='.' chatgptserver/manage.py test && coverage report && coverage html
 DJANGO_MANAGE=chatgptserver/manage.py
+OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file schema.yml   
 
 # Frontend tools
 ESLINT=npm run lint:fix
@@ -23,7 +24,7 @@ START=npm start
 
 # Targets
 .PHONY: all lint format type-check backend-lint backend-format \
-	backend-type-check frontend-lint frontend-format \
+	backend-type-check frontend-lint frontend-format backend-validate-api-schema \
 	frontend-type-check test backend-test frontend-test qa \
 	run-backend run-frontend run
 
@@ -52,6 +53,10 @@ backend-type-check:
 	@echo "$(COLOR_BLUE_BG)Running backend static type checking with mypy...$(COLOR_RESET)"
 	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(MYPY) .
 
+backend-validate-api-schema:
+	@echo "$(COLOR_BLUE_BG)Validating API schema...$(COLOR_RESET)"
+	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(OPENAPI_SCHEMA)
+
 backend-test:
 	@echo "$(COLOR_BLUE_BG)Running backend unit tests...$(COLOR_RESET)"
 	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(PYTEST) && $(PYCOVERAGE)
@@ -74,7 +79,7 @@ frontend-test:
 	cd $(FRONTEND_DIR) && $(JEST)
 
 # Run all QA tools
-qa: format lint type-check test
+qa: format lint type-check backend-validate-api-schema test
 
 # Run backend server
 run-backend:

@@ -10,9 +10,9 @@ class ChatRequestSerializer(serializers.Serializer):
         help_text="The message to send to the chat model.",
     )
     model = serializers.ChoiceField(
-        choices=[(model, model) for model in AssistantModel],
+        choices=[(model.value, model.name) for model in AssistantModel],
         default=AssistantModel.FULL.value,
-        help_text="The assistant GPT-4o model to use for generating the response.",
+        help_text="The assistant GPT-4 model to use for generating the response.",
     )
     temperature = serializers.ChoiceField(
         choices=[(str(temp.value), temp.name) for temp in AssistantTemperature],

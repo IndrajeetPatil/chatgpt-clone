@@ -21,9 +21,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # custom apps
+    # third-party apps
     "rest_framework",
+    "drf_spectacular",
     "corsheaders",
+    # local apps
     "api",
 ]
 
@@ -38,7 +40,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-REST_FRAMEWORK = {"DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"]}
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
 
 ALLOWED_HOSTS = ["*"]
 
@@ -92,6 +97,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
+
+# Swagger docs
+SPECTACULAR_SETTINGS = {
+    "TITLE": "chatgptserver",
+    "DESCRIPTION": "Backend API for ChatGPT",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
 
 # Logging settings
 LOG_DIR = os.path.join(BASE_DIR, "logs")

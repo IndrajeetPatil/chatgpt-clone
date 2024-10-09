@@ -21,7 +21,8 @@ You only need to create `server/.env` file. You can copy the `server/.env.exampl
 
 ## Quality Assurance
 
-The frontend and backend services have their own quality checks (linters, formatters, static type checkers, unit testing, code coverage).
+The frontend and backend services have their own quality checks (linters, formatters, static type checkers, OpenAPI schema validation, unit testing, code coverage).
+
 These checks can be run using the following commands:
 
 ```bash

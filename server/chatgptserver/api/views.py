@@ -1,5 +1,6 @@
 import logging
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,6 +13,11 @@ logger = logging.getLogger("django")
 
 
 class ChatView(APIView):
+    @extend_schema(
+        request=ChatRequestSerializer,
+        responses={200: AssistantResponseSerializer},
+        description="Generate a chat response based on the provided prompt and settings.",
+    )
     def post(self, request) -> Response:
         serializer = ChatRequestSerializer(data=request.data)
         if not serializer.is_valid():
