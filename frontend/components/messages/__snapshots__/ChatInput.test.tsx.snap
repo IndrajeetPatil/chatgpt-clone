@@ -36,8 +36,9 @@ exports[`ChatInput component should render the ChatInput component and match the
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-186dzrf-MuiButtonBase-root-MuiIconButton-root"
-      tabindex="0"
+      class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-186dzrf-MuiButtonBase-root-MuiIconButton-root"
+      disabled=""
+      tabindex="-1"
       type="submit"
     >
       <svg

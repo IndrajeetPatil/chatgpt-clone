@@ -5,7 +5,7 @@ import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
-import { Avatar, Box, IconButton, Paper, Tooltip } from "@mui/material";
+import { Box, IconButton, Paper, Tooltip, Typography } from "@mui/material";
 
 interface AssistantMessageProps {
   content: string;
@@ -45,7 +45,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
       const codeContent = String(children).replace(/\n$/, "");
 
       return !inline && match ? (
-        <Box position="relative">
+        <Box position="relative" sx={{ mt: 2 }}>
           <SyntaxHighlighter style={darcula} language={match[1]} PreTag="div">
             {codeContent}
           </SyntaxHighlighter>
@@ -58,12 +58,13 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
                 right: 4,
                 backgroundColor: "#ff9800",
                 color: "#fff",
+                fontSize: 18,
                 "&:hover": {
                   backgroundColor: "#e65100",
                 },
               }}
             >
-              <FileCopyIcon />
+              <FileCopyIcon fontSize="small" />
             </IconButton>
           </Tooltip>
         </Box>
@@ -72,6 +73,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
           style={{
             backgroundColor: "#f5f5f5",
             borderRadius: "4px",
+            padding: "0 4px",
           }}
         >
           {children}
@@ -82,9 +84,6 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
 
   return (
     <Box display="flex" justifyContent="flex-start" mb={2}>
-      <Avatar sx={{ bgcolor: "#ff9800", mr: 1 }}>
-        <SmartToyIcon />
-      </Avatar>
       <Paper
         elevation={2}
         sx={{
@@ -94,9 +93,27 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
           wordWrap: "break-word",
           overflowWrap: "anywhere",
           position: "relative",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <ReactMarkdown components={renderers}>{content}</ReactMarkdown>
+        {/* Icon on the first line */}
+        <Box display="flex" alignItems="center" mb={1}>
+          <SmartToyIcon
+            sx={{
+              color: "#ff9800",
+              fontSize: "1.5rem",
+              mr: 1,
+            }}
+          />
+          <Typography variant="body2" color="textSecondary">
+            Assistant
+          </Typography>
+        </Box>
+        {/* Content starts on the second line */}
+        <Typography variant="body1" component="div" sx={{ mt: 1 }}>
+          <ReactMarkdown components={renderers}>{content}</ReactMarkdown>
+        </Typography>
         {!isFirstMessage && (
           <Tooltip title={copied ? "Copied!" : "Copy entire message"}>
             <IconButton
@@ -107,12 +124,13 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
                 right: 4,
                 backgroundColor: "#ff9800",
                 color: "#fff",
+                fontSize: 18,
                 "&:hover": {
                   backgroundColor: "#e65100",
                 },
               }}
             >
-              <FileCopyIcon />
+              <FileCopyIcon fontSize="small" />
             </IconButton>
           </Tooltip>
         )}
