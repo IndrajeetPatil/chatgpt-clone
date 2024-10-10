@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import useAssistantResponse from "@/client/hooks/useAssistantResponse";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 import { RefreshCcw } from "lucide-react";
@@ -35,7 +34,6 @@ const theme = createTheme({
 });
 
 export default function Home() {
-  // Initial message from the assistant
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -79,9 +77,7 @@ export default function Home() {
 
   const handleRegenerateResponse = async () => {
     if (lastPrompt) {
-      // Remove the last assistant message
-      setMessages((prev) => prev.slice(0, -1));
-
+      // Do not remove the last assistant message
       await triggerAssistantResponse({
         model,
         temperature,
@@ -94,77 +90,95 @@ export default function Home() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="md">
-        <Box sx={{ my: 4 }}>
-          {/* Chat Messages */}
-          {messages.length > 0 && (
-            <>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 2,
-                  mb: 2,
-                  maxHeight: "70vh",
-                  overflowY: "auto",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Stack spacing={2}>
-                  {messages.map((message, index) =>
-                    message.role === "user" ? (
-                      <UserMessage key={index} content={message.content} />
-                    ) : (
-                      <AssistantMessage
-                        key={index}
-                        content={message.content}
-                        isFirstMessage={index === 0}
-                      />
-                    )
-                  )}
-                  {assistantIsLoading && (
-                    <Box
-                      sx={{ display: "flex", justifyContent: "center", mt: 2 }}
-                    >
-                      <CircularProgress />
-                    </Box>
-                  )}
-                  {assistantError && (
-                    <Alert severity="error">
-                      Error: {assistantError.message}
-                    </Alert>
-                  )}
-                </Stack>
-              </Paper>
+        {/* Full height container for chat messages and control panel */}
+        <Box
+          sx={{
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* Chat Messages Section (80% of the height) */}
+          <Box
+            sx={{
+              flexGrow: 1,
+              overflowY: "auto",
+              p: 2,
+            }}
+          >
+            <Box
+              sx={{
+                p: 2,
+                maxHeight: "100%",
+                display: "flex",
+                flexDirection: "column",
+                overflowY: "auto",
+              }}
+            >
+              <Stack spacing={2}>
+                {messages.map((message, index) =>
+                  message.role === "user" ? (
+                    <UserMessage key={index} content={message.content} />
+                  ) : (
+                    <AssistantMessage
+                      key={index}
+                      content={message.content}
+                      isFirstMessage={index === 0}
+                    />
+                  )
+                )}
+                {assistantIsLoading && (
+                  <Box
+                    sx={{ display: "flex", justifyContent: "center", mt: 2 }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                )}
+                {assistantError && (
+                  <Alert severity="error">
+                    Error: {assistantError.message}
+                  </Alert>
+                )}
+              </Stack>
+            </Box>
+          </Box>
 
-              {/* Control Panel */}
-              <Box>
-                <Stack direction="row" spacing={2}>
-                  <AssistantParameters
-                    model={model}
-                    temperature={temperature}
-                    setModel={setModel}
-                    setTemperature={setTemperature}
-                  />
-                  <Tooltip title="Regenerate Response">
-                    <IconButton
-                      onClick={handleRegenerateResponse}
-                      disabled={assistantIsLoading}
-                      sx={{
-                        border: "1px solid",
-                        borderColor: "divider",
-                        borderRadius: 1,
-                      }}
-                    >
-                      <RefreshCcw size={20} />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Box>
-            </>
-          )}
+          {/* Control Panel and Input Section (20% of the height) */}
+          <Box
+            sx={{
+              height: "20vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              p: 2,
+            }}
+          >
+            {/* Control Panel */}
+            <Stack direction="row" spacing={2} alignItems="center">
+              <AssistantParameters
+                model={model}
+                temperature={temperature}
+                setModel={setModel}
+                setTemperature={setTemperature}
+              />
+              <Tooltip title="Regenerate Response">
+                <IconButton
+                  onClick={handleRegenerateResponse}
+                  disabled={assistantIsLoading}
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: 1,
+                  }}
+                >
+                  <RefreshCcw size={20} />
+                </IconButton>
+              </Tooltip>
+            </Stack>
 
-          {/* Chat Input */}
-          <ChatInput onSendMessage={handleSendMessage} />
+            {/* Chat Input */}
+            <ChatInput onSendMessage={handleSendMessage} />
+          </Box>
         </Box>
       </Container>
     </ThemeProvider>
