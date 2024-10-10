@@ -1,9 +1,10 @@
 "use client";
 
+import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
+
 import useAssistantResponse from "@/client/hooks/useAssistantResponse";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
-import { RefreshCcw } from "lucide-react";
 import {
   Alert,
   Box,
@@ -11,7 +12,6 @@ import {
   Container,
   CssBaseline,
   IconButton,
-  Paper,
   Stack,
   Tooltip,
 } from "@mui/material";

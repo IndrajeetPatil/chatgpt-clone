@@ -1,7 +1,8 @@
+import { Bot, ChevronDown, Thermometer } from "lucide-react";
 import React, { useState } from "react";
-import { IconButton, Menu, MenuItem, Tooltip, Stack, Box } from "@mui/material";
-import { Bot, Thermometer, ChevronDown } from "lucide-react";
+
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
+import { Box, IconButton, Menu, MenuItem, Stack, Tooltip } from "@mui/material";
 
 interface AssistantParametersProps {
   model: AssistantModel;
