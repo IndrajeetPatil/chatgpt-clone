@@ -5,17 +5,22 @@ import {
   MenuItem,
   Tooltip,
   Stack,
-  Paper,
+  Typography,
+  Box,
 } from "@mui/material";
 import { Bot, Thermometer, ChevronDown } from "lucide-react";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 
 interface AssistantParametersProps {
+  model: AssistantModel;
+  temperature: AssistantTemperature;
   setModel: (model: AssistantModel) => void;
   setTemperature: (temperature: AssistantTemperature) => void;
 }
 
 const AssistantParameters: React.FC<AssistantParametersProps> = ({
+  model,
+  temperature,
   setModel,
   setTemperature,
 }) => {
@@ -23,6 +28,9 @@ const AssistantParameters: React.FC<AssistantParametersProps> = ({
   const [menuType, setMenuType] = useState<"model" | "temperature" | null>(
     null
   );
+  const [hoveredButton, setHoveredButton] = useState<
+    "model" | "temperature" | null
+  >(null);
 
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -79,40 +87,93 @@ const AssistantParameters: React.FC<AssistantParametersProps> = ({
     </MenuItem>,
   ];
 
+  const getModelDisplay = () =>
+    model === AssistantModel.FULL ? "GPT-4o" : "GPT-4o Mini";
+  const getTemperatureDisplay = () => {
+    switch (temperature) {
+      case AssistantTemperature.DETERMINISTIC:
+        return "0.2 - More Deterministic";
+      case AssistantTemperature.BALANCED:
+        return "0.7 - Balanced";
+      case AssistantTemperature.CREATIVE:
+        return "0.9 - More Creative";
+      default:
+        return "";
+    }
+  };
+
   return (
-    <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
-      <Stack direction="row" spacing={2} justifyContent="center">
-        <Tooltip title="Choose Assistant Model">
-          <IconButton
-            onClick={(e) => handleClick(e, "model")}
-            sx={{
-              border: "1px solid",
-              borderColor: "divider",
-              borderRadius: 1,
-            }}
-          >
-            <Bot size={20} />
-            <ChevronDown size={16} />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Choose Temperature">
-          <IconButton
-            onClick={(e) => handleClick(e, "temperature")}
-            sx={{
-              border: "1px solid",
-              borderColor: "divider",
-              borderRadius: 1,
-            }}
-          >
-            <Thermometer size={20} />
-            <ChevronDown size={16} />
-          </IconButton>
-        </Tooltip>
+    <>
+      <Stack direction="row" spacing={2}>
+        <Box position="relative">
+          <Tooltip title="Choose Assistant Model">
+            <IconButton
+              onClick={(e) => handleClick(e, "model")}
+              onMouseEnter={() => setHoveredButton("model")}
+              onMouseLeave={() => setHoveredButton(null)}
+              sx={{
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: 1,
+              }}
+            >
+              <Bot size={20} />
+              <ChevronDown size={16} />
+            </IconButton>
+          </Tooltip>
+          {hoveredButton === "model" && (
+            <Typography
+              variant="body2"
+              sx={{
+                position: "absolute",
+                left: "100%",
+                top: "50%",
+                transform: "translateY(-50%)",
+                ml: 1,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {getModelDisplay()}
+            </Typography>
+          )}
+        </Box>
+        <Box position="relative">
+          <Tooltip title="Choose Temperature">
+            <IconButton
+              onClick={(e) => handleClick(e, "temperature")}
+              onMouseEnter={() => setHoveredButton("temperature")}
+              onMouseLeave={() => setHoveredButton(null)}
+              sx={{
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: 1,
+              }}
+            >
+              <Thermometer size={20} />
+              <ChevronDown size={16} />
+            </IconButton>
+          </Tooltip>
+          {hoveredButton === "temperature" && (
+            <Typography
+              variant="body2"
+              sx={{
+                position: "absolute",
+                left: "100%",
+                top: "50%",
+                transform: "translateY(-50%)",
+                ml: 1,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {getTemperatureDisplay()}
+            </Typography>
+          )}
+        </Box>
       </Stack>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         {menuType === "model" ? modelMenuItems : temperatureMenuItems}
       </Menu>
-    </Paper>
+    </>
   );
 };
 

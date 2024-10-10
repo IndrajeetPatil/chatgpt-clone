@@ -4,16 +4,17 @@ import { useEffect, useState } from "react";
 
 import useAssistantResponse from "@/client/hooks/useAssistantResponse";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import { RefreshCcw } from "lucide-react";
 import {
   Alert,
   Box,
-  Button,
   CircularProgress,
   Container,
   CssBaseline,
+  IconButton,
   Paper,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -94,12 +95,6 @@ export default function Home() {
       <CssBaseline />
       <Container maxWidth="md">
         <Box sx={{ my: 4 }}>
-          {/* Settings Panel */}
-          <AssistantParameters
-            setModel={setModel}
-            setTemperature={setTemperature}
-          />
-
           {/* Chat Messages */}
           {messages.length > 0 && (
             <>
@@ -141,15 +136,30 @@ export default function Home() {
                 </Stack>
               </Paper>
 
-              {/* Regenerate Response */}
-              <Button
-                variant="contained"
-                onClick={handleRegenerateResponse}
-                sx={{ mt: 2 }}
-                disabled={assistantIsLoading}
-              >
-                <RefreshIcon />
-              </Button>
+              {/* Control Panel */}
+              <Box>
+                <Stack direction="row" spacing={2}>
+                  <AssistantParameters
+                    model={model}
+                    temperature={temperature}
+                    setModel={setModel}
+                    setTemperature={setTemperature}
+                  />
+                  <Tooltip title="Regenerate Response">
+                    <IconButton
+                      onClick={handleRegenerateResponse}
+                      disabled={assistantIsLoading}
+                      sx={{
+                        border: "1px solid",
+                        borderColor: "divider",
+                        borderRadius: 1,
+                      }}
+                    >
+                      <RefreshCcw size={20} />
+                    </IconButton>
+                  </Tooltip>
+                </Stack>
+              </Box>
             </>
           )}
 
