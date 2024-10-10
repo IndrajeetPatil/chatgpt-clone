@@ -33,7 +33,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
-      <IconButton type="submit" color="primary">
+      <IconButton type="submit" color="primary" disabled={!message.trim()}>
         <SendIcon />
       </IconButton>
     </Box>
