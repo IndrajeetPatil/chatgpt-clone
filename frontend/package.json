@@ -10,7 +10,8 @@
     "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint --fix --ext=.js,.jsx,.tsx .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "jest"
+    "test": "jest",
+    "test:update": "jest -u"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -25,8 +26,7 @@
     "react-dom": "^18",
     "react-markdown": "^9.0.1",
     "react-syntax-highlighter": "^15.5.0",
-    "swr": "^2.2.5",
-    "ts-node": "^10.9.2"
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",
