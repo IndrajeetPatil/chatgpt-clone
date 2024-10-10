@@ -9,9 +9,13 @@ import { Avatar, Box, IconButton, Paper, Tooltip } from "@mui/material";
 
 interface AssistantMessageProps {
   content: string;
+  isFirstMessage: boolean;
 }
 
-const AssistantMessage: React.FC<AssistantMessageProps> = ({ content }) => {
+const AssistantMessage: React.FC<AssistantMessageProps> = ({
+  content,
+  isFirstMessage,
+}) => {
   const [copied, setCopied] = useState(false);
   const [codeCopied, setCodeCopied] = useState<string | null>(null);
 
@@ -67,9 +71,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({ content }) => {
         <code
           style={{
             backgroundColor: "#f5f5f5",
-            padding: "0.2em 0.4em",
             borderRadius: "4px",
-            fontSize: "90%",
           }}
         >
           {children}
@@ -86,7 +88,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({ content }) => {
       <Paper
         elevation={2}
         sx={{
-          p: 4,
+          p: 2,
           backgroundColor: "#fff3e0",
           maxWidth: "80%",
           wordWrap: "break-word",
@@ -95,23 +97,25 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({ content }) => {
         }}
       >
         <ReactMarkdown components={renderers}>{content}</ReactMarkdown>
-        <Tooltip title={copied ? "Copied!" : "Copy entire message"}>
-          <IconButton
-            onClick={() => handleCopy(content)}
-            sx={{
-              position: "absolute",
-              bottom: 8,
-              right: 8,
-              backgroundColor: "#ff9800",
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#e65100",
-              },
-            }}
-          >
-            <FileCopyIcon />
-          </IconButton>
-        </Tooltip>
+        {!isFirstMessage && (
+          <Tooltip title={copied ? "Copied!" : "Copy entire message"}>
+            <IconButton
+              onClick={() => handleCopy(content)}
+              sx={{
+                position: "absolute",
+                bottom: 4,
+                right: 4,
+                backgroundColor: "#ff9800",
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#e65100",
+                },
+              }}
+            >
+              <FileCopyIcon />
+            </IconButton>
+          </Tooltip>
+        )}
       </Paper>
     </Box>
   );

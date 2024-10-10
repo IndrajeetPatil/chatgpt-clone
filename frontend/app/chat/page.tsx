@@ -125,7 +125,11 @@ export default function Home() {
                     message.role === "user" ? (
                       <UserMessage key={index} content={message.content} />
                     ) : (
-                      <AssistantMessage key={index} content={message.content} />
+                      <AssistantMessage
+                        key={index}
+                        content={message.content}
+                        isFirstMessage={index === 0}
+                      />
                     )
                   )}
                   {assistantIsLoading && (
