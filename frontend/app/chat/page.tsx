@@ -17,11 +17,11 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import AssistantMessage from "../components/messages/AssistantMessage";
-import ChatInput from "../components/messages/ChatInput";
-import UserMessage from "../components/messages/UserMessage";
-import AssistantModelParameter from "../components/parameters/AssistantModelParameter";
-import AssistantTemperatureParameter from "../components/parameters/AssistantTemperatureParameter";
+import AssistantMessage from "../../components/messages/AssistantMessage";
+import ChatInput from "../../components/messages/ChatInput";
+import UserMessage from "../../components/messages/UserMessage";
+import AssistantModelParameter from "../../components/parameters/AssistantModelParameter";
+import AssistantTemperatureParameter from "../../components/parameters/AssistantTemperatureParameter";
 
 interface Message {
   role: "user" | "assistant";
