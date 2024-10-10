@@ -96,7 +96,13 @@ const AssistantParameters: React.FC<AssistantParametersProps> = ({
       <Stack direction="row" spacing={2}>
         <Box>
           <Tooltip
-            title={`Choose Assistant Model\n(Current: ${getModelDisplay()})`}
+            title={
+              <React.Fragment>
+                Choose Assistant Model
+                <br />
+                (Current: {getModelDisplay()})
+              </React.Fragment>
+            }
           >
             <IconButton
               onClick={(e) => handleClick(e, "model")}
@@ -113,7 +119,13 @@ const AssistantParameters: React.FC<AssistantParametersProps> = ({
         </Box>
         <Box>
           <Tooltip
-            title={`Choose Temperature\n(Current: ${getTemperatureDisplay()})`}
+            title={
+              <React.Fragment>
+                Choose Temperature
+                <br />
+                (Current: {getTemperatureDisplay()})
+              </React.Fragment>
+            }
           >
             <IconButton
               onClick={(e) => handleClick(e, "temperature")}

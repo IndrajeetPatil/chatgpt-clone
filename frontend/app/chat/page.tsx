@@ -103,7 +103,7 @@ export default function Home() {
                 sx={{
                   p: 2,
                   mb: 2,
-                  maxHeight: "60vh",
+                  maxHeight: "70vh",
                   overflowY: "auto",
                   display: "flex",
                   flexDirection: "column",
