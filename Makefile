@@ -1,10 +1,17 @@
 # Define paths (note that the paths are relative to the Makefile location)
 SERVER_DIR=./server
 FRONTEND_DIR=./frontend
-VENV_ACTIVATE=source .venv/bin/activate 
 
-COLOR_RESET=\033[0m
-COLOR_BLUE_BG=\033[44m
+# Detect operating system
+ifeq ($(OS),Windows_NT)
+    VENV_ACTIVATE=.venv\Scripts\activate
+    COLOR_RESET=
+    COLOR_BLUE_BG=
+else
+    VENV_ACTIVATE=source .venv/bin/activate 
+    COLOR_RESET=\033[0m
+    COLOR_BLUE_BG=\033[44m
+endif
 
 # Backend tools
 RUFF=ruff
