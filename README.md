@@ -1,57 +1,90 @@
 # ChatGPT Clone
 
-This is an elementary clone of the [ChatGPT website](https://chat.openai.com/).
+This is a minimal clone of the [ChatGPT website](https://chat.openai.com/).
 
 ## Requirements
 
 The specified requirements were the following:
 
 - Use Django as the backend and React as the frontend.
-
 - Run the whole project in a Docker container.
-
 - Allow users to select between GPT-4o and GPT-4o mini and change the
   temperature of the responses (0.2, 0.7, and 0.9).
-
 - Request answers in Markdown format and display the answers in respect to the
   given format.
-
 - Document functions, etc. via Docstrings.
-
 - Pick one of the following:
-
   - Format the output in a way that's easy to differentiate between code and
     text.
-
   - Implement an example of function calling (live weather information, stock
     prices, etc.).
-
   - Add a way to copy the whole response or just the code of a response without
     having to select everything manually.
-
   - Give the possibility to regenerate a response.
 
-## Running locally
+## Architecture
 
-The frontend service is built using Next.js and the backend service is built
-using Django. The docker-compose file is used to run the frontend and backend
-services.
+The project is structured as a monorepo with two services:
 
-You only need to create `server/.env` file (by copying the `server/.env.example`
-file and update the values) and then run the following command in the root
-directory:
+- `frontend`: A React application that allows users to interact with the GPT-4o
+  model.
+- `server`: A Django application that serves as the backend for the frontend
+  application.
+
+The frontend service is a Next.js application that uses the `swr` library to
+fetch data from the backend service. The backend service is a Django application
+that uses the `djangorestframework` library to expose a REST API that interacts
+with the OpenAI GPT-4o model.
+
+## Setup
+
+- Clone the repository
+- Create `server/.env` file (cf. `server/.env.example`)
+- Restore needed dependencies:
+
+```bash
+# backend
+cd server
+uv sync --frozen
+
+# frontend
+cd frontend
+npm install
+```
+
+- Run the services:
 
 ```bash
 docker-compose up
 ```
 
-The frontend service is available at `http://localhost:3000` and the backend
-service is available at `http://localhost:8000`.
+The frontend service is available at `http://localhost:3000`
+The backend service is available at `http://localhost:8000`
+
+REST API can be interactively explored using Swagger UI:  
+ `http://localhost:8000/api/schema/swagger-ui/`
 
 ## Tech Stack
 
 - Frontend: React/TypeScript
 - Backend: Django/Python
+
+## Quality Assurance
+
+### Automated checks
+
+The frontend and backend services have their own quality checks (linters,
+formatters, static type checkers, OpenAPI schema validation, unit testing, code
+coverage).
+
+Assuming you have the necessary tools locally installed, these checks can be run
+locally using the following commands:
+
+```bash
+make qa
+```
+
+More specifically:
 
 | Step            | Frontend      | Backend  |
 | --------------- | ------------- | -------- |
@@ -66,18 +99,10 @@ service is available at `http://localhost:8000`.
 | Import sorter   | import-sorter | isort    |
 | Logger          | pino          | logging  |
 
-## Quality Assurance
+### Manual checks
 
-The frontend and backend services have their own quality checks (linters,
-formatters, static type checkers, OpenAPI schema validation, unit testing, code
-coverage).
-
-Assuming you have the necessary tools locally installed, these checks can be run
-locally using the following commands:
-
-```bash
-make qa
-```
+UI (Desktop + mobile view) checked on multiple browsers: Chrome, Safari, Edge
+Deployment checked on two OS: macOS, Windows
 
 ## Grievances/Mistakes
 
@@ -88,3 +113,9 @@ make qa
   would have sufficed. But it was a good exercise to learn Next.js, especially
   server-side rendering, the distinction between client and server components,
   and the API routes.
+
+## Notes
+
+- Although this is PoC project that uses a monorepo approach to host the entire
+  stack, the production-grade project should use separate repositories for the
+  ease of development, maintenance, and deployment.
