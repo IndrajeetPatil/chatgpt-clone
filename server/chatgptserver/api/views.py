@@ -5,9 +5,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .azure_client import get_azure_openai_response
 from .entities import AssistantModel, AssistantTemperature
 from .serializers import AssistantResponseSerializer, ChatRequestSerializer
-from .utils import get_azure_openai_response
 
 logger = logging.getLogger("django")
 
@@ -37,7 +37,7 @@ class ChatView(APIView):
         responses={200: AssistantResponseSerializer},
         description="Generate a chat response based on the provided prompt and settings.",
     )
-    def post(self, request, model: AssistantModel) -> Response:
+    def post(self, request, model: str | AssistantModel) -> Response:
         # Validate model
         try:
             model = AssistantModel(model)
@@ -48,7 +48,9 @@ class ChatView(APIView):
             )
 
         # Validate and parse temperature
-        temperature_str = request.query_params.get("temperature")
+        temperature_str = request.query_params.get(
+            "temperature", AssistantTemperature.BALANCED.name
+        )
         try:
             temperature: AssistantTemperature = AssistantTemperature[
                 temperature_str.upper()

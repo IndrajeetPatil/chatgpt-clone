@@ -1,11 +1,12 @@
 from unittest.mock import patch
 
 import pytest
-from api.entities import AssistantModel, AssistantTemperature
-from api.views import ChatView
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient, APIRequestFactory, APITestCase
+
+from ..entities import AssistantModel, AssistantTemperature
+from ..views import ChatView
 
 
 class ChatViewTests(APITestCase):

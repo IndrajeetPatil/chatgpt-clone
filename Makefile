@@ -10,8 +10,8 @@ COLOR_BLUE_BG=\033[44m
 RUFF=ruff
 MYPY=mypy
 ISORT=isort
-PYTEST=pytest chatgptserver/tests.py
-PYCOVERAGE=coverage run --source='.' chatgptserver/manage.py test && coverage report && coverage html
+PYTEST=pytest chatgptserver
+PYCOVERAGE=coverage run -m pytest chatgptserver && coverage report --fail-under=95 && coverage html
 DJANGO_MANAGE=chatgptserver/manage.py
 OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file schema.yml   
 
