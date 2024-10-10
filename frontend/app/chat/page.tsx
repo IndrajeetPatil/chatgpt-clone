@@ -35,7 +35,13 @@ const theme = createTheme({
 });
 
 export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  // Initial message from the assistant
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content: "Hi, I am a chat bot. How can I help you today?",
+    },
+  ]);
   const [model, setModel] = useState<AssistantModel>(AssistantModel.FULL);
   const [temperature, setTemperature] = useState<AssistantTemperature>(
     AssistantTemperature.BALANCED
@@ -137,15 +143,14 @@ export default function Home() {
                 </Stack>
               </Paper>
 
-              {/* Regenerate Response Button */}
+              {/* Regenerate Response */}
               <Button
                 variant="contained"
-                startIcon={<RefreshIcon />}
                 onClick={handleRegenerateResponse}
                 sx={{ mt: 2 }}
                 disabled={assistantIsLoading}
               >
-                Regenerate Response
+                <RefreshIcon />
               </Button>
             </>
           )}
