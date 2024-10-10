@@ -20,8 +20,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AssistantMessage from "../../components/messages/AssistantMessage";
 import ChatInput from "../../components/messages/ChatInput";
 import UserMessage from "../../components/messages/UserMessage";
-import AssistantModelParameter from "../../components/parameters/AssistantModelParameter";
-import AssistantTemperatureParameter from "../../components/parameters/AssistantTemperatureParameter";
+import AssistantParameters from "../../components/parameters/AssistantParameters";
 
 interface Message {
   role: "user" | "assistant";
@@ -96,15 +95,10 @@ export default function Home() {
       <Container maxWidth="md">
         <Box sx={{ my: 4 }}>
           {/* Settings Panel */}
-          <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
-            <Stack spacing={2}>
-              <AssistantModelParameter model={model} setModel={setModel} />
-              <AssistantTemperatureParameter
-                temperature={temperature}
-                setTemperature={setTemperature}
-              />
-            </Stack>
-          </Paper>
+          <AssistantParameters
+            setModel={setModel}
+            setTemperature={setTemperature}
+          />
 
           {/* Chat Messages */}
           {messages.length > 0 && (
