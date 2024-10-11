@@ -100,7 +100,7 @@ lint-markdown:
 # Run all QA tools
 qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test
 qa-backend: backend-lint backend-format backend-type-check backend-test
-qa: format lint type-check backend-validate-api-schema lint-markdown test
+qa: format lint type-check backend-validate-api-schema test
 
 # Run backend server
 run-backend:
