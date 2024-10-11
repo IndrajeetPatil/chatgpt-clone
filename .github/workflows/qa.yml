@@ -34,13 +34,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install uv
           uv sync --frozen
+        shell: bash
 
       - name: Install frontend dependencies
         working-directory: ./frontend
         run: npm install
+        shell: bash
 
       - name: Run QA checks
         run: make qa
+        shell: bash
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v3
