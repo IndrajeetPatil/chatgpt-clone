@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 
 import useAssistantResponse from "@/client/hooks/useAssistantResponse";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
+import AssistantMessage from "@/components/messages/AssistantMessage";
+import ChatInput from "@/components/messages/ChatInput";
+import UserMessage from "@/components/messages/UserMessage";
+import AssistantModelParameter from "@/components/parameters/AssistantModelParameter";
+import AssistantTemperatureParameter from "@/components/parameters/AssistantTemperatureParameter";
 import {
   Alert,
   Box,
@@ -16,11 +21,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-import AssistantMessage from "../../components/messages/AssistantMessage";
-import ChatInput from "../../components/messages/ChatInput";
-import UserMessage from "../../components/messages/UserMessage";
-import AssistantParameters from "../../components/parameters/AssistantParameters";
 
 interface Message {
   role: "user" | "assistant";
@@ -154,22 +154,16 @@ export default function Home() {
               p: 2,
             }}
           >
-            <Stack direction="row" spacing={2} alignItems="center">
-              <AssistantParameters
-                model={model}
+            <Stack direction="row" spacing={2}>
+              <AssistantModelParameter model={model} setModel={setModel} />
+              <AssistantTemperatureParameter
                 temperature={temperature}
-                setModel={setModel}
                 setTemperature={setTemperature}
               />
               <Tooltip title="Regenerate Response">
                 <IconButton
                   onClick={handleRegenerateResponse}
                   disabled={assistantIsLoading}
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 1,
-                  }}
                 >
                   <RefreshCcw size={20} />
                 </IconButton>
@@ -179,14 +173,7 @@ export default function Home() {
                   darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
                 }
               >
-                <IconButton
-                  onClick={toggleTheme}
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 1,
-                  }}
-                >
+                <IconButton onClick={toggleTheme}>
                   {darkMode ? <Sun size={20} /> : <Moon size={20} />}
                 </IconButton>
               </Tooltip>
