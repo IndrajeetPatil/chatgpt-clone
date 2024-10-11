@@ -46,6 +46,9 @@ jobs:
         run: make qa
         shell: bash
 
+      - name: Run Playwright tests
+        run: e2e-test
+
       - name: Upload coverage reports
         uses: actions/upload-artifact@v3
         with:
@@ -53,3 +56,4 @@ jobs:
           path: |
             server/htmlcov
             frontend/coverage
+            frontend/playwright-report
