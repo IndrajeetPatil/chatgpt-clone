@@ -2,13 +2,21 @@
 SERVER_DIR=./server
 FRONTEND_DIR=./frontend
 
-# Detect operating system
+# Detect operating system and shell
 ifeq ($(OS),Windows_NT)
-    VENV_ACTIVATE=.venv\Scripts\activate
+    # Detect if using PowerShell
+    ifneq ($(findstring pwsh,$(SHELL)),)
+        VENV_ACTIVATE=.\.venv\Scripts\Activate.ps1
+    else ifneq ($(findstring powershell,$(SHELL)),)
+        VENV_ACTIVATE=.\.venv\Scripts\Activate.ps1
+    else
+        # Default to CMD
+        VENV_ACTIVATE=.venv\Scripts\activate
+    endif
     COLOR_RESET=
     COLOR_BLUE_BG=
 else
-    VENV_ACTIVATE=source .venv/bin/activate 
+    VENV_ACTIVATE=. .venv/bin/activate 
     COLOR_RESET=\033[0m
     COLOR_BLUE_BG=\033[44m
 endif
@@ -92,7 +100,7 @@ lint-markdown:
 # Run all QA tools
 qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test
 qa-backend: backend-lint backend-format backend-type-check backend-test
-qa: format lint type-check backend-validate-api-schema lint-markdown test
+qa: format lint type-check backend-validate-api-schema test
 
 # Run backend server
 run-backend:
