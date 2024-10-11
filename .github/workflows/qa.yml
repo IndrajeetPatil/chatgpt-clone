@@ -46,8 +46,9 @@ jobs:
         run: make qa
         shell: bash
 
-      - name: Run Playwright tests
+      - name: Run end-to-end tests
         run: e2e-test
+        shell: bash
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v3
