@@ -16,7 +16,7 @@ ifeq ($(OS),Windows_NT)
     COLOR_RESET=
     COLOR_BLUE_BG=
 else
-    VENV_ACTIVATE=source .venv/bin/activate 
+    VENV_ACTIVATE=. .venv/bin/activate 
     COLOR_RESET=\033[0m
     COLOR_BLUE_BG=\033[44m
 endif
