@@ -101,8 +101,8 @@ More specifically:
 
 ### Manual checks
 
-UI (Desktop + mobile view) checked on multiple browsers: Chrome, Safari, Edge
-Deployment checked on two OS: macOS, Windows
+- UI (Desktop + mobile view) checked on multiple browsers: Chrome, Safari, Edge
+- Deployment checked on two Operating Systems: macOS, Windows
 
 ## Grievances/Mistakes
 
