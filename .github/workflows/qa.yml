@@ -38,7 +38,9 @@ jobs:
 
       - name: Install frontend dependencies
         working-directory: ./frontend
-        run: npm install
+        run: |
+          npm install
+          npx playwright install --with-deps
 
       - name: Run QA checks
         run: make qa
