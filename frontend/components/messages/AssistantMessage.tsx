@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import {
+  vs,
+  vscDarkPlus,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
-import { Box, IconButton, Paper, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Paper,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
 
 interface AssistantMessageProps {
   content: string;
@@ -18,6 +28,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
   const [codeCopied, setCodeCopied] = useState<string | null>(null);
+  const theme = useTheme();
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -46,7 +57,11 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
 
       return !inline && match ? (
         <Box position="relative" sx={{ mt: 2 }}>
-          <SyntaxHighlighter style={darcula} language={match[1]} PreTag="div">
+          <SyntaxHighlighter
+            style={theme.palette.mode === "dark" ? vscDarkPlus : vs}
+            language={match[1]}
+            PreTag="div"
+          >
             {codeContent}
           </SyntaxHighlighter>
           <Tooltip title={codeCopied === codeContent ? "Copied!" : "Copy code"}>
@@ -56,11 +71,13 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
                 position: "absolute",
                 top: 4,
                 right: 4,
-                backgroundColor: "#ff9800",
-                color: "#fff",
+                backgroundColor:
+                  theme.palette.mode === "dark" ? "#4caf50" : "#ff9800",
+                color: theme.palette.common.white,
                 fontSize: 18,
                 "&:hover": {
-                  backgroundColor: "#e65100",
+                  backgroundColor:
+                    theme.palette.mode === "dark" ? "#45a049" : "#e65100",
                 },
               }}
             >
@@ -71,9 +88,11 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
       ) : (
         <code
           style={{
-            backgroundColor: "#f5f5f5",
+            backgroundColor:
+              theme.palette.mode === "dark" ? "#2d2d2d" : "#f5f5f5",
             borderRadius: "4px",
             padding: "0 4px",
+            color: theme.palette.mode === "dark" ? "#e0e0e0" : "inherit",
           }}
         >
           {children}
@@ -88,7 +107,8 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         elevation={2}
         sx={{
           p: 2,
-          backgroundColor: "#fff3e0",
+          backgroundColor:
+            theme.palette.mode === "dark" ? "#2d2d2d" : "#fff3e0",
           maxWidth: "80%",
           wordWrap: "break-word",
           overflowWrap: "anywhere",
@@ -97,11 +117,10 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
           flexDirection: "column",
         }}
       >
-        {/* Icon on the first line */}
         <Box display="flex" alignItems="center" mb={1}>
           <SmartToyIcon
             sx={{
-              color: "#ff9800",
+              color: theme.palette.mode === "dark" ? "#4caf50" : "#ff9800",
               fontSize: "1.5rem",
               mr: 1,
             }}
@@ -110,7 +129,6 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
             Assistant
           </Typography>
         </Box>
-        {/* Content starts on the second line */}
         <Typography variant="body1" component="div" sx={{ mt: 1 }}>
           <ReactMarkdown components={renderers}>{content}</ReactMarkdown>
         </Typography>
@@ -122,11 +140,13 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
                 position: "absolute",
                 bottom: 4,
                 right: 4,
-                backgroundColor: "#ff9800",
-                color: "#fff",
+                backgroundColor:
+                  theme.palette.mode === "dark" ? "#4caf50" : "#ff9800",
+                color: theme.palette.common.white,
                 fontSize: 18,
                 "&:hover": {
-                  backgroundColor: "#e65100",
+                  backgroundColor:
+                    theme.palette.mode === "dark" ? "#45a049" : "#e65100",
                 },
               }}
             >

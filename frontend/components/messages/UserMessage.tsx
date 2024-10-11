@@ -1,43 +1,57 @@
 import React from "react";
+
 import PersonIcon from "@mui/icons-material/Person";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography, useTheme } from "@mui/material";
 
 interface UserMessageProps {
   content: string;
 }
 
-const UserMessage: React.FC<UserMessageProps> = ({ content }) => (
-  <Box display="flex" justifyContent="flex-end" mb={2}>
-    <Paper
-      elevation={2}
-      sx={{
-        p: 2,
-        backgroundColor: "#e3f2fd",
-        maxWidth: "70%",
-        wordWrap: "break-word",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {/* Icon on the first line */}
-      <Box display="flex" alignItems="center" mb={1}>
-        <PersonIcon
+const UserMessage: React.FC<UserMessageProps> = ({ content }) => {
+  const theme = useTheme();
+
+  return (
+    <Box display="flex" justifyContent="flex-end" mb={2}>
+      <Paper
+        elevation={2}
+        sx={{
+          p: 2,
+          backgroundColor:
+            theme.palette.mode === "dark" ? "#1a237e" : "#e3f2fd",
+          maxWidth: "70%",
+          wordWrap: "break-word",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Box display="flex" alignItems="center" mb={1}>
+          <PersonIcon
+            sx={{
+              color: theme.palette.mode === "dark" ? "#90caf9" : "#1976d2",
+              fontSize: "1.5rem",
+              mr: 1,
+            }}
+          />
+          <Typography variant="body2" color="textSecondary">
+            User
+          </Typography>
+        </Box>
+        <Typography
+          variant="body1"
+          component="div"
           sx={{
-            color: "#1976d2",
-            fontSize: "1.5rem",
-            mr: 1,
+            mt: 1,
+            color:
+              theme.palette.mode === "dark"
+                ? theme.palette.common.white
+                : "inherit",
           }}
-        />
-        <Typography variant="body2" color="textSecondary">
-          User
+        >
+          {content}
         </Typography>
-      </Box>
-      {/* Content starts on the second line */}
-      <Typography variant="body1" component="div" sx={{ mt: 1 }}>
-        {content}
-      </Typography>
-    </Paper>
-  </Box>
-);
+      </Paper>
+    </Box>
+  );
+};
 
 export default UserMessage;

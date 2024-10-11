@@ -1,6 +1,6 @@
 "use client";
 
-import { RefreshCcw } from "lucide-react";
+import { Moon, RefreshCcw, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import useAssistantResponse from "@/client/hooks/useAssistantResponse";
@@ -27,12 +27,6 @@ interface Message {
   content: string;
 }
 
-const theme = createTheme({
-  palette: {
-    mode: "light",
-  },
-});
-
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -45,6 +39,7 @@ export default function Home() {
     AssistantTemperature.BALANCED
   );
   const [lastPrompt, setLastPrompt] = useState<string | null>(null);
+  const [darkMode, setDarkMode] = useState(true);
 
   const {
     triggerAssistantResponse,
@@ -52,6 +47,12 @@ export default function Home() {
     assistantError,
     assistantIsLoading,
   } = useAssistantResponse();
+
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? "dark" : "light",
+    },
+  });
 
   const handleSendMessage = async (message: string) => {
     const newMessage: Message = { role: "user", content: message };
@@ -77,7 +78,6 @@ export default function Home() {
 
   const handleRegenerateResponse = async () => {
     if (lastPrompt) {
-      // Do not remove the last assistant message
       await triggerAssistantResponse({
         model,
         temperature,
@@ -86,11 +86,14 @@ export default function Home() {
     }
   };
 
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="md">
-        {/* Full height container for chat messages and control panel */}
         <Box
           sx={{
             height: "100vh",
@@ -98,7 +101,6 @@ export default function Home() {
             flexDirection: "column",
           }}
         >
-          {/* Chat Messages Section (80% of the height) */}
           <Box
             sx={{
               flexGrow: 1,
@@ -143,7 +145,6 @@ export default function Home() {
             </Box>
           </Box>
 
-          {/* Control Panel and Input Section (20% of the height) */}
           <Box
             sx={{
               height: "20vh",
@@ -153,7 +154,6 @@ export default function Home() {
               p: 2,
             }}
           >
-            {/* Control Panel */}
             <Stack direction="row" spacing={2} alignItems="center">
               <AssistantParameters
                 model={model}
@@ -174,9 +174,24 @@ export default function Home() {
                   <RefreshCcw size={20} />
                 </IconButton>
               </Tooltip>
+              <Tooltip
+                title={
+                  darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+                }
+              >
+                <IconButton
+                  onClick={toggleTheme}
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: 1,
+                  }}
+                >
+                  {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+                </IconButton>
+              </Tooltip>
             </Stack>
 
-            {/* Chat Input */}
             <ChatInput onSendMessage={handleSendMessage} />
           </Box>
         </Box>
