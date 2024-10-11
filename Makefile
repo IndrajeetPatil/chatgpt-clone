@@ -2,9 +2,17 @@
 SERVER_DIR=./server
 FRONTEND_DIR=./frontend
 
-# Detect operating system
+# Detect operating system and shell
 ifeq ($(OS),Windows_NT)
-    VENV_ACTIVATE=.venv\Scripts\activate
+    # Detect if using PowerShell
+    ifneq ($(findstring pwsh,$(SHELL)),)
+        VENV_ACTIVATE=.\.venv\Scripts\Activate.ps1
+    else ifneq ($(findstring powershell,$(SHELL)),)
+        VENV_ACTIVATE=.\.venv\Scripts\Activate.ps1
+    else
+        # Default to CMD
+        VENV_ACTIVATE=.venv\Scripts\activate
+    endif
     COLOR_RESET=
     COLOR_BLUE_BG=
 else
