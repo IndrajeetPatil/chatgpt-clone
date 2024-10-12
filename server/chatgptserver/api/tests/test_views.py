@@ -1,52 +1,74 @@
-from unittest.mock import patch
+from typing import Any, Dict, Generator, Optional
+from unittest.mock import MagicMock, patch
 
 import pytest
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient, APIRequestFactory, APITestCase
+from rest_framework.test import APIClient
 
 from ..entities import AssistantModel, AssistantTemperature
-from ..views import ChatView
+
+MOCK_PROMPT: str = "What is the capital of India?"
+MOCK_RESPONSE: str = "The capital of India is New Delhi."
 
 
-class ChatViewTests(APITestCase):
-    def setUp(self):
-        self.client = APIClient()
-        self.url = reverse("chat", kwargs={"model": AssistantModel.FULL.value})
-        self.valid_payload = {
-            "prompt": "What is the capital of France?",
-        }
+@pytest.fixture
+def api_client() -> APIClient:
+    return APIClient()
 
-    @patch("api.views.get_azure_openai_response")
-    def test_post_chat_view_success(self, mock_get_azure_openai_response):
-        mock_get_azure_openai_response.return_value = "The capital of France is Paris."
 
-        response = self.client.post(
-            f"{self.url}?temperature=BALANCED", self.valid_payload, format="json"
+@pytest.fixture
+def chat_url() -> str:
+    return reverse("chat", kwargs={"model": AssistantModel.FULL.value})
+
+
+@pytest.fixture
+def valid_payload() -> Dict[str, str]:
+    return {"prompt": MOCK_PROMPT}
+
+
+@pytest.fixture
+def mock_azure_response() -> Generator[MagicMock, None, None]:
+    with patch("api.views.get_azure_openai_response") as mock:
+        mock.return_value = MOCK_RESPONSE
+        yield mock
+
+
+@pytest.mark.django_db
+class TestChatView:
+    def test_post_chat_view_success(
+        self,
+        api_client: APIClient,
+        chat_url: str,
+        valid_payload: Dict[str, str],
+        mock_azure_response: MagicMock,
+    ) -> None:
+        response = api_client.post(
+            f"{chat_url}?temperature=BALANCED", valid_payload, format="json"
         )
 
-        # Assert that the mock was called with expected parameters
-        mock_get_azure_openai_response.assert_called_once_with(
-            prompt="What is the capital of France?",
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["response"] == MOCK_RESPONSE
+        mock_azure_response.assert_called_once_with(
+            prompt=MOCK_PROMPT,
             model=AssistantModel.FULL,
             temperature=AssistantTemperature.BALANCED,
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["response"], "The capital of France is Paris.")
+    def test_post_chat_view_empty_payload(
+        self, api_client: APIClient, chat_url: str
+    ) -> None:
+        invalid_payload: Dict[str, Any] = {}
 
-    def test_post_chat_view_invalid_payload(self):
-        invalid_payload: dict[str, str] = {}  # Empty payload
-
-        response = self.client.post(
-            f"{self.url}?temperature=BALANCED", invalid_payload, format="json"
+        response = api_client.post(
+            f"{chat_url}?temperature=BALANCED", invalid_payload, format="json"
         )
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("prompt", response.data)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "prompt" in response.data
 
 
-@patch("api.views.get_azure_openai_response")
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     "model, temperature, expected_status, expected_errors",
     [
@@ -83,18 +105,17 @@ class ChatViewTests(APITestCase):
     ],
 )
 def test_chat_view_parameters(
-    mock_get_azure_openai_response, model, temperature, expected_status, expected_errors
-):
-    mock_get_azure_openai_response.return_value = "Mocked response"
-
-    factory = APIRequestFactory()
-    view = ChatView.as_view()
-
-    url = reverse("chat", kwargs={"model": model})
-    request = factory.post(
+    mock_azure_response: MagicMock,
+    api_client: APIClient,
+    model: str,
+    temperature: str,
+    expected_status: int,
+    expected_errors: Optional[Dict[str, str]],
+) -> None:
+    url: str = reverse("chat", kwargs={"model": model})
+    response = api_client.post(
         f"{url}?temperature={temperature}", {"prompt": "Hello"}, format="json"
     )
-    response = view(request, model=model)
 
     assert response.status_code == expected_status
     if expected_errors:
