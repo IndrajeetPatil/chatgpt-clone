@@ -1,3 +1,4 @@
+from itertools import product
 from typing import Generator
 from unittest.mock import MagicMock, patch
 
@@ -78,10 +79,7 @@ class TestGetAzureOpenAIResponse:
 
     @pytest.mark.parametrize(
         "model, temperature",
-        [
-            (AssistantModel.FULL, AssistantTemperature.BALANCED),
-            (AssistantModel.MINI, AssistantTemperature.CREATIVE),
-        ],
+        list(product(AssistantModel, AssistantTemperature)),
     )
     def test_different_models_and_temperatures(
         self,
