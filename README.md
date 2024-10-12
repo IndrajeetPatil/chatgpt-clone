@@ -22,7 +22,7 @@ The specified requirements were the following:
     having to select everything manually.
   - Give the possibility to regenerate a response.
 
-## Architecture
+## Architecture/Design
 
 The project is structured as a monorepo with two services:
 
@@ -35,6 +35,9 @@ The frontend service is a Next.js application that uses the `swr` library to
 fetch data from the backend service. The backend service is a Django application
 that uses the `djangorestframework` library to expose a REST API that interacts
 with the OpenAI GPT-4o model.
+
+The UI is built with [Material UI](https://mui.com/material-ui/getting-started/)
+components and Bootstrap CSS, and follows Google's Material Design.
 
 ## Setup
 
@@ -103,6 +106,8 @@ More specifically:
 
 - UI (Desktop + mobile view) checked on multiple browsers: Chrome, Safari, Edge
 - Deployment checked on two Operating Systems: macOS, Windows
+- Accessibility checks with [Access Assistant](https://chromewebstore.google.com/detail/access-assistant/ojiighldhdmahfdnhfdebnpmlbiemdfm)
+- Performance checks with [Lighthouse](https://developers.google.com/web/tools/lighthouse)
 
 ## Grievances/Mistakes
 
@@ -114,8 +119,14 @@ More specifically:
   server-side rendering, the distinction between client and server components,
   and the API routes.
 
-## Notes
+## Room for Improvement
 
 - Although this is PoC project that uses a monorepo approach to host the entire
   stack, the production-grade project should use separate repositories for the
   ease of development, maintenance, and deployment.
+
+- The project could be improved by adding more features like user authentication
+  and saving chat history.
+
+- The performance of the frontend could be improved by using a state management
+  library like Redux or Recoil.
