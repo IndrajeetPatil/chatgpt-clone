@@ -1,7 +1,6 @@
-import { test, expect } from "@playwright/test";
-
-import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 import { getModelDisplay, getTemperatureDisplay } from "@/client/helpers";
+import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
+import { expect, test } from "@playwright/test";
 
 const models = [AssistantModel.MINI, AssistantModel.FULL];
 const temperatures = [AssistantTemperature.DETERMINISTIC];

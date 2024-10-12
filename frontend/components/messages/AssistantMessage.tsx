@@ -1,10 +1,6 @@
 import React, { useState } from "react";
+import { atomOneDark, atomOneLight, CopyBlock } from "react-code-blocks";
 import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-  vs,
-  vscDarkPlus,
-} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
@@ -22,12 +18,17 @@ interface AssistantMessageProps {
   isFirstMessage: boolean;
 }
 
+interface CodeProps {
+  inline?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
 const AssistantMessage: React.FC<AssistantMessageProps> = ({
   content,
   isFirstMessage,
 }) => {
   const [copied, setCopied] = useState(false);
-  const [codeCopied, setCodeCopied] = useState<string | null>(null);
   const theme = useTheme();
 
   const handleCopy = (text: string) => {
@@ -36,62 +37,31 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleCodeCopy = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCodeCopied(code);
-    setTimeout(() => setCodeCopied(null), 2000);
-  };
-
-  const renderers = {
-    code({
-      inline,
-      className,
-      children,
-    }: {
-      inline?: boolean;
-      className?: string;
-      children?: React.ReactNode;
-    }): React.JSX.Element {
+  const renderers: Record<string, React.FC<CodeProps>> = {
+    code({ inline, className, children }: CodeProps) {
       const match = /language-(\w+)/.exec(className ?? "");
-      const codeContent = String(children).replace(/\n$/, "");
+      const language = match ? match[1] : "";
+      const codeString = String(children).replace(/\n$/, "");
 
-      return !inline && match ? (
-        <Box position="relative" sx={{ mt: 2 }}>
-          <SyntaxHighlighter
-            style={theme.palette.mode === "dark" ? vscDarkPlus : vs}
-            language={match[1]}
-            PreTag="div"
-          >
-            {codeContent}
-          </SyntaxHighlighter>
-          <Tooltip title={codeCopied === codeContent ? "Copied!" : "Copy code"}>
-            <IconButton
-              onClick={() => handleCodeCopy(codeContent)}
-              sx={{
-                position: "absolute",
-                top: 4,
-                right: 4,
-                backgroundColor:
-                  theme.palette.mode === "dark" ? "#4caf50" : "#ff9800",
-                color: theme.palette.common.white,
-                fontSize: 18,
-                "&:hover": {
-                  backgroundColor:
-                    theme.palette.mode === "dark" ? "#45a049" : "#e65100",
-                },
-              }}
-            >
-              <FileCopyIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      ) : (
+      if (!inline && match) {
+        return (
+          <Box position="relative" sx={{ mt: 2 }}>
+            <CopyBlock
+              text={codeString}
+              language={language}
+              showLineNumbers={false}
+              theme={theme.palette.mode === "dark" ? atomOneDark : atomOneLight}
+              codeBlock
+            />
+          </Box>
+        );
+      }
+
+      return (
         <code
           style={{
             backgroundColor:
               theme.palette.mode === "dark" ? "#2d2d2d" : "#f5f5f5",
-            borderRadius: "4px",
-            padding: "0 4px",
             color: theme.palette.mode === "dark" ? "#e0e0e0" : "inherit",
           }}
         >

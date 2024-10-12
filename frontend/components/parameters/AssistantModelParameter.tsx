@@ -1,8 +1,8 @@
 import { Bot, ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 
-import { AssistantModel } from "@/client/types/assistant";
 import { getModelDisplay } from "@/client/helpers";
+import { AssistantModel } from "@/client/types/assistant";
 import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 
 interface AssistantModelParameterProps {
