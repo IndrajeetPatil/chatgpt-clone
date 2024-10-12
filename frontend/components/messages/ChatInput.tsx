@@ -1,4 +1,5 @@
-import React, { useState, KeyboardEvent } from "react";
+import React, { KeyboardEvent, useState } from "react";
+
 import SendIcon from "@mui/icons-material/Send";
 import { Box, IconButton, TextField } from "@mui/material";
 
@@ -41,7 +42,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         fullWidth
         placeholder="Type your message..."
         rows={2}
-        maxRows={4}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
