@@ -42,7 +42,6 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
       const match = /language-(\w+)/.exec(className ?? "");
       const language = match ? match[1] : "";
       const codeString = String(children).replace(/\n$/, "");
-
       if (!inline && match) {
         return (
           <Box position="relative" sx={{ mt: 2 }}>

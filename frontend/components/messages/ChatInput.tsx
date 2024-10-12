@@ -28,9 +28,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
     >
       <TextField
         fullWidth
-        variant="outlined"
         placeholder="Type your message..."
         value={message}
+        multiline={true}
         onChange={(e) => setMessage(e.target.value)}
       />
       <IconButton type="submit" color="primary" disabled={!message.trim()}>
