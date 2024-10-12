@@ -48,31 +48,20 @@ export default function Home() {
     assistantIsLoading,
   } = useAssistantResponse();
 
-  const theme = createTheme({
-    palette: {
-      mode: darkMode ? "dark" : "light",
-    },
-  });
+  const theme = createTheme({ palette: { mode: darkMode ? "dark" : "light" } });
 
   const handleSendMessage = async (message: string) => {
-    const newMessage: Message = { role: "user", content: message };
-    setMessages([...messages, newMessage]);
+    setMessages([...messages, { role: "user", content: message }]);
     setLastPrompt(message);
-
-    await triggerAssistantResponse({
-      model,
-      temperature,
-      prompt: message,
-    });
+    await triggerAssistantResponse({ model, temperature, prompt: message });
   };
 
   useEffect(() => {
     if (assistantResponse) {
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: assistantResponse.response,
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: assistantResponse.response },
+      ]);
     }
   }, [assistantResponse]);
 
@@ -86,101 +75,59 @@ export default function Home() {
     }
   };
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="md">
-        <Box
-          sx={{
-            height: "100vh",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Box
-            sx={{
-              flexGrow: 1,
-              overflowY: "auto",
-              p: 2,
-            }}
-          >
-            <Box
-              sx={{
-                p: 2,
-                maxHeight: "100%",
-                display: "flex",
-                flexDirection: "column",
-                overflowY: "auto",
-              }}
-            >
-              <Stack spacing={2}>
-                {messages.map((message, index) =>
-                  message.role === "user" ? (
-                    <UserMessage key={index} content={message.content} />
-                  ) : (
-                    <AssistantMessage
-                      key={index}
-                      content={message.content}
-                      isFirstMessage={index === 0}
-                    />
-                  )
-                )}
-                {assistantIsLoading && (
-                  <Box
-                    sx={{ display: "flex", justifyContent: "center", mt: 2 }}
-                  >
-                    <CircularProgress />
-                  </Box>
-                )}
-                {assistantError && (
-                  <Alert severity="error">
-                    Error: {assistantError.message}
-                  </Alert>
-                )}
-              </Stack>
-            </Box>
-          </Box>
+      <Container
+        maxWidth="md"
+        sx={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      >
+        {/* Chat Messages */}
+        <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
+          <Stack spacing={2}>
+            {messages.map((message, index) =>
+              message.role === "user" ? (
+                <UserMessage key={index} content={message.content} />
+              ) : (
+                <AssistantMessage
+                  key={index}
+                  content={message.content}
+                  isFirstMessage={index === 0}
+                />
+              )
+            )}
+            {assistantIsLoading && <CircularProgress />}
+            {assistantError && (
+              <Alert severity="error">Error: {assistantError.message}</Alert>
+            )}
+          </Stack>
+        </Box>
 
-          <Box
-            sx={{
-              height: "20vh",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              p: 2,
-            }}
-          >
-            <Stack direction="row" spacing={2}>
-              <AssistantModelParameter model={model} setModel={setModel} />
-              <AssistantTemperatureParameter
-                temperature={temperature}
-                setTemperature={setTemperature}
-              />
-              <Tooltip title="Regenerate Response">
-                <IconButton
-                  onClick={handleRegenerateResponse}
-                  disabled={assistantIsLoading}
-                >
-                  <RefreshCcw size={20} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip
-                title={
-                  darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
-                }
+        {/* Control Panel */}
+        <Box sx={{ p: 2 }}>
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <AssistantModelParameter model={model} setModel={setModel} />
+            <AssistantTemperatureParameter
+              temperature={temperature}
+              setTemperature={setTemperature}
+            />
+            <Tooltip title="Regenerate Response">
+              <IconButton
+                onClick={handleRegenerateResponse}
+                disabled={assistantIsLoading}
               >
-                <IconButton onClick={toggleTheme}>
-                  {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-                </IconButton>
-              </Tooltip>
-            </Stack>
-
-            <ChatInput onSendMessage={handleSendMessage} />
-          </Box>
+                <RefreshCcw size={20} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              <IconButton onClick={() => setDarkMode(!darkMode)}>
+                {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </IconButton>
+            </Tooltip>
+          </Stack>
+          <ChatInput onSendMessage={handleSendMessage} />
         </Box>
       </Container>
     </ThemeProvider>

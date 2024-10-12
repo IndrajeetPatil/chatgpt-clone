@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useState, KeyboardEvent } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { Box, IconButton, TextField } from "@mui/material";
 
@@ -12,9 +11,20 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    sendMessage();
+  };
+
+  const sendMessage = () => {
     if (message.trim()) {
       onSendMessage(message.trim());
       setMessage("");
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
     }
   };
 
@@ -23,15 +33,19 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
       component="form"
       onSubmit={handleSubmit}
       display="flex"
-      alignItems="center"
+      alignItems="flex-end"
       mt={2}
     >
       <TextField
+        multiline
         fullWidth
         placeholder="Type your message..."
+        rows={2}
+        maxRows={4}
         value={message}
-        multiline={true}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
+        sx={{ mr: 1 }}
       />
       <IconButton type="submit" color="primary" disabled={!message.trim()}>
         <SendIcon />

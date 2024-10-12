@@ -7,12 +7,10 @@ This is a minimal clone of the [ChatGPT website](https://chat.openai.com/).
 The specified requirements were the following:
 
 - Use Django as the backend and React as the frontend.
-- Run the whole project in a Docker container.
 - Allow users to select between GPT-4o and GPT-4o mini and change the
   temperature of the responses (0.2, 0.7, and 0.9).
 - Request answers in Markdown format and display the answers in respect to the
   given format.
-- Document functions, etc. via Docstrings.
 - Pick one of the following:
   - Format the output in a way that's easy to differentiate between code and
     text.
@@ -61,16 +59,11 @@ npm install
 docker-compose up
 ```
 
-The frontend service is available at `http://localhost:3000`
-The backend service is available at `http://localhost:8000`
+- The frontend service is available at `http://localhost:3000`
+- The backend service is available at `http://localhost:8000`
 
 REST API can be interactively explored using Swagger UI:  
  `http://localhost:8000/api/schema/swagger-ui/`
-
-## Tech Stack
-
-- Frontend: React/TypeScript
-- Backend: Django/Python
 
 ## Quality Assurance
 

@@ -3,10 +3,10 @@
 exports[`ChatInput component should render the ChatInput component and match the snapshot 1`] = `
 <DocumentFragment>
   <form
-    class="MuiBox-root css-1jcfcth"
+    class="MuiBox-root css-mkkhhh"
   >
     <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-cmpglg-MuiFormControl-root-MuiTextField-root"
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-15e2bhn-MuiFormControl-root-MuiTextField-root"
     >
       <div
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-zsp0bh-MuiInputBase-root-MuiOutlinedInput-root"
@@ -16,6 +16,7 @@ exports[`ChatInput component should render the ChatInput component and match the
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-w4nesw-MuiInputBase-input-MuiOutlinedInput-input"
           id=":r0:"
           placeholder="Type your message..."
+          rows="2"
           style="height: 0px; overflow: hidden;"
         />
         <textarea
