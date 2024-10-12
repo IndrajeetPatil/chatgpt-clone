@@ -47,11 +47,11 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         return (
           <Box sx={{ mt: 2, position: "relative" }}>
             <CopyBlock
+              theme={isDark ? atomOneDark : atomOneLight}
               text={codeString}
+              codeBlock={true}
               language={language}
               showLineNumbers={false}
-              theme={isDark ? atomOneDark : atomOneLight}
-              codeBlock
             />
           </Box>
         );
@@ -70,7 +70,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "flex-start", mb: 2 }}>
+    <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
       <Paper
         elevation={2}
         sx={{
