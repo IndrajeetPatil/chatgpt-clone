@@ -128,5 +128,4 @@ More specifically:
 - The project could be improved by adding more features like user authentication
   and saving chat history.
 
-- The performance of the frontend could be improved by using a state management
-  library like Redux or Recoil.
+- The performance of the frontend needs to be improved (poor LCP, FCP, TFB).
