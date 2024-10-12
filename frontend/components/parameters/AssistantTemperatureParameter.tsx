@@ -40,7 +40,10 @@ const AssistantTemperatureParameter: React.FC<
             </React.Fragment>
           }
         >
-          <IconButton onClick={handleClick}>
+          <IconButton
+            onClick={handleClick}
+            aria-label={`Select assistant temperature. Current temperature: ${getTemperatureDisplay(temperature)}`}
+          >
             <Thermometer size={20} />
             <ChevronDown size={16} />
           </IconButton>

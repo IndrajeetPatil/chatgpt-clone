@@ -95,12 +95,13 @@ More specifically:
 | Import sorter   | import-sorter | isort    |
 | Logger          | pino          | logging  |
 
+These checks are also run on every push to the repository using GitHub Actions.
+
 ### Manual checks
 
 - UI (Desktop + mobile view) checked on multiple browsers: Chrome, Safari, Edge
 - Deployment checked on two Operating Systems: macOS, Windows
-- Accessibility checks with [Access Assistant](https://chromewebstore.google.com/detail/access-assistant/ojiighldhdmahfdnhfdebnpmlbiemdfm)
-- Performance checks with [Lighthouse](https://developers.google.com/web/tools/lighthouse)
+- Accessibility and performance checks with [Lighthouse](https://developers.google.com/web/tools/lighthouse)
 
 ## Grievances/Mistakes
 
@@ -120,5 +121,3 @@ More specifically:
 
 - The project could be improved by adding more features like user authentication
   and saving chat history.
-
-- The performance of the frontend needs to be improved (poor LCP, FCP, TFB).

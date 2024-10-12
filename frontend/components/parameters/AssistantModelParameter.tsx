@@ -41,7 +41,10 @@ const AssistantModelParameter: React.FC<AssistantModelParameterProps> = ({
             </React.Fragment>
           }
         >
-          <IconButton onClick={handleClick}>
+          <IconButton
+            onClick={handleClick}
+            aria-label={`Select assistant model. Current model: ${getModelDisplay(model)}`}
+          >
             <Bot size={20} />
             <ChevronDown size={16} />
           </IconButton>

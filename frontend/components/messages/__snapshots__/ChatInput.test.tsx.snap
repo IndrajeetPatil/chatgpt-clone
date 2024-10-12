@@ -6,6 +6,7 @@ exports[`ChatInput component should render the ChatInput component and match the
     class="MuiBox-root css-mkkhhh"
   >
     <div
+      aria-label="Type your message"
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-15e2bhn-MuiFormControl-root-MuiTextField-root"
     >
       <div

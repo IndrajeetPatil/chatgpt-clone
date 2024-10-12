@@ -46,6 +46,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
         sx={{ mr: 1 }}
+        aria-label="Type your message"
       />
       <IconButton type="submit" color="primary" disabled={!message.trim()}>
         <SendIcon />
