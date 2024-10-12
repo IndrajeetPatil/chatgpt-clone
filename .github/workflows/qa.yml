@@ -35,16 +35,18 @@ jobs:
           .venv/bin/pip install --upgrade pip
           pip install uv
           uv sync --frozen
-        shell: bash
 
       - name: Install frontend dependencies
         working-directory: ./frontend
-        run: npm install
-        shell: bash
+        run: |
+          npm install
+          npx playwright install --with-deps
 
       - name: Run QA checks
         run: make qa
-        shell: bash
+
+      #- name: Run end-to-end tests
+      #  run: make e2e-test
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v3
@@ -53,3 +55,4 @@ jobs:
           path: |
             server/htmlcov
             frontend/coverage
+            frontend/playwright-report

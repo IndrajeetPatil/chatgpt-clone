@@ -32,6 +32,9 @@ const config: Config = {
   // The test environment that will be used for testing
   testEnvironment: "jsdom",
 
+  // Don't run Playwright e2e tests
+  testPathIgnorePatterns: ["tests"],
+
   // Indicates whether each individual test should be reported during the run
   verbose: true,
 

@@ -27,7 +27,7 @@ MYPY=mypy
 ISORT=isort
 PYTEST=pytest chatgptserver
 PYCOVERAGE=coverage run -m pytest chatgptserver && coverage report --fail-under=95 && coverage html
-DJANGO_MANAGE=chatgptserver/manage.py
+DJANGO_RUNSERVER=chatgptserver/manage.py runserver
 OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file schema.yml   
 
 # Frontend tools
@@ -35,12 +35,13 @@ ESLINT=npm run lint:fix
 PRETTIER=npm run format
 TSC=npm run build
 JEST=npm run test
-START=npm start
+NEXT_START=npm run start
+PLAYWRIGHT=npm run test:e2e
 
 # Targets
 .PHONY: all lint format type-check backend-lint backend-format \
 	backend-type-check frontend-lint frontend-format backend-validate-api-schema \
-	frontend-type-check test backend-test frontend-test qa \
+	frontend-type-check test backend-test frontend-test e2e-test qa \
 	run-backend run-frontend run
 
 # Run linters for both backend and frontend
@@ -97,29 +98,37 @@ lint-markdown:
 	@echo "$(COLOR_BLUE_BG)Linting markdown files...$(COLOR_RESET)"
 	markdownlint README.md
 
-# Run all QA tools
-qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test
-qa-backend: backend-lint backend-format backend-type-check backend-test
-qa: format lint type-check backend-validate-api-schema test
-
 # Run backend server
 run-backend:
 	@echo "$(COLOR_BLUE_BG)Running backend server...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(DJANGO_MANAGE) runserver
+	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(DJANGO_RUNSERVER) & echo $$! > backend.pid
 
 # Run frontend server
 run-frontend:
 	@echo "$(COLOR_BLUE_BG)Running frontend server...$(COLOR_RESET)"
-	cd $(FRONTEND_DIR) && $(START)
+	cd $(FRONTEND_DIR) && $(NEXT_START) & echo $$! > frontend.pid
 
-# Run backend and frontend servers
-run:
-	@$(MAKE) run-backend &
+# Run QA checks
+qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test
+qa-backend: backend-lint backend-format backend-type-check backend-test
+qa: format lint type-check backend-validate-api-schema test
+
+# End-to-end testing with backend and frontend running
+e2e-test:
+	@echo "$(COLOR_BLUE_BG)Starting backend and frontend services...$(COLOR_RESET)"
+	@$(MAKE) run-backend
 	@$(MAKE) run-frontend
+	@sleep 10 # Wait for services to start (adjust this as necessary)
+	@echo "$(COLOR_BLUE_BG)Running end-to-end tests...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(PLAYWRIGHT)
 
-all: qa run
 
 # Run all services
-run-services:
+docker-up:
 	@echo "$(COLOR_BLUE_BG)Running containerized services...$(COLOR_RESET)"
 	docker-compose up --build --force-recreate
+
+# Stop all services
+docker-down:
+	@echo "$(COLOR_BLUE_BG)Stopping containerized services...$(COLOR_RESET)"
+	docker-compose down

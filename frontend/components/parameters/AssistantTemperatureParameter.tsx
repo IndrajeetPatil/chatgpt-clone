@@ -2,6 +2,8 @@ import { ChevronDown, Thermometer } from "lucide-react";
 import React, { useState } from "react";
 
 import { AssistantTemperature } from "@/client/types/assistant";
+import { getTemperatureDisplay } from "@/client/helpers";
+
 import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 
 interface AssistantTemperatureParameterProps {
@@ -27,19 +29,6 @@ const AssistantTemperatureParameter: React.FC<
     handleClose();
   };
 
-  const getTemperatureDisplay = () => {
-    switch (temperature) {
-      case AssistantTemperature.DETERMINISTIC:
-        return "0.2 - More Deterministic";
-      case AssistantTemperature.BALANCED:
-        return "0.7 - Balanced";
-      case AssistantTemperature.CREATIVE:
-        return "0.9 - More Creative";
-      default:
-        return "";
-    }
-  };
-
   return (
     <>
       <Box>
@@ -48,7 +37,7 @@ const AssistantTemperatureParameter: React.FC<
             <React.Fragment>
               Choose Temperature
               <br />
-              (Current: {getTemperatureDisplay()})
+              (Current: {getTemperatureDisplay(temperature)})
             </React.Fragment>
           }
         >

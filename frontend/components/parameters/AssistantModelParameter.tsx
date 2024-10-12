@@ -2,6 +2,7 @@ import { Bot, ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 
 import { AssistantModel } from "@/client/types/assistant";
+import { getModelDisplay } from "@/client/helpers";
 import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 
 interface AssistantModelParameterProps {
@@ -28,9 +29,6 @@ const AssistantModelParameter: React.FC<AssistantModelParameterProps> = ({
     handleClose();
   };
 
-  const getModelDisplay = () =>
-    model === AssistantModel.FULL ? "GPT-4o" : "GPT-4o Mini";
-
   return (
     <>
       <Box>
@@ -39,7 +37,7 @@ const AssistantModelParameter: React.FC<AssistantModelParameterProps> = ({
             <React.Fragment>
               Choose Assistant Model
               <br />
-              (Current: {getModelDisplay()})
+              (Current: {getModelDisplay(model)})
             </React.Fragment>
           }
         >
