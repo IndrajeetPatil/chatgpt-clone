@@ -15,10 +15,10 @@ class AzureOpenAIClient:
     A singleton client for Azure OpenAI, ensuring thread-safe and efficient usage across multiple requests.
 
     Note:
-
     The default timeout for Azure OpenAI is 10 minutes, which is sufficient for most use cases.
     For other constants set by openai-python client (retry delay, max no. of connections, etc.), see:
     https://github.com/openai/openai-python/blob/main/src/openai/_constants.py
+
     """
 
     _instance = None
@@ -65,7 +65,7 @@ def get_azure_openai_response(
         return client_response_content
 
     except Exception as e:
-        logger.error("Error getting Azure OpenAI response: %s", str(e))
+        logger.exception("Error getting Azure OpenAI response: %s", str(e))
         raise
 
 
@@ -73,5 +73,5 @@ def _get_safe_response_content(completion) -> str:
     try:
         return completion.choices[0].message.content or ""
     except (AttributeError, IndexError):
-        logger.error("Unexpected response format from Azure OpenAI")
+        logger.exception("Unexpected response format from Azure OpenAI")
         return ""

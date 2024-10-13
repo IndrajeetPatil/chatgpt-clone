@@ -1,13 +1,12 @@
+from collections.abc import Generator
 from itertools import product
-from typing import Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
+from api.azure_client import AzureOpenAIClient, get_azure_openai_response
+from api.entities import AssistantModel, AssistantTemperature
 from django.test import override_settings
 from openai import AzureOpenAI
-
-from ..azure_client import AzureOpenAIClient, get_azure_openai_response
-from ..entities import AssistantModel, AssistantTemperature
 
 
 @pytest.fixture
@@ -37,7 +36,7 @@ class TestAzureOpenAIClient:
 @pytest.mark.django_db
 class TestGetAzureOpenAIResponse:
     @pytest.mark.parametrize(
-        "api_response, expected_output",
+        ("api_response", "expected_output"),
         [
             ("Valid content", "Valid content"),
             ("", ""),
@@ -78,7 +77,7 @@ class TestGetAzureOpenAIResponse:
         assert response == ""
 
     @pytest.mark.parametrize(
-        "model, temperature",
+        ("model", "temperature"),
         list(product(AssistantModel, AssistantTemperature)),
     )
     def test_different_models_and_temperatures(
@@ -91,7 +90,9 @@ class TestGetAzureOpenAIResponse:
         mock_azure_client.chat.completions.create.return_value = mock_completion
 
         response = get_azure_openai_response(
-            "Test prompt", model=model, temperature=temperature
+            "Test prompt",
+            model=model,
+            temperature=temperature,
         )
 
         assert response == "Test response"

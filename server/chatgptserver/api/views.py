@@ -49,7 +49,8 @@ class ChatView(APIView):
 
         # Validate and parse temperature
         temperature_str = request.query_params.get(
-            "temperature", AssistantTemperature.BALANCED.name
+            "temperature",
+            AssistantTemperature.BALANCED.name,
         )
         try:
             temperature: AssistantTemperature = AssistantTemperature[
@@ -58,7 +59,7 @@ class ChatView(APIView):
         except KeyError:
             return Response(
                 {
-                    "error": f"Invalid temperature. Choose from {", ".join(temp.name for temp in AssistantTemperature)}"
+                    "error": f"Invalid temperature. Choose from {", ".join(temp.name for temp in AssistantTemperature)}",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -80,10 +81,12 @@ class ChatView(APIView):
 
         try:
             response: str = get_azure_openai_response(
-                prompt=prompt, model=model, temperature=temperature
+                prompt=prompt,
+                model=model,
+                temperature=temperature,
             )
         except Exception as e:
-            logger.error("Error generating response: %s", str(e))
+            logger.exception("Error generating response: %s", str(e))
             return Response(
                 {"error": "Failed to generate response"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -93,8 +96,7 @@ class ChatView(APIView):
         response_serializer = AssistantResponseSerializer(data={"response": response})
         if response_serializer.is_valid():
             return Response(response_serializer.data)
-        else:
-            return Response(
-                response_serializer.errors,
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+        return Response(
+            response_serializer.errors,
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )

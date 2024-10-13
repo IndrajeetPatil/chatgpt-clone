@@ -1,12 +1,12 @@
-from typing import Any, Dict, Generator, Optional
+from collections.abc import Generator
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+from api.entities import AssistantModel, AssistantTemperature
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-
-from ..entities import AssistantModel, AssistantTemperature
 
 MOCK_PROMPT: str = "What is the capital of India?"
 MOCK_RESPONSE: str = "The capital of India is New Delhi."
@@ -23,7 +23,7 @@ def chat_url() -> str:
 
 
 @pytest.fixture
-def valid_payload() -> Dict[str, str]:
+def valid_payload() -> dict[str, str]:
     return {"prompt": MOCK_PROMPT}
 
 
@@ -40,11 +40,13 @@ class TestChatView:
         self,
         api_client: APIClient,
         chat_url: str,
-        valid_payload: Dict[str, str],
+        valid_payload: dict[str, str],
         mock_azure_response: MagicMock,
     ) -> None:
         response = api_client.post(
-            f"{chat_url}?temperature=BALANCED", valid_payload, format="json"
+            f"{chat_url}?temperature=BALANCED",
+            valid_payload,
+            format="json",
         )
 
         assert response.status_code == status.HTTP_200_OK
@@ -56,12 +58,16 @@ class TestChatView:
         )
 
     def test_post_chat_view_empty_payload(
-        self, api_client: APIClient, chat_url: str
+        self,
+        api_client: APIClient,
+        chat_url: str,
     ) -> None:
-        invalid_payload: Dict[str, Any] = {}
+        invalid_payload: dict[str, Any] = {}
 
         response = api_client.post(
-            f"{chat_url}?temperature=BALANCED", invalid_payload, format="json"
+            f"{chat_url}?temperature=BALANCED",
+            invalid_payload,
+            format="json",
         )
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -70,7 +76,7 @@ class TestChatView:
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "model, temperature, expected_status, expected_errors",
+    ("model", "temperature", "expected_status", "expected_errors"),
     [
         # Case: Valid inputs
         (
@@ -92,7 +98,7 @@ class TestChatView:
             "INVALID",
             status.HTTP_400_BAD_REQUEST,
             {
-                "error": "Invalid temperature. Choose from DETERMINISTIC, BALANCED, CREATIVE"
+                "error": "Invalid temperature. Choose from DETERMINISTIC, BALANCED, CREATIVE",
             },
         ),
         # Case: Both 'model' and 'temperature' invalid
@@ -110,11 +116,13 @@ def test_chat_view_parameters(
     model: str,
     temperature: str,
     expected_status: int,
-    expected_errors: Optional[Dict[str, str]],
+    expected_errors: dict[str, str] | None,
 ) -> None:
     url: str = reverse("chat", kwargs={"model": model})
     response = api_client.post(
-        f"{url}?temperature={temperature}", {"prompt": "Hello"}, format="json"
+        f"{url}?temperature={temperature}",
+        {"prompt": "Hello"},
+        format="json",
     )
 
     assert response.status_code == expected_status
