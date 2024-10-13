@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserMessage renders user message with person icon correctly 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="mock-box"
+    sx="[object Object]"
+  >
+    <div
+      data-testid="mock-paper"
+      elevation="2"
+      sx="[object Object]"
+    >
+      <span
+        data-testid="mock-person-icon"
+      >
+        PersonIcon
+      </span>
+      <div
+        component="div"
+        data-testid="mock-typography"
+        sx="[object Object]"
+        variant="body1"
+      >
+        Hello, world!
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
