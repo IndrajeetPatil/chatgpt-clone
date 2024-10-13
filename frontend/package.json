@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "rm -rf .next && next build",
     "start": "next start",
+    "check-types": "tsc --noemit",
     "lint": "next lint --dir .",
     "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint --fix --ext=.js,.jsx,.tsx .",
     "format": "prettier --write .",
@@ -53,6 +54,7 @@
     "markdownlint": "^0.35.0",
     "react-test-renderer": "^18.3.1",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

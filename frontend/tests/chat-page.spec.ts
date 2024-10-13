@@ -2,9 +2,6 @@ import { getModelDisplay, getTemperatureDisplay } from "@/client/helpers";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 import { expect, test } from "@playwright/test";
 
-const models = [AssistantModel.MINI, AssistantModel.FULL];
-const temperatures = [AssistantTemperature.DETERMINISTIC];
-
 test.describe("Chat Page Model and Temperature Combinations", () => {
   test("should return correct response for selected model and temperature", async ({
     page,

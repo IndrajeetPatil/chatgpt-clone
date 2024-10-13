@@ -33,7 +33,7 @@ OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file sch
 # Frontend tools
 ESLINT=npm run lint:fix
 PRETTIER=npm run format
-TSC=npm run build
+TSC=npm run check-types
 JEST=npm run test
 NEXT_START=npm run start
 PLAYWRIGHT=npm run test:e2e
