@@ -34,6 +34,7 @@ OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file sch
 ESLINT=npm run lint:fix
 PRETTIER=npm run format
 TSC=npm run check-types
+BUILD=npm run build
 JEST=npm run test
 NEXT_START=npm run start
 PLAYWRIGHT=npm run test:e2e
@@ -94,6 +95,10 @@ frontend-test:
 	@echo "$(COLOR_BLUE_BG)Running frontend unit tests...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(JEST)
 
+frontend-build:
+	@echo "$(COLOR_BLUE_BG)Building frontend...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(BUILD)
+
 lint-markdown:
 	@echo "$(COLOR_BLUE_BG)Linting markdown files...$(COLOR_RESET)"
 	markdownlint README.md
@@ -109,7 +114,7 @@ run-frontend:
 	cd $(FRONTEND_DIR) && $(NEXT_START) & echo $$! > frontend.pid
 
 # Run QA checks
-qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test
+qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build
 qa-backend: backend-lint backend-format backend-type-check backend-test
 qa: format lint type-check backend-validate-api-schema test
 

@@ -1,5 +1,7 @@
 import React from "react";
+
 import { render } from "@testing-library/react";
+
 import UserMessage from "./UserMessage";
 
 // Mock Material-UI components to simplify snapshot
@@ -36,9 +38,13 @@ jest.mock("@mui/material", () => ({
 }));
 
 // Mock PersonIcon
-jest.mock("@mui/icons-material/Person", () => () => (
-  <span data-testid="mock-person-icon">PersonIcon</span>
-));
+jest.mock("@mui/icons-material/Person", () => {
+  const MockPersonIcon = () => (
+    <span data-testid="mock-person-icon">PersonIcon</span>
+  );
+  MockPersonIcon.displayName = "PersonIcon";
+  return MockPersonIcon;
+});
 
 describe("UserMessage", () => {
   it("renders user message with person icon correctly", () => {
