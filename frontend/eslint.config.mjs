@@ -1,5 +1,1 @@
-export default tseslint.config(
-  eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked
-);
+export default tseslint.config(eslint.configs.all, ...tseslint.configs.all);

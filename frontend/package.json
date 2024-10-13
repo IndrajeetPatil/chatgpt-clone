@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "rm -rf .next && next build",
     "start": "next start",
+    "check-types": "tsc --noemit",
     "lint": "next lint --dir .",
     "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint --fix --ext=.js,.jsx,.tsx .",
     "format": "prettier --write .",
