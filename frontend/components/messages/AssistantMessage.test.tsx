@@ -1,7 +1,9 @@
 import React from "react";
-import { render, screen, RenderResult } from "@testing-library/react";
+
+import { createTheme, ThemeProvider } from "@mui/material";
+import { render, RenderResult, screen } from "@testing-library/react";
+
 import AssistantMessage from "./AssistantMessage";
-import { ThemeProvider, createTheme } from "@mui/material";
 
 interface CodeBlockProps {
   text: string;
