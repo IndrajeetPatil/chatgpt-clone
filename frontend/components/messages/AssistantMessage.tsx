@@ -40,10 +40,9 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
 
   const renderers: Record<string, React.FC<CodeProps>> = {
     code({ inline, className, children }: CodeProps) {
-      const match = /language-(\w+)/.exec(className ?? "");
-      const language = match ? match[1] : "";
+      const [, language = ""] = (className ?? "").match(/language-(\w+)/) || [];
       const codeString = String(children).replace(/\n$/, "");
-      if (!inline && match) {
+      if (!inline && language) {
         return (
           <Box sx={{ mt: 2, position: "relative" }}>
             <CopyBlock
