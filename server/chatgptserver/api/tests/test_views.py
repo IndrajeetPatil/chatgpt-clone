@@ -56,44 +56,45 @@ def mock_azure_response(monkeypatch: MonkeyPatch) -> MockAzureResponse:
 
 
 @pytest.mark.django_db
-class TestChatView:
-    def test_post_chat_view_success(
-        self,
-        api_client: APIClient,
-        chat_url: str,
-        valid_payload: dict[str, str],
-        mock_azure_response: MockAzureResponse,
-    ) -> None:
-        response = api_client.post(
-            f"{chat_url}?temperature=BALANCED",
-            valid_payload,
-            format="json",
-        )
+def test_post_chat_view_success(
+    api_client: APIClient,
+    chat_url: str,
+    valid_payload: dict[str, str],
+    mock_azure_response: MockAzureResponse,
+) -> None:
+    """Test successful POST request to chat view with valid payload."""
+    response = api_client.post(
+        f"{chat_url}?temperature=BALANCED",
+        valid_payload,
+        format="json",
+    )
 
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data["response"] == MOCK_RESPONSE
-        assert len(mock_azure_response.calls) == 1
-        assert mock_azure_response.calls[0] == {
-            "prompt": MOCK_PROMPT,
-            "model": AssistantModel.FULL,
-            "temperature": AssistantTemperature.BALANCED,
-        }
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["response"] == MOCK_RESPONSE
+    assert len(mock_azure_response.calls) == 1
+    assert mock_azure_response.calls[0] == {
+        "prompt": MOCK_PROMPT,
+        "model": AssistantModel.FULL,
+        "temperature": AssistantTemperature.BALANCED,
+    }
 
-    def test_post_chat_view_empty_payload(
-        self,
-        api_client: APIClient,
-        chat_url: str,
-    ) -> None:
-        invalid_payload: dict[str, Any] = {}
 
-        response = api_client.post(
-            f"{chat_url}?temperature=BALANCED",
-            invalid_payload,
-            format="json",
-        )
+@pytest.mark.django_db
+def test_post_chat_view_empty_payload(
+    api_client: APIClient,
+    chat_url: str,
+) -> None:
+    """Test POST request to chat view with empty payload."""
+    invalid_payload: dict[str, Any] = {}
 
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "prompt" in response.data
+    response = api_client.post(
+        f"{chat_url}?temperature=BALANCED",
+        invalid_payload,
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert "prompt" in response.data
 
 
 @pytest.mark.django_db
@@ -140,6 +141,7 @@ def test_chat_view_parameters(
     expected_status: int,
     expected_errors: dict[str, str] | None,
 ) -> None:
+    """Test chat view with different combinations of model and temperature parameters."""
     url: str = reverse("chat", kwargs={"model": model})
     response = api_client.post(
         f"{url}?temperature={temperature}",
