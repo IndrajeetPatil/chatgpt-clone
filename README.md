@@ -35,7 +35,7 @@ that uses the `djangorestframework` library to expose a REST API that interacts
 with the OpenAI GPT-4o model.
 
 The UI is built with [Material UI](https://mui.com/material-ui/getting-started/)
-components and Bootstrap CSS, and follows Google's Material Design.
+components and follows Google's Material Design.
 
 ## Setup
 
