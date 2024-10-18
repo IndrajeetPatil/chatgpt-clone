@@ -1,11 +1,31 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, RenderResult } from "@testing-library/react";
 import AssistantMessage from "./AssistantMessage";
 import { ThemeProvider, createTheme } from "@mui/material";
 
+interface CodeBlockProps {
+  text: string;
+  language?: string;
+  codeBlock?: boolean;
+  theme?: Record<string, unknown>;
+}
+
+interface ReactMarkdownProps {
+  children: string;
+  components: {
+    code: React.FC<CodeProps>;
+  };
+}
+
+interface CodeProps {
+  inline?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
 // Mock modules
 jest.mock("react-code-blocks", () => ({
-  CopyBlock: ({ text }: { text: string }) => (
+  CopyBlock: ({ text }: CodeBlockProps): JSX.Element => (
     <div data-testid="code-block">{text}</div>
   ),
   atomOneDark: {},
@@ -14,21 +34,15 @@ jest.mock("react-code-blocks", () => ({
 
 jest.mock("react-markdown", () => ({
   __esModule: true,
-  default: ({
-    children,
-    components,
-  }: {
-    children: string;
-    components: any;
-  }) => {
+  default: ({ children, components }: ReactMarkdownProps): JSX.Element => {
     // Split content by code blocks and render appropriately
-    const parts = children.split(/(```[\s\S]*?```)/);
+    const parts: string[] = children.split(/(```[\s\S]*?```)/);
     return (
       <div data-testid="markdown-content">
-        {parts.map((part, index) => {
+        {parts.map((part: string, index: number) => {
           if (part.startsWith("```")) {
             const Code = components.code;
-            const codeContent = part.replace(/```\w*\n?|\n?```/g, "");
+            const codeContent: string = part.replace(/```\w*\n?|\n?```/g, "");
             return (
               <Code key={index} className="language-javascript">
                 {codeContent}
@@ -42,8 +56,14 @@ jest.mock("react-markdown", () => ({
   },
 }));
 
+interface WrapperProps {
+  children: React.ReactNode;
+}
+
 // Wrapper component for providing required context
-const Wrapper = ({ children }: { children: React.ReactNode }) => (
+const Wrapper: React.FC<WrapperProps> = ({
+  children,
+}: WrapperProps): JSX.Element => (
   <ThemeProvider theme={createTheme()}>{children}</ThemeProvider>
 );
 
@@ -53,7 +73,9 @@ describe("AssistantMessage", () => {
     render(<AssistantMessage content={content} isFirstMessage={false} />, {
       wrapper: Wrapper,
     });
-    expect(screen.getByTestId("markdown-content")).toHaveTextContent(content);
+
+    const element = screen.getByTestId("markdown-content");
+    expect(element).toHaveTextContent(content);
   });
 
   test("renders code block content", () => {
@@ -61,8 +83,12 @@ describe("AssistantMessage", () => {
     render(<AssistantMessage content={content} isFirstMessage={false} />, {
       wrapper: Wrapper,
     });
-    expect(screen.getByTestId("markdown-content")).toBeInTheDocument();
-    expect(screen.getByTestId("code-block")).toBeInTheDocument();
+
+    const markdownElement = screen.getByTestId("markdown-content");
+    const codeElement = screen.getByTestId("code-block");
+
+    expect(markdownElement).toBeInTheDocument();
+    expect(codeElement).toBeInTheDocument();
   });
 
   test("renders inline code within text", () => {
@@ -70,15 +96,15 @@ describe("AssistantMessage", () => {
     render(<AssistantMessage content={content} isFirstMessage={false} />, {
       wrapper: Wrapper,
     });
-    expect(screen.getByTestId("markdown-content")).toHaveTextContent(
-      "Use the `console.log()` function"
-    );
+
+    const element = screen.getByTestId("markdown-content");
+    expect(element).toHaveTextContent(content);
   });
 
   test("renders mixed content with code blocks and text", () => {
     const content =
       'Here is some code:\n```javascript\nconsole.log("hello");\n```\nAnd more text';
-    const { container } = render(
+    const { container }: RenderResult = render(
       <AssistantMessage content={content} isFirstMessage={false} />,
       { wrapper: Wrapper }
     );
@@ -90,7 +116,9 @@ describe("AssistantMessage", () => {
     render(<AssistantMessage content="" isFirstMessage={false} />, {
       wrapper: Wrapper,
     });
-    expect(screen.getByTestId("markdown-content")).toBeInTheDocument();
-    expect(screen.getByTestId("markdown-content")).toHaveTextContent("");
+
+    const element = screen.getByTestId("markdown-content");
+    expect(element).toBeInTheDocument();
+    expect(element).toHaveTextContent("");
   });
 });

@@ -19,7 +19,6 @@ dependencies = [
 [tool.uv]
 dev-dependencies = [
     "coverage>=7.6.1",
-    "isort>=5.13.2",
     "mypy>=1.11.2",
     "pytest-django>=4.9.0",
     "pytest>=8.3.3",

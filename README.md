@@ -92,7 +92,7 @@ More specifically:
 | Code coverage   | jest          | coverage |
 | API client      | axios         | openai   |
 | API server      | -             | django   |
-| Import sorter   | import-sorter | isort    |
+| Import sorter   | import-sorter | ruff     |
 | Logger          | pino          | logging  |
 
 These checks are also run on every push to the repository using GitHub Actions.

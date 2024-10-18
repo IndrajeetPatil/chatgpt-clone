@@ -24,7 +24,6 @@ endif
 # Backend tools
 RUFF=ruff
 MYPY=mypy
-ISORT=isort
 PYTEST=pytest chatgptserver
 PYCOVERAGE=coverage run -m pytest chatgptserver && coverage report --fail-under=95 && coverage html
 DJANGO_RUNSERVER=chatgptserver/manage.py runserver
@@ -64,7 +63,7 @@ backend-lint:
 
 backend-format:
 	@echo "$(COLOR_BLUE_BG)Running backend formatting with ruff...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(RUFF) format . && $(ISORT) .
+	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(RUFF) format .
 
 backend-type-check:
 	@echo "$(COLOR_BLUE_BG)Running backend static type checking with mypy...$(COLOR_RESET)"
