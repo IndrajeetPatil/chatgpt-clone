@@ -1,20 +1,45 @@
-from collections.abc import Generator
 from itertools import product
-from unittest.mock import MagicMock, patch
 
 import pytest
-from api.azure_client import AzureOpenAIClient, get_azure_openai_response
-from api.entities import AssistantModel, AssistantTemperature
+from _pytest.monkeypatch import MonkeyPatch
 from django.test import override_settings
 from openai import AzureOpenAI
 
+from api.azure_client import AzureOpenAIClient, get_azure_openai_response
+from api.entities import AssistantModel, AssistantTemperature
+
+
+class MockAzureClient:
+    def __init__(self):
+        self.chat = self.MockChat()
+
+    class MockChat:
+        def __init__(self):
+            self.completions = self.MockCompletions()
+
+        class MockCompletions:
+            def __init__(self):
+                self.create_calls = []
+                self.return_value = None
+                self.side_effect = None
+
+            def create(self, **kwargs):
+                self.create_calls.append(kwargs)
+                if self.side_effect is not None:
+                    raise self.side_effect
+                return self.return_value
+
 
 @pytest.fixture
-def mock_azure_client() -> Generator[MagicMock, None, None]:
-    with patch("api.AzureOpenAIClient.get_instance") as mock_get_instance:
-        mock_client = MagicMock()
-        mock_get_instance.return_value = mock_client
-        yield mock_client
+def mock_azure_client(monkeypatch: MonkeyPatch) -> MockAzureClient:
+    """Fixture that provides a mock AzureOpenAIClient instance using monkeypatch."""
+    mock_client = MockAzureClient()
+
+    def mock_get_instance():
+        return mock_client
+
+    monkeypatch.setattr(AzureOpenAIClient, "get_instance", mock_get_instance)
+    return mock_client
 
 
 @pytest.mark.django_db
@@ -45,32 +70,36 @@ class TestGetAzureOpenAIResponse:
     )
     def test_successful_response(
         self,
-        mock_azure_client: MagicMock,
+        mock_azure_client: MockAzureClient,
         api_response: str,
         expected_output: str,
     ) -> None:
-        mock_completion = self._create_mock_completion(api_response)
-        mock_azure_client.chat.completions.create.return_value = mock_completion
+        mock_azure_client.chat.completions.return_value = self._create_mock_completion(
+            api_response,
+        )
 
         response = get_azure_openai_response("Test prompt")
 
         assert response == expected_output
-        mock_azure_client.chat.completions.create.assert_called_once_with(
-            model=AssistantModel.FULL.value,
-            temperature=AssistantTemperature.BALANCED.value,
-            messages=[{"role": "user", "content": "Test prompt"}],
-        )
+        assert len(mock_azure_client.chat.completions.create_calls) == 1
+        assert mock_azure_client.chat.completions.create_calls[0] == {
+            "model": AssistantModel.FULL.value,
+            "temperature": AssistantTemperature.BALANCED.value,
+            "messages": [{"role": "user", "content": "Test prompt"}],
+        }
 
-    def test_api_exception(self, mock_azure_client: MagicMock) -> None:
-        mock_azure_client.chat.completions.create.side_effect = Exception("API Error")
+    def test_api_exception(self, mock_azure_client: MockAzureClient) -> None:
+        mock_azure_client.chat.completions.side_effect = Exception("API Error")
 
         with pytest.raises(Exception):
             get_azure_openai_response("Test prompt")
 
-    def test_unexpected_response_format(self, mock_azure_client: MagicMock) -> None:
-        mock_completion = MagicMock()
-        mock_completion.choices = []  # Empty choices list
-        mock_azure_client.chat.completions.create.return_value = mock_completion
+    def test_unexpected_response_format(
+        self,
+        mock_azure_client: MockAzureClient,
+    ) -> None:
+        mock_completion = type("MockCompletion", (), {"choices": []})()
+        mock_azure_client.chat.completions.return_value = mock_completion
 
         response = get_azure_openai_response("Test prompt")
 
@@ -82,12 +111,13 @@ class TestGetAzureOpenAIResponse:
     )
     def test_different_models_and_temperatures(
         self,
-        mock_azure_client: MagicMock,
+        mock_azure_client: MockAzureClient,
         model: AssistantModel,
         temperature: AssistantTemperature,
     ) -> None:
-        mock_completion = self._create_mock_completion("Test response")
-        mock_azure_client.chat.completions.create.return_value = mock_completion
+        mock_azure_client.chat.completions.return_value = self._create_mock_completion(
+            "Test response",
+        )
 
         response = get_azure_openai_response(
             "Test prompt",
@@ -96,15 +126,14 @@ class TestGetAzureOpenAIResponse:
         )
 
         assert response == "Test response"
-        mock_azure_client.chat.completions.create.assert_called_once_with(
-            model=model.value,
-            temperature=temperature.value,
-            messages=[{"role": "user", "content": "Test prompt"}],
-        )
+        assert len(mock_azure_client.chat.completions.create_calls) == 1
+        assert mock_azure_client.chat.completions.create_calls[0] == {
+            "model": model.value,
+            "temperature": temperature.value,
+            "messages": [{"role": "user", "content": "Test prompt"}],
+        }
 
-    def _create_mock_completion(self, content: str) -> MagicMock:
-        mock_choice = MagicMock()
-        mock_choice.message.content = content
-        mock_completion = MagicMock()
-        mock_completion.choices = [mock_choice]
-        return mock_completion
+    def _create_mock_completion(self, content: str) -> object:
+        MockMessage = type("MockMessage", (), {"content": content})
+        MockChoice = type("MockChoice", (), {"message": MockMessage()})
+        return type("MockCompletion", (), {"choices": [MockChoice()]})()

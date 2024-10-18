@@ -11,8 +11,7 @@ logger = logging.getLogger("django")
 
 
 class AzureOpenAIClient:
-    """
-    A singleton client for Azure OpenAI, ensuring thread-safe and efficient usage across multiple requests.
+    """A singleton client for Azure OpenAI, ensuring thread-safe and efficient usage across multiple requests.
 
     Note:
     The default timeout for Azure OpenAI is 10 minutes, which is sufficient for most use cases.
