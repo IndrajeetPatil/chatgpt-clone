@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
@@ -139,7 +139,7 @@ def test_chat_view_parameters(
     model: str,
     temperature: str,
     expected_status: int,
-    expected_errors: dict[str, str] | None,
+    expected_errors: Optional[dict[str, str]],
 ) -> None:
     """Test chat view with different combinations of model and temperature parameters."""
     url: str = reverse("chat", kwargs={"model": model})

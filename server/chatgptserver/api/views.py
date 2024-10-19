@@ -42,9 +42,11 @@ class ChatView(APIView):
         try:
             model = AssistantModel(model)
         except ValueError:
+            valid_models = ", ".join(AssistantModel)
+            error_message = f"Invalid model. Choose from {valid_models}"
+
             return Response(
-                {"error": f"Invalid model. Choose from {", ".join(AssistantModel)}"},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"error": error_message}, status=status.HTTP_400_BAD_REQUEST
             )
 
         # Validate and parse temperature
