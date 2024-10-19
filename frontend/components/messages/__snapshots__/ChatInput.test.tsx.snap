@@ -44,7 +44,7 @@ exports[`ChatInput component should render the ChatInput component and match the
     </div>
     <button
       aria-label="Send message"
-      class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-186dzrf-MuiButtonBase-root-MuiIconButton-root"
+      class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-1u171q0-MuiButtonBase-root-MuiIconButton-root"
       disabled=""
       tabindex="-1"
       type="submit"
