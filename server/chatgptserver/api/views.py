@@ -46,7 +46,8 @@ class ChatView(APIView):
             error_message = f"Invalid model. Choose from {valid_models}"
 
             return Response(
-                {"error": error_message}, status=status.HTTP_400_BAD_REQUEST
+                {"error": error_message},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         # Validate and parse temperature
