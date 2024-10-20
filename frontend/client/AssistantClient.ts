@@ -13,8 +13,8 @@ export default async function fetchAssistantResponse(
 ) {
   const fullUrl = `${url}/api/v1/chat/${model}/?temperature=${temperature}`;
 
-  log.debug(`Model: ${model}, Temperature: ${temperature}, Prompt: ${prompt}`);
-  log.debug(`Fetching assistant response from ${fullUrl}`);
+  log.info(`Model: ${model}, Temperature: ${temperature}, Prompt: ${prompt}`);
+  log.info(`Fetching assistant response from ${fullUrl}`);
 
   const response = await axios.post(fullUrl, {
     prompt,

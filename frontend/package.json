@@ -31,6 +31,18 @@
     "react-markdown": "^9.0.1",
     "swr": "^2.2.5"
   },
+  "browserList": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
     "@testing-library/jest-dom": "^6.5.0",
