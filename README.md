@@ -14,7 +14,7 @@ The specified requirements were the following:
 
 ## Implementation
 
-![](demo.mov)
+![Demo clip of ChatGPT Clone](./demo.mov)
 
 ## Architecture/Design
 
