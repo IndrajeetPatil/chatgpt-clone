@@ -11,14 +11,10 @@ The specified requirements were the following:
   temperature of the responses (0.2, 0.7, and 0.9).
 - Request answers in Markdown format and display the answers in respect to the
   given format.
-- Pick one of the following:
-  - Format the output in a way that's easy to differentiate between code and
-    text.
-  - Implement an example of function calling (live weather information, stock
-    prices, etc.).
-  - Add a way to copy the whole response or just the code of a response without
-    having to select everything manually.
-  - Give the possibility to regenerate a response.
+
+## Implementation
+
+![](demo.mov)
 
 ## Architecture/Design
 
