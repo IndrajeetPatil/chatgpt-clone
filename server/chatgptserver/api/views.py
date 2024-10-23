@@ -60,10 +60,10 @@ class ChatView(APIView):
                 temperature_str.upper()
             ]
         except KeyError:
+            valid_temperatures = ", ".join(temp.name for temp in AssistantTemperature)
+            error_message = f"Invalid temperature. Choose from {valid_temperatures}"
             return Response(
-                {
-                    "error": f"Invalid temperature. Choose from {", ".join(temp.name for temp in AssistantTemperature)}",
-                },
+                {"error": error_message},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
