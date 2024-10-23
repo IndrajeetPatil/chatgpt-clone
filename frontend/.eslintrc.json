@@ -1,8 +1,21 @@
 {
+  "env": { "browser": true, "node": true },
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
     "next",
     "next/core-web-vitals",
-    "next/typescript"
-  ]
+    "next/typescript",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "prettier"],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"],
+      "@typescript-eslint": [".ts"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }
