@@ -27,7 +27,8 @@ MYPY=mypy
 PYTEST=pytest chatgptserver
 PYCOVERAGE=coverage run -m pytest chatgptserver && coverage report --fail-under=95 && coverage html
 DJANGO_RUNSERVER=chatgptserver/manage.py runserver
-OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file schema.yml   
+OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file schema.yml
+LOCUST=locust -H http://127.0.0.1:8000/ 
 
 # Frontend tools
 ESLINT=npm run lint:fix
@@ -39,10 +40,11 @@ NEXT_START=npm run start
 PLAYWRIGHT=npm run test:e2e
 
 # Targets
-.PHONY: all lint format type-check backend-lint backend-format \
-	backend-type-check frontend-lint frontend-format backend-validate-api-schema \
-	frontend-type-check test backend-test frontend-test e2e-test qa \
-	run-backend run-frontend run
+.PHONY: all lint format type-check backend-lint backend-format backend-test \
+	backend-type-check backend-validate-api-schema backend-load-test \
+	frontend-type-check frontend-lint frontend-format frontend-test  \
+	run-backend run-frontend run \
+	test docker-up docker-down e2e-test qa qa-frontend qa-backend
 
 # Run linters for both backend and frontend
 lint: backend-lint frontend-lint
@@ -76,6 +78,11 @@ backend-validate-api-schema:
 backend-test:
 	@echo "$(COLOR_BLUE_BG)Running backend unit tests...$(COLOR_RESET)"
 	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(PYTEST) && $(PYCOVERAGE)
+
+backend-load-test:
+	@echo "$(COLOR_BLUE_BG)Running backend load tests...$(COLOR_RESET)"
+	@$(MAKE) run-backend
+	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(LOCUST)
 
 # Linting, formatting, type-checking, and unit testing for frontend
 frontend-lint:
