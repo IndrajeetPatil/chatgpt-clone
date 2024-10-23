@@ -34,6 +34,7 @@ LOCUST=locust -H http://127.0.0.1:8000/
 ESLINT=npm run lint:fix
 PRETTIER=npm run format
 TSC=npm run check-types
+AUDIT=npm audit --audit-level=moderate
 BUILD=npm run build
 JEST=npm run test
 NEXT_START=npm run start
@@ -105,6 +106,10 @@ frontend-build:
 	@echo "$(COLOR_BLUE_BG)Building frontend...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(BUILD)
 
+frontend-audit:
+	@echo "$(COLOR_BLUE_BG)Auditing frontend dependencies...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(AUDIT)
+
 lint-markdown:
 	@echo "$(COLOR_BLUE_BG)Linting markdown files...$(COLOR_RESET)"
 	markdownlint README.md
@@ -120,7 +125,7 @@ run-frontend:
 	cd $(FRONTEND_DIR) && $(NEXT_START) & echo $$! > frontend.pid
 
 # Run QA checks
-qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build
+qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit
 qa-backend: backend-lint backend-format backend-type-check backend-test
 qa: format lint type-check backend-validate-api-schema test
 

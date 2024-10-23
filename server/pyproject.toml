@@ -3,24 +3,24 @@ name = "server"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "django-cors-headers>=4.4.0",
     "django-stubs>=5.1.0",
-    "django>=5.1.1",
+    "django>=5.1.2",
     "djangorestframework-stubs>=3.15.1",
     "djangorestframework>=3.15.2",
     "drf-spectacular>=0.27.2",
-    "openai>=1.51.0",
+    "openai>=1.52.1",
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
 ]
 
 [tool.uv]
 dev-dependencies = [
-    "coverage>=7.6.1",
+    "coverage>=7.6.4",
     "locust>=2.32.0",
-    "mypy>=1.12.0",
+    "mypy==1.13.0",
     "pytest-django>=4.9.0",
     "pytest>=8.3.3",
     "ruff>=0.7.0",
