@@ -85,6 +85,7 @@ More specifically:
 | Linter          | eslint        | ruff     |
 | Type checking   | Typescript    | mypy     |
 | Unit testing    | jest          | pytest   |
+| End-to-end test | Playwright    | -        |
 | Code coverage   | jest          | coverage |
 | API client      | axios         | openai   |
 | API server      | -             | django   |
@@ -98,6 +99,8 @@ These checks are also run on every push to the repository using GitHub Actions.
 - UI (Desktop + mobile view) checked on multiple browsers: Chrome, Safari, Edge
 - Deployment checked on two Operating Systems: macOS, Windows
 - Accessibility and performance checks with [Lighthouse](https://developers.google.com/web/tools/lighthouse)
+
+![Lighthouse report](./lighthouse.png)
 
 ## Grievances/Mistakes
 
