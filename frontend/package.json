@@ -8,7 +8,7 @@
     "start": "next start",
     "check-types": "tsc --noemit",
     "lint": "next lint --dir .",
-    "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint --fix --ext=.js,.jsx,.tsx .",
+    "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
@@ -44,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^15.0.1",
     "@playwright/test": "^1.48.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
