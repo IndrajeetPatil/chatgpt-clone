@@ -21,6 +21,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
+      - name: Create .env file
+        run: |
+          echo AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }} >> server/.env
+          echo AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }} >> server/.env
+          echo AZURE_OPENAI_API_VERSION=${{ secrets.AZURE_OPENAI_API_VERSION }} >> server/.env
+
       - name: Build and test services
         run: |
           docker-compose build
