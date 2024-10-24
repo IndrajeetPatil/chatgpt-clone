@@ -2,6 +2,7 @@
 
 import { Moon, RefreshCcw, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import useAssistantResponse from "@/client/hooks/useAssistantResponse";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
@@ -23,13 +24,17 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 interface Message {
+  id: string;
   role: "user" | "assistant";
   content: string;
 }
 
+const INITIAL_MESSAGE_ID = "initial-message";
+
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     {
+      id: INITIAL_MESSAGE_ID,
       role: "assistant",
       content: "Hi, I am a chat bot. How can I help you today?",
     },
@@ -51,17 +56,24 @@ export default function Home() {
   const theme = createTheme({ palette: { mode: darkMode ? "dark" : "light" } });
 
   const handleSendMessage = async (message: string) => {
-    setMessages([...messages, { role: "user", content: message }]);
+    const newMessage = {
+      id: uuidv4(),
+      role: "user" as const,
+      content: message,
+    };
+    setMessages([...messages, newMessage]);
     setLastPrompt(message);
     await triggerAssistantResponse({ model, temperature, prompt: message });
   };
 
   useEffect(() => {
     if (assistantResponse) {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: assistantResponse.response },
-      ]);
+      const newMessage = {
+        id: uuidv4(),
+        role: "assistant" as const,
+        content: assistantResponse.response,
+      };
+      setMessages((prev) => [...prev, newMessage]);
     }
   }, [assistantResponse]);
 
@@ -85,14 +97,14 @@ export default function Home() {
         {/* Chat Messages */}
         <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
           <Stack spacing={2}>
-            {messages.map((message, index) =>
+            {messages.map((message) =>
               message.role === "user" ? (
-                <UserMessage key={index} content={message.content} />
+                <UserMessage key={message.id} content={message.content} />
               ) : (
                 <AssistantMessage
-                  key={index}
+                  key={message.id}
                   content={message.content}
-                  isFirstMessage={index === 0}
+                  isFirstMessage={message.id === INITIAL_MESSAGE_ID}
                 />
               )
             )}

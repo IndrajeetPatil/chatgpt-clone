@@ -16,6 +16,19 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Minimal ChatGPT clone",
   description: "Built as a hobby full-stack project",
+  keywords: ["ChatGPT", "LLM", "Next.js", "JavaScript", "TypeScript"],
+  creator: "Indrajeet Patil",
+  robots: {
+    index: false,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: false,
+      noimageindex: true,
+    },
+  },
+  category: "technology",
 };
 
 export default function RootLayout({

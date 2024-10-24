@@ -29,7 +29,8 @@
     "react-code-blocks": "^0.1.6",
     "react-dom": "^18",
     "react-markdown": "^9.0.1",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "uuid": "^10.0.0"
   },
   "browserList": {
     "production": [
@@ -56,6 +57,7 @@
     "@types/react-dom": "^18",
     "@types/react-gtm-module": "^2.0.3",
     "@types/react-test-renderer": "^18.3.0",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
     "babel-jest": "^29.7.0",
