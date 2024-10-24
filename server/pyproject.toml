@@ -1,7 +1,7 @@
 [project]
 name = "server"
 version = "0.1.0"
-description = "Add your description here"
+description = "The backend service is a Django REST framework to communicate with Azure OpenAI GPT-4o model."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -11,7 +11,7 @@ dependencies = [
     "djangorestframework-stubs>=3.15.1",
     "djangorestframework>=3.15.2",
     "drf-spectacular>=0.27.2",
-    "openai>=1.52.1",
+    "openai>=1.52.2",
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
 ]
@@ -20,10 +20,10 @@ dependencies = [
 dev-dependencies = [
     "coverage>=7.6.4",
     "locust>=2.32.0",
-    "mypy==1.13.0",
+    "mypy>=1.13.0",
     "pytest-django>=4.9.0",
     "pytest>=8.3.3",
-    "ruff>=0.7.0",
+    "ruff>=0.7.1",
 ]
 
 [tool.ruff]
