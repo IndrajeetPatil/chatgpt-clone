@@ -24,7 +24,7 @@ endif
 # Backend tools
 RUFF=ruff
 MYPY=mypy
-PYTEST=pytest chatgptserver
+PYTEST=pytest chatgptserver --verbose
 PYCOVERAGE=coverage run -m pytest chatgptserver && coverage report --fail-under=95 && coverage html
 DJANGO_RUNSERVER=chatgptserver/manage.py runserver
 OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file schema.yml
