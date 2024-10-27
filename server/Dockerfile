@@ -11,11 +11,9 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 WORKDIR /app
 
-# Copy the project files
-# (remember that Dockerfile is in the server directory)
 COPY . /app/
 
-RUN uv sync --frozen
+RUN uv sync --frozen --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH" \
     DJANGO_SETTINGS_MODULE=chatgptserver.settings \
