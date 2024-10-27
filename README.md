@@ -90,7 +90,7 @@ More specifically:
 | API client      | axios         | openai   |
 | API server      | -             | django   |
 | Import sorter   | import-sorter | ruff     |
-| Logger          | pino          | logging  |
+| Logger          | pino          | loguru   |
 
 These checks are also run on every push to the repository using GitHub Actions.
 

@@ -1,5 +1,3 @@
-import logging
-
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status
 from rest_framework.response import Response
@@ -7,9 +5,8 @@ from rest_framework.views import APIView
 
 from .azure_client import get_azure_openai_response
 from .entities import AssistantModel, AssistantTemperature
+from .logging_config import logger
 from .serializers import AssistantResponseSerializer, ChatRequestSerializer
-
-logger = logging.getLogger("django")
 
 
 class ChatView(APIView):
@@ -70,16 +67,13 @@ class ChatView(APIView):
         # Validate prompt
         serializer = ChatRequestSerializer(data=request.data)
         if not serializer.is_valid():
-            logger.info("Invalid request: %s", serializer.errors)
+            logger.info(f"Invalid request: {serializer.errors}")
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         prompt: str = serializer.validated_data["prompt"]
 
         logger.info(
-            "Received chat request with:\n prompt: %s,\n model: %s,\n temperature: %s",
-            prompt,
-            model.value,
-            temperature.value,
+            f"Received chat request with:\n prompt: {prompt},\n model: {model.value},\n temperature: {temperature.value}",
         )
 
         try:
@@ -89,13 +83,13 @@ class ChatView(APIView):
                 temperature=temperature,
             )
         except Exception as e:
-            logger.exception("Error generating response: %s", str(e))
+            logger.exception(f"Error generating response: {e!s}")
             return Response(
                 {"error": "Failed to generate response"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        logger.info("Generated response length: %s", len(response))
+        logger.info(f"Generated response length: {len(response)}")
         response_serializer = AssistantResponseSerializer(data={"response": response})
         if response_serializer.is_valid():
             return Response(response_serializer.data)

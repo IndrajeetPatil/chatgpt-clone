@@ -1,12 +1,10 @@
-import logging
 import time
 
 from django.conf import settings
 from openai import AzureOpenAI
 
 from .entities import AssistantModel, AssistantTemperature
-
-logger = logging.getLogger("django")
+from .logging_config import logger
 
 
 class AzureOpenAIClient:
@@ -55,17 +53,14 @@ def get_azure_openai_response(
                 },
             ],
         )
-        logger.info(
-            "Azure OpenAI completion took %s seconds",
-            time.time() - start_time,
-        )
+        logger.info(f"Azure OpenAI completion took {time.time() - start_time} seconds")
 
         client_response_content = _get_safe_response_content(completion)
-        logger.info("Length of Azure OpenAI response: %s", len(client_response_content))
+        logger.info(f"Length of Azure OpenAI response: {len(client_response_content)}")
         return client_response_content
 
     except Exception as e:
-        logger.exception("Error getting Azure OpenAI response: %s", str(e))
+        logger.exception(f"Error getting Azure OpenAI response: {e!s}")
         raise
 
 
