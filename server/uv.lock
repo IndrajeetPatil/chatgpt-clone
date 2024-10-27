@@ -925,6 +925,7 @@ dependencies = [
     { name = "djangorestframework" },
     { name = "djangorestframework-stubs" },
     { name = "drf-spectacular" },
+    { name = "loguru" },
     { name = "openai" },
     { name = "python-dotenv" },
     { name = "requests" },
@@ -934,7 +935,6 @@ dependencies = [
 dev = [
     { name = "coverage" },
     { name = "locust" },
-    { name = "loguru" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-django" },
@@ -950,6 +950,7 @@ requires-dist = [
     { name = "djangorestframework", specifier = ">=3.15.2" },
     { name = "djangorestframework-stubs", specifier = ">=3.15.1" },
     { name = "drf-spectacular", specifier = ">=0.27.2" },
+    { name = "loguru", specifier = ">=0.7.2" },
     { name = "openai", specifier = ">=1.52.2" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "requests", specifier = ">=2.32.3" },
@@ -959,7 +960,6 @@ requires-dist = [
 dev = [
     { name = "coverage", specifier = ">=7.6.4" },
     { name = "locust", specifier = ">=2.32.0" },
-    { name = "loguru", specifier = ">=0.7.2" },
     { name = "mypy", specifier = ">=1.13.0" },
     { name = "pytest", specifier = ">=8.3.3" },
     { name = "pytest-django", specifier = ">=4.9.0" },

@@ -139,10 +139,15 @@ e2e-test:
 	cd $(FRONTEND_DIR) && $(PLAYWRIGHT)
 
 
+# Build containers
+docker-build:
+	@echo "$(COLOR_BLUE_BG)Building containerized services...$(COLOR_RESET)"
+	docker-compose build --no-cache
+
 # Run all services
-docker-up:
+docker-up: docker-build
 	@echo "$(COLOR_BLUE_BG)Running containerized services...$(COLOR_RESET)"
-	docker-compose up --build --force-recreate
+	docker-compose up -d
 
 # Stop all services
 docker-down:
