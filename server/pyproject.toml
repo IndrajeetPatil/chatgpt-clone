@@ -29,6 +29,9 @@ dev-dependencies = [
     "ruff>=0.8.0",
 ]
 
+[tool.uv.sources]
+crosszip = { git = "https://github.com/IndrajeetPatil/crosszip", rev = "fix-pytest-plugin" }
+
 [tool.ruff]
 line-length = 88
 indent-width = 4
@@ -48,4 +51,17 @@ omit = [
     "chatgptserver/manage.py",
     # no need to check openai implementation
     "chatgptserver/api/utils.py",
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    # error on using unregistered marker
+    "--strict-markers",
+    # show extra test summary info for everything
+    "-ra",
+]
+xfail_strict = true
+python_files = ["test_*.py", "test-*.py", "tests.py", "test.py"]
+markers = [
+    "crosszip_parametrize(*args): mark test to be parametrized with crossed combinations"
 ]

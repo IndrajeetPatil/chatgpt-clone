@@ -1,4 +1,3 @@
-from crosszip import crosszip_parametrize
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from django.test import override_settings
@@ -116,7 +115,7 @@ def test_unexpected_response_format(mock_azure_client: MockAzureClient) -> None:
 
 
 @pytest.mark.django_db
-@crosszip_parametrize(
+@pytest.mark.crosszip_parametrize(
     "model",
     [m for m in AssistantModel],
     "temperature",
