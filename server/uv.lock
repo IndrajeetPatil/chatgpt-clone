@@ -188,6 +188,15 @@ wheels = [
 ]
 
 [[package]]
+name = "crosszip"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6f/83/4d5c3dcbdc220fe3ab3f1563d38e998b82140d9f02c686c309fc6ab3f363/crosszip-0.1.0.tar.gz", hash = "sha256:9867b967a3518b97c532428001f1e293b12851528aa90c9449b82b9413beb2c7", size = 306975 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5f/1d/555151b6d8ab40624fd4e80d5bec85fde52023cfa00852c33492238c7510/crosszip-0.1.0-py3-none-any.whl", hash = "sha256:1d301fc2eb23cdf1fba88e4f6b95acba7cb927a3f8b3df1ed4eba5b2f2c96fca", size = 5373 },
+]
+
+[[package]]
 name = "distro"
 version = "1.9.0"
 source = { registry = "https://pypi.org/simple" }
@@ -956,6 +965,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "coverage" },
+    { name = "crosszip" },
     { name = "locust" },
     { name = "mypy" },
     { name = "pytest" },
@@ -981,6 +991,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "coverage", specifier = ">=7.6.7" },
+    { name = "crosszip", specifier = ">=0.1.0" },
     { name = "locust", specifier = ">=2.32.0" },
     { name = "mypy", specifier = ">=1.13.0" },
     { name = "pytest", specifier = ">=8.3.3" },

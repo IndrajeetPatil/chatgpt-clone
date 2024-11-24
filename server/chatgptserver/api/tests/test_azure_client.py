@@ -1,5 +1,4 @@
-from itertools import product
-
+from crosszip import crosszip_parametrize
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from django.test import override_settings
@@ -117,9 +116,11 @@ def test_unexpected_response_format(mock_azure_client: MockAzureClient) -> None:
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    ("model", "temperature"),
-    list(product(AssistantModel, AssistantTemperature)),
+@crosszip_parametrize(
+    "model",
+    [m for m in AssistantModel],
+    "temperature",
+    [t for t in AssistantTemperature],
 )
 def test_different_models_and_temperatures(
     mock_azure_client: MockAzureClient,
