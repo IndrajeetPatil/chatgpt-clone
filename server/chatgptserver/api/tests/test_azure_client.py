@@ -117,9 +117,9 @@ def test_unexpected_response_format(mock_azure_client: MockAzureClient) -> None:
 @pytest.mark.django_db
 @pytest.mark.crosszip_parametrize(
     "model",
-    list(AssistantModel),
+    AssistantModel,
     "temperature",
-    list(AssistantTemperature),
+    AssistantTemperature,
 )
 def test_different_models_and_temperatures(
     mock_azure_client: MockAzureClient,
