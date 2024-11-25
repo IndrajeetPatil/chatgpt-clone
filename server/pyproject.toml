@@ -20,7 +20,7 @@ dependencies = [
 [tool.uv]
 dev-dependencies = [
     "coverage>=7.6.7",
-    "crosszip>=0.1.0",
+    "crosszip>=0.2.0",
     "locust>=2.32.0",
     "mypy>=1.13.0",
     "pytest-django>=4.9.0",
@@ -28,9 +28,6 @@ dev-dependencies = [
     "pytest>=8.3.3",
     "ruff>=0.8.0",
 ]
-
-[tool.uv.sources]
-crosszip = { git = "https://github.com/IndrajeetPatil/crosszip", rev = "fix-pytest-plugin" }
 
 [tool.ruff]
 line-length = 88
@@ -62,6 +59,3 @@ addopts = [
 ]
 xfail_strict = true
 python_files = ["test_*.py", "test-*.py", "tests.py", "test.py"]
-markers = [
-    "crosszip_parametrize(*args): mark test to be parametrized with crossed combinations"
-]
