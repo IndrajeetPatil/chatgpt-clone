@@ -20,12 +20,13 @@ dependencies = [
 [tool.uv]
 dev-dependencies = [
     "coverage>=7.6.7",
+    "crosszip>=1.0.0",
     "locust>=2.32.0",
     "mypy>=1.13.0",
     "pytest-django>=4.9.0",
     "pytest-random-order>=1.1.1",
     "pytest>=8.3.3",
-    "ruff>=0.8.0",
+    "ruff>=0.8.1",
 ]
 
 [tool.ruff]
@@ -48,3 +49,13 @@ omit = [
     # no need to check openai implementation
     "chatgptserver/api/utils.py",
 ]
+
+[tool.pytest.ini_options]
+addopts = [
+    # error on using unregistered marker
+    "--strict-markers",
+    # show extra test summary info for everything
+    "-ra",
+]
+xfail_strict = true
+python_files = ["test_*.py", "test-*.py", "tests.py", "test.py"]
