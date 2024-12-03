@@ -1006,13 +1006,13 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "coverage", specifier = ">=7.6.7" },
-    { name = "crosszip", specifier = ">=0.2.0" },
+    { name = "crosszip", specifier = ">=1.0.0" },
     { name = "locust", specifier = ">=2.32.0" },
     { name = "mypy", specifier = ">=1.13.0" },
     { name = "pytest", specifier = ">=8.3.3" },
     { name = "pytest-django", specifier = ">=4.9.0" },
     { name = "pytest-random-order", specifier = ">=1.1.1" },
-    { name = "ruff", specifier = ">=0.8.0" },
+    { name = "ruff", specifier = ">=0.8.1" },
 ]
 
 [[package]]

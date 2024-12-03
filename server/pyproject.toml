@@ -20,13 +20,13 @@ dependencies = [
 [tool.uv]
 dev-dependencies = [
     "coverage>=7.6.7",
-    "crosszip>=0.2.0",
+    "crosszip>=1.0.0",
     "locust>=2.32.0",
     "mypy>=1.13.0",
     "pytest-django>=4.9.0",
     "pytest-random-order>=1.1.1",
     "pytest>=8.3.3",
-    "ruff>=0.8.0",
+    "ruff>=0.8.1",
 ]
 
 [tool.ruff]
