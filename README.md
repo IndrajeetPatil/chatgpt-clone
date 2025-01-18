@@ -18,6 +18,9 @@ The specified requirements were the following:
 
 ![](demo.mov)
 
+If the video is not accessible on GitHub README, have a look at it
+[here](https://github.com/IndrajeetPatil/chatgpt-clone/blob/main/demo.mov).
+
 ## Architecture/Design
 
 The project is structured as a monorepo with two services:
