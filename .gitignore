@@ -301,3 +301,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 README.html
+.Rproj.user
