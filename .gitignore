@@ -302,3 +302,4 @@ dist
 .pnp.*
 README.html
 .Rproj.user
+.Rhistory

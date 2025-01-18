@@ -1,16 +1,6 @@
 # ChatGPT Clone
 
 
-- [Requirements](#requirements)
-- [Implementation](#implementation)
-- [Architecture/Design](#architecturedesign)
-- [Setup](#setup)
-- [Quality Assurance](#quality-assurance)
-  - [Automated checks](#automated-checks)
-  - [Manual checks](#manual-checks)
-- [Grievances/Mistakes](#grievancesmistakes)
-- [Room for Improvement](#room-for-improvement)
-
 This is a minimal clone of the [ChatGPT
 website](https://chat.openai.com/).
 
@@ -25,10 +15,6 @@ The specified requirements were the following:
   to the given format.
 
 ## Implementation
-
-``` r
-knitr::include_graphics("demo.mov")
-```
 
 ![](demo.mov)
 

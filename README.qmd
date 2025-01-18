@@ -1,7 +1,7 @@
 ---
 title: "ChatGPT Clone"
 format: gfm
-toc: true
+toc: false
 # date-modified: "`r Sys.Date()`"
 # author: "Indrajeet Patil"
 ---
@@ -21,8 +21,11 @@ The specified requirements were the following:
 ## Implementation
 
 ```{r}
+#| echo: false
 knitr::include_graphics("demo.mov")
 ```
+
+If the video is not accessible on GitHub README, have a look at it [here](https://github.com/IndrajeetPatil/chatgpt-clone/blob/main/demo.mov).
 
 ## Architecture/Design
 
