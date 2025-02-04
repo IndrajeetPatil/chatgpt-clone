@@ -39,19 +39,29 @@ jest.mock("react-markdown", () => ({
   default: ({ children, components }: ReactMarkdownProps): JSX.Element => {
     // Split content by code blocks and render appropriately
     const parts: string[] = children.split(/(```[\s\S]*?```)/);
+
+    // Use a cumulative offset to generate a key that is derived from the content's position
+    let cumulativeOffset = 0;
+
     return (
       <div data-testid="markdown-content">
-        {parts.map((part: string, index: number) => {
+        {parts.map((part: string) => {
+          // Use the current cumulativeOffset as the key.
+          // To ensure keys for empty strings are unique, always increment by at least 1.
+          const key = `part-${cumulativeOffset}`;
+          cumulativeOffset += part.length || 1;
+
           if (part.startsWith("```")) {
             const Code = components.code;
+            // Remove the backticks and optional language identifier
             const codeContent: string = part.replace(/```\w*\n?|\n?```/g, "");
             return (
-              <Code key={index} className="language-javascript">
+              <Code key={key} className="language-javascript">
                 {codeContent}
               </Code>
             );
           }
-          return <span key={index}>{part}</span>;
+          return <span key={key}>{part}</span>;
         })}
       </div>
     );
