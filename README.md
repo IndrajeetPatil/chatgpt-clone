@@ -84,19 +84,19 @@ make qa
 
 More specifically:
 
-| Step            | Frontend      | Backend  |
-|-----------------|---------------|----------|
-| Package Manager | npm           | uv       |
-| Formatter       | prettier      | ruff     |
-| Linter          | eslint        | ruff     |
-| Type checking   | Typescript    | mypy     |
-| Unit testing    | jest          | pytest   |
-| End-to-end test | Playwright    | \-       |
-| Code coverage   | jest          | coverage |
-| API client      | axios         | openai   |
-| API server      | \-            | django   |
-| Import sorter   | import-sorter | ruff     |
-| Logger          | pino          | loguru   |
+| Step            | Frontend   | Backend  |
+|-----------------|------------|----------|
+| Package Manager | npm        | uv       |
+| Formatter       | biome      | ruff     |
+| Linter          | biome      | ruff     |
+| Type checking   | Typescript | mypy     |
+| Unit testing    | jest       | pytest   |
+| End-to-end test | Playwright | \-       |
+| Code coverage   | jest       | coverage |
+| API client      | axios      | openai   |
+| API server      | \-         | django   |
+| Import sorter   | biome      | ruff     |
+| Logger          | pino       | loguru   |
 
 These checks are also run on every push to the repository using GitHub
 Actions.

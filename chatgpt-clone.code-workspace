@@ -3,8 +3,5 @@
     {
       "path": "."
     }
-  ],
-  "settings": {
-    "eslint.workingDirectories": [{ "mode": "auto" }]
-  }
+  ]
 }

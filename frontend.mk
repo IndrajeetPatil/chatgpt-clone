@@ -1,8 +1,7 @@
 FRONTEND_DIR=./frontend
 
 # Frontend tool commands
-ESLINT=npm run lint:fix
-PRETTIER=npm run format
+LINT=npm run lint
 TSC=npm run check-types
 AUDIT=npm audit --audit-level=moderate
 BUILD=npm run build
@@ -12,12 +11,10 @@ PLAYWRIGHT=npm run test:e2e
 
 # Frontend Targets
 frontend-lint:
-	@echo "$(COLOR_BLUE_BG)Running frontend linting...$(COLOR_RESET)"
-	cd $(FRONTEND_DIR) && $(ESLINT) .
+	@echo "$(COLOR_BLUE_BG)Running frontend linting and formatting...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(LINT) .
 
-frontend-format:
-	@echo "$(COLOR_BLUE_BG)Running frontend formatting...$(COLOR_RESET)"
-	cd $(FRONTEND_DIR) && $(PRETTIER) .
+frontend-format: frontend-lint
 
 frontend-type-check:
 	@echo "$(COLOR_BLUE_BG)Running frontend static type checking with TypeScript...$(COLOR_RESET)"
