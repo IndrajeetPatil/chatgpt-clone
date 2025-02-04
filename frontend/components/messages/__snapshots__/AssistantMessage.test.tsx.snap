@@ -47,8 +47,9 @@ And more text
       </div>
       <button
         aria-label="Copy entire message"
-        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-10v7hw3-MuiButtonBase-root-MuiIconButton-root"
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-f0zfgc-MuiButtonBase-root-MuiIconButton-root"
         data-mui-internal-clone-element="true"
+        id=":r7:"
         tabindex="0"
         type="button"
       >

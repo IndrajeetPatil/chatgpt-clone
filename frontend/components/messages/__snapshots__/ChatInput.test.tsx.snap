@@ -34,6 +34,7 @@ exports[`ChatInput component should render the ChatInput component and match the
             class="css-w4cd9x"
           >
             <span
+              aria-hidden="true"
               class="notranslate"
             >
               ​
@@ -44,8 +45,9 @@ exports[`ChatInput component should render the ChatInput component and match the
     </div>
     <button
       aria-label="Send message"
-      class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-1u171q0-MuiButtonBase-root-MuiIconButton-root"
+      class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-1svfwy9-MuiButtonBase-root-MuiIconButton-root"
       disabled=""
+      id=":r1:"
       tabindex="-1"
       type="submit"
     >
