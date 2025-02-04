@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { atomOneDark, atomOneLight, CopyBlock } from "react-code-blocks";
+import type React from "react";
+import { useState } from "react";
+import { CopyBlock, atomOneDark, atomOneLight } from "react-code-blocks";
 import ReactMarkdown from "react-markdown";
 
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";

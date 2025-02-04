@@ -7,10 +7,7 @@
     "build": "rm -rf .next && next build",
     "start": "next start",
     "check-types": "tsc --noemit",
-    "lint": "next lint --dir .",
-    "lint:fix": "eslint --fix .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "lint": "biome check --write . && biome check --write --unsafe .",
     "test": "jest",
     "test:update": "jest -u",
     "test:e2e": "npx playwright test"
@@ -33,11 +30,7 @@
     "uuid": "^10.0.0"
   },
   "browserList": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -45,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@next/eslint-plugin-next": "^15.0.1",
     "@playwright/test": "^1.48.0",
     "@testing-library/jest-dom": "^6.5.0",

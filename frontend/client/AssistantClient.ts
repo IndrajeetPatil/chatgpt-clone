@@ -1,6 +1,9 @@
 import axios from "axios";
 
-import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
+import type {
+  AssistantModel,
+  AssistantTemperature,
+} from "@/client/types/assistant";
 import { logger } from "@/logger";
 
 const log = logger.child({ module: "totoro" });

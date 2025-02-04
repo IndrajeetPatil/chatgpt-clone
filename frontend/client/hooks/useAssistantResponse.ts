@@ -1,6 +1,9 @@
 import useSWRMutation from "swr/mutation";
 
-import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
+import type {
+  AssistantModel,
+  AssistantTemperature,
+} from "@/client/types/assistant";
 
 import fetchAssistantResponse from "../AssistantClient";
 

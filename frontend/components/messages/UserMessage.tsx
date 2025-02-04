@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import PersonIcon from "@mui/icons-material/Person";
 import { Box, Paper, Typography, useTheme } from "@mui/material";

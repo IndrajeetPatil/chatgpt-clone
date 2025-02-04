@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 
-import { createTheme, ThemeProvider } from "@mui/material";
-import { render, RenderResult, screen } from "@testing-library/react";
+import { ThemeProvider, createTheme } from "@mui/material";
+import { type RenderResult, render, screen } from "@testing-library/react";
 
 import AssistantMessage from "./AssistantMessage";
 

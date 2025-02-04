@@ -1,7 +1,7 @@
-import pino, { Logger } from "pino";
+import pino, { type Logger } from "pino";
 
 export const logger: Logger =
-  process.env["NODE_ENV"] === "production"
+  process.env.NODE_ENV === "production"
     ? pino({ level: "warn" })
     : pino({
         transport: {
