@@ -99,7 +99,10 @@ export default function Home() {
           <Stack spacing={2}>
             {messages.map((message) =>
               message.role === "user" ? (
-                <UserMessage key={message.id} content={message.content} />
+                <UserMessage
+                  key={message.id}
+                  content={message.content}
+                />
               ) : (
                 <AssistantMessage
                   key={message.id}
@@ -117,8 +120,15 @@ export default function Home() {
 
         {/* Control Panel */}
         <Box sx={{ p: 2 }}>
-          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-            <AssistantModelParameter model={model} setModel={setModel} />
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ mb: 2 }}
+          >
+            <AssistantModelParameter
+              model={model}
+              setModel={setModel}
+            />
             <AssistantTemperatureParameter
               temperature={temperature}
               setTemperature={setTemperature}

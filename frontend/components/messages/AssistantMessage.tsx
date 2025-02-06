@@ -83,7 +83,10 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         }}
       >
         <SmartToyIcon sx={{ color: isDark ? "#4caf50" : "#ff9800" }} />
-        <Typography variant="body1" component="div">
+        <Typography
+          variant="body1"
+          component="div"
+        >
           <ReactMarkdown components={renderers}>{content}</ReactMarkdown>
         </Typography>
         {!isFirstMessage && (

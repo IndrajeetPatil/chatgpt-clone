@@ -2,7 +2,7 @@ import type React from "react";
 
 import { render } from "@testing-library/react";
 
-import UserMessage from "./UserMessage";
+import UserMessage from "./UserMessage.tsx";
 
 // Mock Material-UI components to simplify snapshot
 jest.mock("@mui/material", () => ({
@@ -10,7 +10,10 @@ jest.mock("@mui/material", () => ({
     children,
     ...props
   }: React.PropsWithChildren<Record<string, unknown>>) => (
-    <div data-testid="mock-box" {...props}>
+    <div
+      data-testid="mock-box"
+      {...props}
+    >
       {children}
     </div>
   ),
@@ -18,7 +21,10 @@ jest.mock("@mui/material", () => ({
     children,
     ...props
   }: React.PropsWithChildren<Record<string, unknown>>) => (
-    <div data-testid="mock-paper" {...props}>
+    <div
+      data-testid="mock-paper"
+      {...props}
+    >
       {children}
     </div>
   ),
@@ -26,7 +32,10 @@ jest.mock("@mui/material", () => ({
     children,
     ...props
   }: React.PropsWithChildren<Record<string, unknown>>) => (
-    <div data-testid="mock-typography" {...props}>
+    <div
+      data-testid="mock-typography"
+      {...props}
+    >
       {children}
     </div>
   ),

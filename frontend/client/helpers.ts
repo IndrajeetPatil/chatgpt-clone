@@ -1,4 +1,4 @@
-import { AssistantModel, AssistantTemperature } from "./types/assistant";
+import { AssistantModel, AssistantTemperature } from "./types/assistant.ts";
 
 const getModelDisplay = (model: AssistantModel) =>
   model === AssistantModel.FULL ? "GPT-4o" : "GPT-4o Mini";

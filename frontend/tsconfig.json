@@ -3,6 +3,7 @@
     "allowJs": false,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,

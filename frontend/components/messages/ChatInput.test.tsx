@@ -1,10 +1,8 @@
 import "@testing-library/jest-dom";
 
-import React from "react";
-
 import { fireEvent, render } from "@testing-library/react";
 
-import ChatInput from "./ChatInput";
+import ChatInput from "./ChatInput.tsx";
 
 describe("ChatInput component", () => {
   it("should render the ChatInput component and match the snapshot", () => {

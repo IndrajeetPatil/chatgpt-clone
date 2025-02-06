@@ -7,7 +7,7 @@
     "build": "rm -rf .next && next build",
     "start": "next start",
     "check-types": "tsc --noemit",
-    "lint": "biome check --write . && biome check --write --unsafe .",
+    "lint": "biome check --write --unsafe .",
     "test": "jest",
     "test:update": "jest -u",
     "test:e2e": "npx playwright test"

@@ -1,5 +1,6 @@
 import { Bot, ChevronDown } from "lucide-react";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 
 import { getModelDisplay } from "@/client/helpers";
 import { AssistantModel } from "@/client/types/assistant";
@@ -34,11 +35,11 @@ const AssistantModelParameter: React.FC<AssistantModelParameterProps> = ({
       <Box>
         <Tooltip
           title={
-            <React.Fragment>
+            <>
               Choose Assistant Model
               <br />
               (Current: {getModelDisplay(model)})
-            </React.Fragment>
+            </>
           }
         >
           <IconButton
@@ -50,7 +51,11 @@ const AssistantModelParameter: React.FC<AssistantModelParameterProps> = ({
           </IconButton>
         </Tooltip>
       </Box>
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
         <MenuItem onClick={() => handleModelChange(AssistantModel.FULL)}>
           GPT-4o
         </MenuItem>

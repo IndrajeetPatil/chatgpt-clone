@@ -39,8 +39,8 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
       mt={2}
     >
       <TextField
-        multiline
-        fullWidth
+        multiline={true}
+        fullWidth={true}
         placeholder="Type your message..."
         rows={2}
         value={message}

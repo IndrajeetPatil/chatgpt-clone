@@ -1,5 +1,6 @@
 import { ChevronDown, Thermometer } from "lucide-react";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 
 import { getTemperatureDisplay } from "@/client/helpers";
 import { AssistantTemperature } from "@/client/types/assistant";
@@ -33,11 +34,11 @@ const AssistantTemperatureParameter: React.FC<
       <Box>
         <Tooltip
           title={
-            <React.Fragment>
+            <>
               Choose Temperature
               <br />
               (Current: {getTemperatureDisplay(temperature)})
-            </React.Fragment>
+            </>
           }
         >
           <IconButton
@@ -49,7 +50,11 @@ const AssistantTemperatureParameter: React.FC<
           </IconButton>
         </Tooltip>
       </Box>
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
         <MenuItem
           onClick={() =>
             handleTemperatureChange(AssistantTemperature.DETERMINISTIC)
