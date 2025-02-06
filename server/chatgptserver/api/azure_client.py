@@ -8,7 +8,8 @@ from .logging_config import logger
 
 
 class AzureOpenAIClient:
-    """A singleton client for Azure OpenAI
+    """
+    A singleton client for Azure OpenAI
 
     This ensures thread-safe and efficient usage across multiple requests.
 

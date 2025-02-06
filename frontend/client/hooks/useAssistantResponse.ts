@@ -5,7 +5,7 @@ import type {
   AssistantTemperature,
 } from "@/client/types/assistant";
 
-import fetchAssistantResponse from "../AssistantClient.tsx";
+import fetchAssistantResponse from "../AssistantClient";
 
 interface AssistantResponseArgs {
   model: AssistantModel;

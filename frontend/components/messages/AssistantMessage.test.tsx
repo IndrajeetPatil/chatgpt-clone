@@ -3,7 +3,7 @@ import type React from "react";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { type RenderResult, render, screen } from "@testing-library/react";
 
-import AssistantMessage from "./AssistantMessage.tsx";
+import AssistantMessage from "./AssistantMessage";
 
 interface CodeBlockProps {
   text: string;

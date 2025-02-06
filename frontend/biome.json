@@ -77,7 +77,8 @@
       "linter": {
         "rules": {
           "correctness": {
-            "noUndeclaredVariables": "off"
+            "noUndeclaredVariables": "off",
+            "useImportExtensions": "off"
           },
           "suspicious": {
             "noReactSpecificProps": "off"

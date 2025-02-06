@@ -2,7 +2,7 @@ import type React from "react";
 
 import { render } from "@testing-library/react";
 
-import UserMessage from "./UserMessage.tsx";
+import UserMessage from "./UserMessage";
 
 // Mock Material-UI components to simplify snapshot
 jest.mock("@mui/material", () => ({
