@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AssistantMessage renders mixed content with code blocks and text 1`] = `
 <div>
@@ -49,7 +49,6 @@ And more text
         aria-label="Copy entire message"
         class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-f0zfgc-MuiButtonBase-root-MuiIconButton-root"
         data-mui-internal-clone-element="true"
-        id=":r7:"
         tabindex="0"
         type="button"
       >
