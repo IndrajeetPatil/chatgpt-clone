@@ -31,7 +31,8 @@ test: backend-test frontend-test
 
 # Quality Assurance targets
 qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit
-qa-backend: backend-lint backend-format backend-type-check backend-test
+qa-backend: backend-lint backend-format backend-type-check backend-audit backend-test
+hooks: backend-hooks
 qa: format lint type-check backend-validate-api-schema test
 
 # Run targets

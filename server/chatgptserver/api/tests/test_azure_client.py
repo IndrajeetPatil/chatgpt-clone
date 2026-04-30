@@ -1,27 +1,31 @@
+from typing import TYPE_CHECKING
+
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 from django.test import override_settings
 from openai import AzureOpenAI
 
 from api.azure_client import AzureOpenAIClient, get_azure_openai_response
 from api.entities import AssistantModel, AssistantTemperature
 
+if TYPE_CHECKING:
+    from _pytest.monkeypatch import MonkeyPatch
+
 
 class MockAzureClient:
-    def __init__(self):
+    def __init__(self) -> None:
         self.chat = self.MockChat()
 
     class MockChat:
-        def __init__(self):
+        def __init__(self) -> None:
             self.completions = self.MockCompletions()
 
         class MockCompletions:
-            def __init__(self):
+            def __init__(self) -> None:
                 self.create_calls = []
                 self.return_value = None
                 self.side_effect = None
 
-            def create(self, **kwargs):
+            def create(self, **kwargs: object) -> object:
                 self.create_calls.append(kwargs)
                 if self.side_effect is not None:
                     raise self.side_effect
@@ -30,10 +34,9 @@ class MockAzureClient:
 
 @pytest.fixture
 def mock_azure_client(monkeypatch: MonkeyPatch) -> MockAzureClient:
-    """Fixture that provides a mock AzureOpenAIClient instance using monkeypatch."""
     mock_client = MockAzureClient()
 
-    def mock_get_instance():
+    def mock_get_instance() -> MockAzureClient:
         return mock_client
 
     monkeypatch.setattr(AzureOpenAIClient, "get_instance", mock_get_instance)
@@ -41,10 +44,9 @@ def mock_azure_client(monkeypatch: MonkeyPatch) -> MockAzureClient:
 
 
 def create_mock_completion(content: str) -> object:
-    """Helper function to create mock completion objects."""
-    MockMessage = type("MockMessage", (), {"content": content})
-    MockChoice = type("MockChoice", (), {"message": MockMessage()})
-    return type("MockCompletion", (), {"choices": [MockChoice()]})()
+    mock_message_cls = type("MockMessage", (), {"content": content})
+    mock_choice_cls = type("MockChoice", (), {"message": mock_message_cls()})
+    return type("MockCompletion", (), {"choices": [mock_choice_cls()]})()
 
 
 @pytest.mark.django_db
@@ -54,7 +56,6 @@ def create_mock_completion(content: str) -> object:
     AZURE_OPENAI_API_KEY="test-api-key",
 )
 def test_singleton_instance() -> None:
-    """Test that AzureOpenAIClient maintains singleton pattern and proper configuration."""
     instance1 = AzureOpenAIClient.get_instance()
     instance2 = AzureOpenAIClient.get_instance()
 
@@ -78,7 +79,6 @@ def test_successful_response(
     api_response: str,
     expected_output: str,
 ) -> None:
-    """Test successful API responses with different content values."""
     mock_azure_client.chat.completions.return_value = create_mock_completion(
         api_response,
     )
@@ -96,7 +96,6 @@ def test_successful_response(
 
 @pytest.mark.django_db
 def test_api_exception(mock_azure_client: MockAzureClient) -> None:
-    """Test handling of API exceptions."""
     mock_azure_client.chat.completions.side_effect = Exception("API Error")
 
     with pytest.raises(Exception, match="API Error"):
@@ -105,7 +104,6 @@ def test_api_exception(mock_azure_client: MockAzureClient) -> None:
 
 @pytest.mark.django_db
 def test_unexpected_response_format(mock_azure_client: MockAzureClient) -> None:
-    """Test handling of unexpected response format."""
     mock_completion = type("MockCompletion", (), {"choices": []})()
     mock_azure_client.chat.completions.return_value = mock_completion
 
@@ -126,7 +124,6 @@ def test_different_models_and_temperatures(
     model: AssistantModel,
     temperature: AssistantTemperature,
 ) -> None:
-    """Test API calls with different combinations of models and temperatures."""
     mock_azure_client.chat.completions.return_value = create_mock_completion(
         "Test response",
     )

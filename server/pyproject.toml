@@ -3,12 +3,10 @@ name = "server"
 version = "0.1.0"
 description = "The backend service is a Django REST framework to communicate with Azure OpenAI GPT-4o model."
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "django-cors-headers>=4.4.0",
-    "django-stubs>=5.1.0",
     "django>=5.1.2",
-    "djangorestframework-stubs>=3.15.1",
     "djangorestframework>=3.15.2",
     "drf-spectacular>=0.27.2",
     "loguru>=0.7.2",
@@ -17,38 +15,62 @@ dependencies = [
     "requests>=2.32.3",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
+    "add-trailing-comma>=4.0.0",
     "coverage>=7.6.7",
     "crosszip>=1.0.0",
+    "django-stubs>=5.1.0",
+    "djangorestframework-stubs>=3.15.1",
     "locust>=2.32.0",
-    "mypy>=1.13.0",
+    "prek>=0.3.10",
     "pytest-django>=4.9.0",
     "pytest-random-order>=1.1.1",
     "pytest>=8.3.3",
-    "ruff>=0.8.1",
+    "ruff>=0.15.11",
+    "ty>=0.0.32",
 ]
 
+[tool.uv]
+required-version = ">=0.11.2"
+
 [tool.ruff]
+fix = true
+preview = true
+unsafe-fixes = true
 line-length = 88
 indent-width = 4
 
 [tool.ruff.lint]
-preview = true
-#select = ["ALL"]
-ignore = ["COM812", "CPY", "D100", "D203", "D212", "DOC502"]
+select = ["ALL"]
+ignore = ["COM812", "CPY", "D", "DOC"]
 
 [tool.ruff.lint.per-file-ignores]
 "test_*.py" = [
-    # docstring requirements
-    "D",
-    "DOC",
     # tests can have asserts
     "S101",
+    # magic values in assertions are fine
+    "PLR2004",
+    # parametrized tests naturally have many arguments
+    "PLR0913",
+    "PLR0917",
+    # fixtures used for side effects don't need to be referenced
+    "ARG001",
+    # `== ""` assertions are intentionally explicit
+    "PLC1901",
+    # long expected-value strings in parametrize are unavoidable
+    "E501",
 ]
 
 [tool.ruff.format]
 preview = true
+docstring-code-format = true
+
+[tool.ty.src]
+exclude = [".venv", "build", "dist"]
+
+[tool.ty.environment]
+python-version = "3.14"
 
 [tool.coverage.run]
 omit = [

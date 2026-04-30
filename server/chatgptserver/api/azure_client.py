@@ -1,4 +1,5 @@
 import time
+from typing import TYPE_CHECKING
 
 from django.conf import settings
 from openai import AzureOpenAI
@@ -6,16 +7,20 @@ from openai import AzureOpenAI
 from .entities import AssistantModel, AssistantTemperature
 from .logging_config import logger
 
+if TYPE_CHECKING:
+    from openai.types.chat import ChatCompletion
+
 
 class AzureOpenAIClient:
     """
-    A singleton client for Azure OpenAI
+    A singleton client for Azure OpenAI.
 
     This ensures thread-safe and efficient usage across multiple requests.
 
     Note:
-    The default timeout for Azure OpenAI is 10 minutes, which is sufficient for most use cases.
-    For other constants set by openai-python client (retry delay, max no. of connections, etc.), see:
+    The default timeout for Azure OpenAI is 10 minutes, which is sufficient
+    for most use cases. For other constants set by openai-python client
+    (retry delay, max no. of connections, etc.), see:
     https://github.com/openai/openai-python/blob/main/src/openai/_constants.py
 
     """
@@ -23,7 +28,7 @@ class AzureOpenAIClient:
     _instance = None
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls) -> AzureOpenAI:
         if cls._instance is None:
             cls._instance = AzureOpenAI(
                 azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
@@ -40,7 +45,6 @@ def get_azure_openai_response(
     temperature: AssistantTemperature = AssistantTemperature.BALANCED,
 ) -> str:
     client = AzureOpenAIClient.get_instance()
-    client.azure_deployment = model.value
 
     try:
         start_time = time.time()
@@ -55,19 +59,18 @@ def get_azure_openai_response(
             ],
         )
         logger.info(f"Azure OpenAI completion took {time.time() - start_time} seconds")
-
         client_response_content = _get_safe_response_content(completion)
         logger.info(f"Length of Azure OpenAI response: {len(client_response_content)}")
-        return client_response_content
-
     except Exception as e:
         logger.exception(f"Error getting Azure OpenAI response: {e!s}")
         raise
+    else:
+        return client_response_content
 
 
-def _get_safe_response_content(completion) -> str:
+def _get_safe_response_content(completion: ChatCompletion) -> str:
     try:
         return completion.choices[0].message.content or ""
-    except (AttributeError, IndexError):
+    except AttributeError, IndexError:
         logger.exception("Unexpected response format from Azure OpenAI")
         return ""
