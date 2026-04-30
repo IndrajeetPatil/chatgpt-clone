@@ -1,7 +1,6 @@
-import type React from "react";
-
 import PersonIcon from "@mui/icons-material/Person";
 import { Box, Paper, Typography, useTheme } from "@mui/material";
+import type React from "react";
 
 interface UserMessageProps {
   content: string;

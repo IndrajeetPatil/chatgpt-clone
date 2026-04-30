@@ -1,11 +1,10 @@
-import type React from "react";
-
 import { render } from "@testing-library/react";
+import type React from "react";
+import { vi } from "vitest";
 
 import UserMessage from "./UserMessage";
 
-// Mock Material-UI components to simplify snapshot
-jest.mock("@mui/material", () => ({
+vi.mock("@mui/material", () => ({
   Box: ({
     children,
     ...props
@@ -46,13 +45,12 @@ jest.mock("@mui/material", () => ({
   }),
 }));
 
-// Mock PersonIcon
-jest.mock("@mui/icons-material/Person", () => {
+vi.mock("@mui/icons-material/Person", () => {
   const MockPersonIcon = () => (
     <span data-testid="mock-person-icon">PersonIcon</span>
   );
   MockPersonIcon.displayName = "PersonIcon";
-  return MockPersonIcon;
+  return { default: MockPersonIcon };
 });
 
 describe("UserMessage", () => {

@@ -1,8 +1,7 @@
-import type React from "react";
-import { type KeyboardEvent, useState } from "react";
-
 import SendIcon from "@mui/icons-material/Send";
 import { Box, IconButton, TextField } from "@mui/material";
+import type React from "react";
+import { type KeyboardEvent, useState } from "react";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;

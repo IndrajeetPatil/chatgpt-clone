@@ -1,14 +1,13 @@
 import pino, { type Logger } from "pino";
 
-export const logger: Logger =
-  process.env.NODE_ENV === "production"
-    ? pino({ level: "warn" })
-    : pino({
-        transport: {
-          target: "pino-pretty",
-          options: {
-            colorize: true,
-          },
-        },
-        level: "debug",
-      });
+export const logger: Logger = pino({
+  browser: {
+    asObject: true,
+  },
+  level:
+    import.meta.env.MODE === "test"
+      ? "silent"
+      : import.meta.env.PROD
+        ? "warn"
+        : "debug",
+});

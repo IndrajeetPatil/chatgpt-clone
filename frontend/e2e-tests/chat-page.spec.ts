@@ -1,6 +1,6 @@
+import { expect, test } from "@playwright/test";
 import { getModelDisplay, getTemperatureDisplay } from "@/client/helpers";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
-import { expect, test } from "@playwright/test";
 
 test.describe("Chat Page Model and Temperature Combinations", () => {
   test("should return correct response for selected model and temperature", async ({

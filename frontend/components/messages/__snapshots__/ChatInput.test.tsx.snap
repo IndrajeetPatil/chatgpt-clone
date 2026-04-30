@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ChatInput component should render the ChatInput component and match the snapshot 1`] = `
+exports[`ChatInput component > should render the ChatInput component and match the snapshot 1`] = `
 <DocumentFragment>
   <form
     class="MuiBox-root css-mkkhhh"

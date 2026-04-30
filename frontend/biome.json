@@ -20,7 +20,13 @@
     "lineWidth": 80,
     "attributePosition": "auto",
     "bracketSpacing": true,
-    "includes": ["**", "!**/.next"]
+    "includes": [
+      "**",
+      "!**/.next/**",
+      "!**/coverage/**",
+      "!**/dist/**",
+      "!node_modules/**"
+    ]
   },
   "json": {
     "formatter": {
@@ -36,7 +42,13 @@
         "useAsConstAssertion": "error"
       }
     },
-    "includes": ["**", "!node_modules", "!.next"]
+    "includes": [
+      "**",
+      "!**/.next/**",
+      "!**/coverage/**",
+      "!**/dist/**",
+      "!node_modules/**"
+    ]
   },
   "javascript": {
     "formatter": {

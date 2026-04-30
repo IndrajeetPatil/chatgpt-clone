@@ -1,12 +1,11 @@
-import "@testing-library/jest-dom";
-
 import { fireEvent, render } from "@testing-library/react";
+import { vi } from "vitest";
 
 import ChatInput from "./ChatInput";
 
 describe("ChatInput component", () => {
   it("should render the ChatInput component and match the snapshot", () => {
-    const onSendMessageMock = jest.fn();
+    const onSendMessageMock = vi.fn();
     const { asFragment } = render(
       <ChatInput onSendMessage={onSendMessageMock} />
     );
@@ -15,7 +14,7 @@ describe("ChatInput component", () => {
   });
 
   test("should call onSendMessage with the message when Enter is pressed", () => {
-    const onSendMessageMock = jest.fn();
+    const onSendMessageMock = vi.fn();
     const { getByPlaceholderText } = render(
       <ChatInput onSendMessage={onSendMessageMock} />
     );
@@ -28,7 +27,7 @@ describe("ChatInput component", () => {
   });
 
   test("should not call onSendMessage if Enter is pressed with an empty message", () => {
-    const onSendMessageMock = jest.fn();
+    const onSendMessageMock = vi.fn();
     const { getByPlaceholderText } = render(
       <ChatInput onSendMessage={onSendMessageMock} />
     );

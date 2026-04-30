@@ -1,10 +1,9 @@
+import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { Bot, ChevronDown } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-
 import { getModelDisplay } from "@/client/helpers";
 import { AssistantModel } from "@/client/types/assistant";
-import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 
 interface AssistantModelParameterProps {
   model: AssistantModel;

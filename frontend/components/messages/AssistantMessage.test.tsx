@@ -1,13 +1,9 @@
-import type React from "react";
-
-import { ThemeProvider, createTheme } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material";
 import { type RenderResult, render, screen } from "@testing-library/react";
+import type React from "react";
+import { vi } from "vitest";
 
 import AssistantMessage from "./AssistantMessage";
-
-interface CodeBlockProps {
-  text: string;
-}
 
 interface ReactMarkdownProps {
   children: string;
@@ -22,18 +18,12 @@ interface CodeProps {
   children: React.ReactNode;
 }
 
-// Mock modules
-jest.mock("react-code-blocks", () => ({
-  CopyBlock: ({ text }: CodeBlockProps): React.JSX.Element => (
-    <div data-testid="code-block">{text}</div>
-  ),
-  atomOneDark: {},
-  atomOneLight: {},
-}));
-
-jest.mock("react-markdown", () => ({
+vi.mock("react-markdown", () => ({
   __esModule: true,
-  default: ({ children, components }: ReactMarkdownProps): React.JSX.Element => {
+  default: ({
+    children,
+    components,
+  }: ReactMarkdownProps): React.JSX.Element => {
     // Split content by code blocks and render appropriately
     const parts: string[] = children.split(/(```[\s\S]*?```)/);
 
