@@ -99,7 +99,7 @@ def test_api_exception(mock_azure_client: MockAzureClient) -> None:
     """Test handling of API exceptions."""
     mock_azure_client.chat.completions.side_effect = Exception("API Error")
 
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match="API Error"):
         get_azure_openai_response("Test prompt")
 
 

@@ -34,9 +34,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
     <Box
       component="form"
       onSubmit={handleSubmit}
-      display="flex"
-      alignItems="flex-end"
-      mt={2}
+      sx={{ display: "flex", alignItems: "flex-end", mt: 2 }}
     >
       <TextField
         multiline={true}
