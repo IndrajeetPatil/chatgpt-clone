@@ -27,7 +27,8 @@
     "react-dom": "^19",
     "react-markdown": "^10.1.0",
     "swr": "^2.4.1",
-    "uuid": "^14.0.0"
+    "uuid": "^14.0.0",
+    "zod": "^4.4.1"
   },
   "browserList": {
     "production": [">0.2%", "not dead", "not op_mini all"],
