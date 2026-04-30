@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`AssistantMessage renders mixed content with code blocks and text 1`] = `
+exports[`AssistantMessage > renders mixed content with code blocks and text 1`] = `
 <div>
   <div
     class="MuiBox-root css-1w1vbxm"
@@ -30,15 +30,16 @@ exports[`AssistantMessage renders mixed content with code blocks and text 1`] = 
             Here is some code:
 
           </span>
-          <div
-            class="MuiBox-root css-1od93p9"
+          <pre
+            class="MuiBox-root css-ubsq2i"
+            data-testid="code-block"
           >
-            <div
-              data-testid="code-block"
+            <code
+              class="MuiTypography-root MuiTypography-body1 css-13ss2i9-MuiTypography-root"
             >
               console.log("hello");
-            </div>
-          </div>
+            </code>
+          </pre>
           <span>
             
 And more text

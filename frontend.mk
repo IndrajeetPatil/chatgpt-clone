@@ -5,8 +5,8 @@ LINT=npm run lint
 TSC=npm run check-types
 AUDIT=npm audit --audit-level=moderate
 BUILD=npm run build
-JEST=npm run test
-NEXT_START=npm run start
+VITEST=npm run test
+VITE_START=npm run start
 PLAYWRIGHT=npm run test:e2e
 
 # Frontend Targets
@@ -22,7 +22,7 @@ frontend-type-check:
 
 frontend-test:
 	@echo "$(COLOR_BLUE_BG)Running frontend unit tests...$(COLOR_RESET)"
-	cd $(FRONTEND_DIR) && $(JEST)
+	cd $(FRONTEND_DIR) && $(VITEST)
 
 frontend-build:
 	@echo "$(COLOR_BLUE_BG)Building frontend...$(COLOR_RESET)"
@@ -34,7 +34,7 @@ frontend-audit:
 
 _run-frontend:
 	@echo "$(COLOR_BLUE_BG)Running frontend server...$(COLOR_RESET)"
-	cd $(FRONTEND_DIR) && $(NEXT_START) & echo $$! > frontend.pid
+	cd $(FRONTEND_DIR) && $(VITE_START) & echo $$! > frontend.pid
 
 _run-e2e-test:
 	@echo "$(COLOR_BLUE_BG)Running end-to-end tests...$(COLOR_RESET)"

@@ -1,4 +1,6 @@
-Object.assign(global, {
+import { vi } from "vitest";
+
+Object.assign(globalThis, {
   setImmediate: (callback: (...args: unknown[]) => void, ...args: unknown[]) =>
     setTimeout(callback, 0, ...args),
 });
@@ -6,7 +8,7 @@ Object.assign(global, {
 import fetchAssistantResponse from "./AssistantClient";
 import { AssistantModel, AssistantTemperature } from "./types/assistant";
 
-const fetchMock = jest.fn();
+const fetchMock = vi.fn();
 
 function createFetchResponse({
   body,
@@ -18,17 +20,17 @@ function createFetchResponse({
   status: number;
 }): Response {
   return {
-    json: jest.fn().mockResolvedValue(body),
+    json: vi.fn().mockResolvedValue(body),
     ok,
     status,
-    text: jest.fn().mockResolvedValue(String(body)),
+    text: vi.fn().mockResolvedValue(String(body)),
   } as unknown as Response;
 }
 
 describe("fetchAssistantResponse", () => {
   beforeEach(() => {
     fetchMock.mockReset();
-    global.fetch = fetchMock;
+    globalThis.fetch = fetchMock;
   });
 
   it("posts the assistant request with native fetch", async () => {

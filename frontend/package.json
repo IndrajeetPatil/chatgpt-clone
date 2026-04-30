@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "rm -rf .next && next build",
-    "start": "next start",
+    "dev": "vite --host 0.0.0.0 --port 3000",
+    "build": "rm -rf dist && vite build",
+    "start": "vite preview --host 0.0.0.0 --port 3000",
     "check-types": "tsc --noemit",
     "lint": "biome check --write --unsafe .",
-    "test": "jest",
-    "test:update": "jest -u",
+    "test": "vitest run --coverage",
+    "test:update": "vitest run --update",
     "test:e2e": "npx playwright test"
   },
   "dependencies": {
@@ -18,11 +18,8 @@
     "@mui/icons-material": "^9.0.0",
     "@mui/material": "^9.0.0",
     "lucide-react": "^1.14.0",
-    "next": "16.2.4",
     "pino": "^10.3.1",
-    "pino-pretty": "^13.1.3",
     "react": "^19",
-    "react-code-blocks": "^0.1.6",
     "react-dom": "^19",
     "react-markdown": "^10.1.0",
     "swr": "^2.4.1",
@@ -30,7 +27,11 @@
     "zod": "^4.4.1"
   },
   "browserList": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -42,20 +43,19 @@
     "@playwright/test": "^1.59.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-gtm-module": "^2.0.4",
     "@types/react-test-renderer": "^19.1.0",
     "@types/uuid": "^11.0.0",
-    "babel-jest": "^30.3.0",
-    "jest": "^30.3.0",
-    "jest-environment-jsdom": "^30.3.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "^4.1.5",
+    "jsdom": "^29.1.1",
     "markdownlint": "^0.40.0",
     "react-test-renderer": "^19.2.5",
-    "ts-jest": "^29.4.9",
-    "ts-node": "^10.9.2",
-    "typescript": "^6"
+    "typescript": "^6",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.5"
   }
 }

@@ -1,10 +1,9 @@
+import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { ChevronDown, Thermometer } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-
 import { getTemperatureDisplay } from "@/client/helpers";
 import { AssistantTemperature } from "@/client/types/assistant";
-import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 
 interface AssistantTemperatureParameterProps {
   temperature: AssistantTemperature;

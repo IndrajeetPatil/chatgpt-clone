@@ -1,8 +1,3 @@
-import type React from "react";
-import { useState } from "react";
-import { CopyBlock, atomOneDark, atomOneLight } from "react-code-blocks";
-import ReactMarkdown from "react-markdown";
-
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import {
@@ -13,6 +8,9 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import type React from "react";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 interface AssistantMessageProps {
   content: string;
@@ -45,14 +43,28 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
       const codeString = String(children).replace(/\n$/, "");
       if (!inline && language) {
         return (
-          <Box sx={{ mt: 2, position: "relative" }}>
-            <CopyBlock
-              theme={isDark ? atomOneDark : atomOneLight}
-              text={codeString}
-              codeBlock={true}
-              language={language}
-              showLineNumbers={false}
-            />
+          <Box
+            component="pre"
+            data-testid="code-block"
+            sx={{
+              mt: 2,
+              p: 2,
+              overflowX: "auto",
+              borderRadius: 1,
+              backgroundColor: isDark ? "#1e1e1e" : "#f6f8fa",
+            }}
+          >
+            <Typography
+              component="code"
+              sx={{
+                fontFamily:
+                  '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+                fontSize: "0.875rem",
+                whiteSpace: "pre",
+              }}
+            >
+              {codeString}
+            </Typography>
           </Box>
         );
       }

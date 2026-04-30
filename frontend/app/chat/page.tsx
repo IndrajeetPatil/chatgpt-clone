@@ -1,16 +1,5 @@
 "use client";
 
-import { Moon, RefreshCcw, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-
-import useAssistantResponse from "@/client/hooks/useAssistantResponse";
-import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
-import AssistantMessage from "@/components/messages/AssistantMessage";
-import ChatInput from "@/components/messages/ChatInput";
-import UserMessage from "@/components/messages/UserMessage";
-import AssistantModelParameter from "@/components/parameters/AssistantModelParameter";
-import AssistantTemperatureParameter from "@/components/parameters/AssistantTemperatureParameter";
 import {
   Alert,
   Box,
@@ -21,7 +10,17 @@ import {
   Stack,
   Tooltip,
 } from "@mui/material";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Moon, RefreshCcw, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import useAssistantResponse from "@/client/hooks/useAssistantResponse";
+import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
+import AssistantMessage from "@/components/messages/AssistantMessage";
+import ChatInput from "@/components/messages/ChatInput";
+import UserMessage from "@/components/messages/UserMessage";
+import AssistantModelParameter from "@/components/parameters/AssistantModelParameter";
+import AssistantTemperatureParameter from "@/components/parameters/AssistantTemperatureParameter";
 
 interface Message {
   id: string;

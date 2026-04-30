@@ -30,7 +30,7 @@ The project is structured as a monorepo with two services:
 - `server`: A Django application that serves as the backend for the
   frontend application.
 
-The frontend service is a Next.js application that uses the `swr`
+The frontend service is a Vite React application that uses the `swr`
 library to fetch data from the backend service. The backend service is a
 Django application that uses the `djangorestframework` library to expose
 a REST API that interacts with the OpenAI GPT-4o model.
@@ -90,9 +90,9 @@ More specifically:
 | Formatter       | biome      | ruff     |
 | Linter          | biome      | ruff     |
 | Type checking   | Typescript | mypy     |
-| Unit testing    | jest       | pytest   |
+| Unit testing    | vitest     | pytest   |
 | End-to-end test | Playwright | \-       |
-| Code coverage   | jest       | coverage |
+| Code coverage   | vitest     | coverage |
 | API client      | fetch      | openai   |
 | API server      | \-         | django   |
 | Import sorter   | biome      | ruff     |
@@ -116,10 +116,9 @@ Actions.
 - Using Django framework only for the API server seemed like an
   overkill. fastAPI would have been a better choice.
 
-- Using Next.js only for the frontend was a total overkill. A vanilla
-  React app would have sufficed. But it was a good exercise to learn
-  Next.js, especially server-side rendering, the distinction between
-  client and server components, and the API routes.
+- Using Next.js only for the frontend was a total overkill. The frontend
+  has since been migrated to a Vite React SPA, which is a better fit for
+  this app.
 
 ## Room for Improvement
 
