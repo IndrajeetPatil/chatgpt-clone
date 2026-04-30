@@ -34,7 +34,6 @@ class MockAzureClient:
 
 @pytest.fixture
 def mock_azure_client(monkeypatch: MonkeyPatch) -> MockAzureClient:
-    """Fixture that provides a mock AzureOpenAIClient instance using monkeypatch."""
     mock_client = MockAzureClient()
 
     def mock_get_instance() -> MockAzureClient:
@@ -45,7 +44,6 @@ def mock_azure_client(monkeypatch: MonkeyPatch) -> MockAzureClient:
 
 
 def create_mock_completion(content: str) -> object:
-    """Helper function to create mock completion objects."""
     mock_message_cls = type("MockMessage", (), {"content": content})
     mock_choice_cls = type("MockChoice", (), {"message": mock_message_cls()})
     return type("MockCompletion", (), {"choices": [mock_choice_cls()]})()
@@ -58,7 +56,6 @@ def create_mock_completion(content: str) -> object:
     AZURE_OPENAI_API_KEY="test-api-key",
 )
 def test_singleton_instance() -> None:
-    """Test that AzureOpenAIClient maintains singleton pattern."""
     instance1 = AzureOpenAIClient.get_instance()
     instance2 = AzureOpenAIClient.get_instance()
 
@@ -82,7 +79,6 @@ def test_successful_response(
     api_response: str,
     expected_output: str,
 ) -> None:
-    """Test successful API responses with different content values."""
     mock_azure_client.chat.completions.return_value = create_mock_completion(
         api_response,
     )
@@ -100,7 +96,6 @@ def test_successful_response(
 
 @pytest.mark.django_db
 def test_api_exception(mock_azure_client: MockAzureClient) -> None:
-    """Test handling of API exceptions."""
     mock_azure_client.chat.completions.side_effect = Exception("API Error")
 
     with pytest.raises(Exception, match="API Error"):
@@ -109,7 +104,6 @@ def test_api_exception(mock_azure_client: MockAzureClient) -> None:
 
 @pytest.mark.django_db
 def test_unexpected_response_format(mock_azure_client: MockAzureClient) -> None:
-    """Test handling of unexpected response format."""
     mock_completion = type("MockCompletion", (), {"choices": []})()
     mock_azure_client.chat.completions.return_value = mock_completion
 
@@ -130,7 +124,6 @@ def test_different_models_and_temperatures(
     model: AssistantModel,
     temperature: AssistantTemperature,
 ) -> None:
-    """Test API calls with different combinations of models and temperatures."""
     mock_azure_client.chat.completions.return_value = create_mock_completion(
         "Test response",
     )

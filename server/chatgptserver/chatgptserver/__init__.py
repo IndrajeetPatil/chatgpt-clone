@@ -1,1 +1,0 @@
-"""ChatGPT server Django application."""

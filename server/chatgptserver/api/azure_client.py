@@ -29,13 +29,6 @@ class AzureOpenAIClient:
 
     @classmethod
     def get_instance(cls) -> AzureOpenAI:
-        """
-        Return the singleton AzureOpenAI client, creating it if needed.
-
-        Returns:
-            The shared AzureOpenAI client instance.
-
-        """
         if cls._instance is None:
             cls._instance = AzureOpenAI(
                 azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
@@ -51,13 +44,6 @@ def get_azure_openai_response(
     model: AssistantModel = AssistantModel.FULL,
     temperature: AssistantTemperature = AssistantTemperature.BALANCED,
 ) -> str:
-    """
-    Send a prompt to Azure OpenAI and return the response text.
-
-    Returns:
-        The text content of the model's response.
-
-    """
     client = AzureOpenAIClient.get_instance()
     client.azure_deployment = model.value
 

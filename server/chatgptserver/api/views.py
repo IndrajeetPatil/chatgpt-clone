@@ -15,8 +15,6 @@ if TYPE_CHECKING:
 
 
 class ChatView(APIView):
-    """API view for generating chat responses via Azure OpenAI."""
-
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -45,13 +43,6 @@ class ChatView(APIView):
         description="Generate a chat response based on the provided prompt.",
     )
     def post(self, request: Request, model: str | AssistantModel) -> Response:  # noqa: PLR6301
-        """
-        Generate a chat response for the given model and prompt.
-
-        Returns:
-            A DRF Response containing the assistant's reply or an error.
-
-        """
         # Validate model
         try:
             model = AssistantModel(model)

@@ -15,8 +15,6 @@ MOCK_RESPONSE: str = "The capital of India is New Delhi."
 
 
 class MockAzureResponse:
-    """Mock class for Azure OpenAI responses"""
-
     def __init__(self) -> None:
         self.calls = []
         self.response = MOCK_RESPONSE
@@ -28,30 +26,23 @@ class MockAzureResponse:
 
 @pytest.fixture
 def api_client() -> APIClient:
-    """Creates and returns an instance of APIClient."""
     return APIClient()
 
 
 @pytest.fixture
 def chat_url() -> str:
-    """Returns the URL for the chat endpoint."""
     return reverse("chat", kwargs={"model": AssistantModel.FULL.value})
 
 
 @pytest.fixture
 def valid_payload() -> dict[str, str]:
-    """Returns a valid payload for the chat endpoint."""
     return {"prompt": MOCK_PROMPT}
 
 
 @pytest.fixture
 def mock_azure_response(monkeypatch: MonkeyPatch) -> MockAzureResponse:
-    """Mocks the Azure OpenAI response for testing purposes using monkeypatch.
-    Not using autouse=True because:
-    1. Not all tests require this mock
-    2. Explicit dependencies are better for readability
-    3. Some tests might need different mock configurations
-    """
+    # Not using autouse=True: not all tests require this mock, and some need
+    # different configurations.
     mock = MockAzureResponse()
     monkeypatch.setattr("api.views.get_azure_openai_response", mock)
     return mock
@@ -64,7 +55,6 @@ def test_post_chat_view_success(
     valid_payload: dict[str, str],
     mock_azure_response: MockAzureResponse,
 ) -> None:
-    """Test successful POST request to chat view with valid payload."""
     response = api_client.post(
         f"{chat_url}?temperature=BALANCED",
         valid_payload,
@@ -86,7 +76,6 @@ def test_post_chat_view_empty_payload(
     api_client: APIClient,
     chat_url: str,
 ) -> None:
-    """Test POST request to chat view with empty payload."""
     invalid_payload: dict[str, Any] = {}
 
     response = api_client.post(
@@ -143,7 +132,6 @@ def test_chat_view_parameters(
     expected_status: int,
     expected_errors: dict[str, str] | None,
 ) -> None:
-    """Test chat view with different model and temperature parameter combinations."""
     url: str = reverse("chat", kwargs={"model": model})
     response = api_client.post(
         f"{url}?temperature={temperature}",
