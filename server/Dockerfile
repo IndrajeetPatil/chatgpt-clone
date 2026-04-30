@@ -16,12 +16,9 @@ COPY . /app/
 RUN uv sync --frozen --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH" \
-    DJANGO_SETTINGS_MODULE=chatgptserver.settings \
     PYTHONUNBUFFERED=1 \
-    DEBUG=True \
-    ALLOWED_HOSTS="localhost,127.0.0.1"
+    CORS_ALLOWED_ORIGINS='["http://localhost:3000"]'
 
 EXPOSE 8000
 
-RUN python chatgptserver/manage.py migrate
-CMD ["python", "chatgptserver/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]

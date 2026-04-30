@@ -1,8 +1,8 @@
 import json
+from http import HTTPStatus
 from random import choice
 
 from locust import HttpUser, between, task
-from rest_framework import status
 
 
 class ChatAPIUser(HttpUser):
@@ -28,16 +28,24 @@ class ChatAPIUser(HttpUser):
         model = choice(self.models)  # noqa: S311
         temperature = choice(self.temperatures)  # noqa: S311
         prompt = choice(self.test_prompts)  # noqa: S311
-        payload = {"prompt": prompt}
+        payload = {
+            "messages": [
+                {
+                    "role": "user",
+                    "parts": [{"type": "text", "text": prompt}],
+                },
+            ],
+            "model": model,
+            "temperature": temperature,
+        }
 
         with self.client.post(
-            f"api/v1/chat/{model}/",
-            params={"temperature": temperature},
+            "api/v1/chat",
             data=json.dumps(payload),
             headers=self.headers,
             catch_response=True,
         ) as response:
-            if response.status_code == status.HTTP_200_OK:
+            if response.status_code == HTTPStatus.OK:
                 response.success()
             else:
                 response.failure(

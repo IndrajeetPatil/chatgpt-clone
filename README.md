@@ -8,7 +8,7 @@ website](https://chat.openai.com/).
 
 The specified requirements were the following:
 
-- Use Django as the backend and React as the frontend.
+- Use FastAPI as the backend and React as the frontend.
 - Allow users to select between GPT-4o and GPT-4o mini and change the
   temperature of the responses (0.2, 0.7, and 0.9).
 - Request answers in Markdown format and display the answers in respect
@@ -27,13 +27,13 @@ The project is structured as a monorepo with two services:
 
 - `frontend`: A React application that allows users to interact with the
   GPT-4o model.
-- `server`: A Django application that serves as the backend for the
+- `server`: A FastAPI application that serves as the backend for the
   frontend application.
 
-The frontend service is a Vite React application that uses the `swr`
-library to fetch data from the backend service. The backend service is a
-Django application that uses the `djangorestframework` library to expose
-a REST API that interacts with the OpenAI GPT-4o model.
+The frontend service is a Vite React application that uses the Vercel AI
+SDK to manage chat state and streamed responses from the backend service.
+The backend service is a FastAPI application that exposes a streaming
+API backed by Azure OpenAI GPT-4o deployments.
 
 The UI is built with [Material
 UI](https://mui.com/material-ui/getting-started/) components and follows
@@ -64,8 +64,8 @@ docker-compose up
 - The frontend service is available at `http://localhost:3000`
 - The backend service is available at `http://localhost:8000`
 
-REST API can be interactively explored using Swagger UI:  
-`http://localhost:8000/api/schema/swagger-ui/`
+REST API can be interactively explored using FastAPI's Swagger UI:
+`http://localhost:8000/docs`
 
 ## Quality Assurance
 
@@ -89,12 +89,12 @@ More specifically:
 | Package Manager | npm        | uv       |
 | Formatter       | biome      | ruff     |
 | Linter          | biome      | ruff     |
-| Type checking   | Typescript | mypy     |
+| Type checking   | Typescript | ty       |
 | Unit testing    | vitest     | pytest   |
 | End-to-end test | Playwright | \-       |
 | Code coverage   | vitest     | coverage |
-| API client      | fetch      | openai   |
-| API server      | \-         | django   |
+| API client      | Vercel AI SDK | openai |
+| API server      | \-         | FastAPI  |
 | Import sorter   | biome      | ruff     |
 | Logger          | pino       | loguru   |
 
@@ -112,9 +112,6 @@ Actions.
 ![Lighthouse report](./lighthouse.png)
 
 ## Grievances/Mistakes
-
-- Using Django framework only for the API server seemed like an
-  overkill. fastAPI would have been a better choice.
 
 - Using Next.js only for the frontend was a total overkill. The frontend
   has since been migrated to a Vite React SPA, which is a better fit for

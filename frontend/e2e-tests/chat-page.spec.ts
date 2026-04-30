@@ -6,6 +6,24 @@ test.describe("Chat Page Model and Temperature Combinations", () => {
   test("should return correct response for selected model and temperature", async ({
     page,
   }) => {
+    const expectedResponse = "Test received! How can I assist you today?";
+    await page.route("http://localhost:8000/api/v1/chat", async (route) => {
+      const request = route.request();
+      const body = request.postDataJSON();
+
+      expect(body.model).toBe(AssistantModel.MINI);
+      expect(body.temperature).toBe(AssistantTemperature.DETERMINISTIC);
+      expect(body.messages.at(-1).parts).toEqual([
+        { type: "text", text: "test message" },
+      ]);
+
+      await route.fulfill({
+        body: expectedResponse,
+        contentType: "text/plain; charset=utf-8",
+        status: 200,
+      });
+    });
+
     await page.goto("/chat");
 
     // Verify the initial assistant message is present
@@ -35,10 +53,6 @@ test.describe("Chat Page Model and Temperature Combinations", () => {
     await page.getByPlaceholder("Type your message...").fill("test message");
     await page.locator("form").getByRole("button").click();
 
-    await page.fill('input[type="text"]', "Test message");
-    await page.keyboard.press("Enter");
-
-    const expectedResponse = "Test received! How can I assist you today?";
     await expect(page.getByText(expectedResponse)).toBeVisible();
   });
 });

@@ -12,7 +12,7 @@ PLAYWRIGHT=npm run test:e2e
 # Frontend Targets
 frontend-lint:
 	@echo "$(COLOR_BLUE_BG)Running frontend linting and formatting...$(COLOR_RESET)"
-	cd $(FRONTEND_DIR) && $(LINT) .
+	cd $(FRONTEND_DIR) && $(LINT)
 
 frontend-format: frontend-lint
 

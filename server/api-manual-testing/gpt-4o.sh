@@ -1,40 +1,42 @@
 #!/bin/bash
 # valid
 curl -X 'POST' \
-  'http://localhost:8000/api/v1/chat/gpt-4o/?temperature=balanced' \
-  -H 'accept: application/json' \
+  'http://localhost:8000/api/v1/chat' \
+  -H 'accept: text/plain' \
   -H 'Content-Type: application/json' \
-  -H 'X-CSRFTOKEN: 2m4lWrUeSyNpMX7tGw8wmaqWNUkI2xc0wQo7xaH2OfKmpZYUN27izfheYDceUSMw' \
   -d '{
-  "prompt": "what is AI?"
+  "messages": [{"role": "user", "parts": [{"type": "text", "text": "what is AI?"}]}],
+  "model": "gpt-4o",
+  "temperature": "BALANCED"
 }'
 
 # invalid: wrong model name
 curl -X 'POST' \
-  'http://localhost:8000/api/v1/chat/gpt-bla/?temperature=balanced' \
-  -H 'accept: application/json' \
+  'http://localhost:8000/api/v1/chat' \
+  -H 'accept: text/plain' \
   -H 'Content-Type: application/json' \
-  -H 'X-CSRFTOKEN: 2m4lWrUeSyNpMX7tGw8wmaqWNUkI2xc0wQo7xaH2OfKmpZYUN27izfheYDceUSMw' \
   -d '{
-  "prompt": "what is AI?"
+  "messages": [{"role": "user", "parts": [{"type": "text", "text": "what is AI?"}]}],
+  "model": "gpt-bla",
+  "temperature": "BALANCED"
 }'
 
 # invalid: wrong temperature
 curl -X 'POST' \
-  'http://localhost:8000/api/v1/chat/gpt-4o/?temperature=hot' \
-  -H 'accept: application/json' \
+  'http://localhost:8000/api/v1/chat' \
+  -H 'accept: text/plain' \
   -H 'Content-Type: application/json' \
-  -H 'X-CSRFTOKEN: 2m4lWrUeSyNpMX7tGw8wmaqWNUkI2xc0wQo7xaH2OfKmpZYUN27izfheYDceUSMw' \
   -d '{
-  "prompt": "what is AI?"
+  "messages": [{"role": "user", "parts": [{"type": "text", "text": "what is AI?"}]}],
+  "model": "gpt-4o",
+  "temperature": "HOT"
 }'
 
-# invalid: missing prompt
+# invalid: missing text message
 curl -X 'POST' \
-  'http://localhost:8000/api/v1/chat/gpt-4o/?temperature=balanced' \
-  -H 'accept: application/json' \
+  'http://localhost:8000/api/v1/chat' \
+  -H 'accept: text/plain' \
   -H 'Content-Type: application/json' \
-  -H 'X-CSRFTOKEN: 2m4lWrUeSyNpMX7tGw8wmaqWNUkI2xc0wQo7xaH2OfKmpZYUN27izfheYDceUSMw' \
   -d '{
-  "prompt": ""
+  "messages": [{"role": "user", "parts": [{"type": "text", "text": ""}]}]
 }'

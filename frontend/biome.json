@@ -10,6 +10,17 @@
     "enabled": true,
     "clientKind": "git"
   },
+  "files": {
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/coverage",
+      "!**/dist",
+      "!**/playwright-report",
+      "!**/test-results",
+      "!node_modules"
+    ]
+  },
   "formatter": {
     "enabled": true,
     "useEditorconfig": true,
@@ -25,6 +36,8 @@
       "!**/.next/**",
       "!**/coverage/**",
       "!**/dist/**",
+      "!**/playwright-report/**",
+      "!**/test-results/**",
       "!node_modules/**"
     ]
   },
@@ -47,6 +60,8 @@
       "!**/.next/**",
       "!**/coverage/**",
       "!**/dist/**",
+      "!**/playwright-report/**",
+      "!**/test-results/**",
       "!node_modules/**"
     ]
   },

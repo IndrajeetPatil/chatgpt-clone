@@ -1,10 +1,10 @@
 SERVER_DIR=./server
 
 # Backend tool commands
-PYTEST=pytest chatgptserver --verbose
-PYCOVERAGE=coverage run -m pytest chatgptserver && coverage report --fail-under=95 && coverage html
-DJANGO_RUNSERVER=chatgptserver/manage.py runserver
-OPENAPI_SCHEMA=chatgptserver/manage.py spectacular --color --validate --file schema.yml
+PYTEST=pytest app tests --verbose
+PYCOVERAGE=coverage run -m pytest app tests && coverage report --fail-under=95 && coverage html
+FASTAPI_RUNSERVER=fastapi dev app/main.py --host 0.0.0.0 --port 8000
+OPENAPI_SCHEMA=python -c "from app.main import app; app.openapi()"
 LOCUST=locust -H http://127.0.0.1:8000/
 
 # Backend Targets
@@ -14,7 +14,7 @@ backend-lint:
 
 backend-format:
 	@echo "$(COLOR_BLUE_BG)Running backend formatting...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && uv run add-trailing-comma --exit-zero-even-if-changed $$(git ls-files '*.py')
+	cd $(SERVER_DIR) && find . -name '*.py' -not -path './.venv/*' -print0 | xargs -0 uv run add-trailing-comma --exit-zero-even-if-changed
 	cd $(SERVER_DIR) && uv run ruff format .
 
 backend-type-check:
@@ -23,7 +23,7 @@ backend-type-check:
 
 backend-audit:
 	@echo "$(COLOR_BLUE_BG)Auditing backend dependencies...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && uv audit --no-dev --preview-features
+	cd $(SERVER_DIR) && uv audit --no-dev --locked --preview-features audit
 
 backend-validate-api-schema:
 	@echo "$(COLOR_BLUE_BG)Validating API schema...$(COLOR_RESET)"
@@ -39,7 +39,7 @@ backend-hooks:
 
 _run-backend:
 	@echo "$(COLOR_BLUE_BG)Running backend server...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(DJANGO_RUNSERVER) & echo $$! > backend.pid
+	cd $(SERVER_DIR) && $(VENV_ACTIVATE) && $(FASTAPI_RUNSERVER) & echo $$! > backend.pid
 
 backend-load-test:
 	@echo "$(COLOR_BLUE_BG)Running backend load tests...$(COLOR_RESET)"
