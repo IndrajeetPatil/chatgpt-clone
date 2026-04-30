@@ -24,7 +24,7 @@ interface CodeProps {
 
 // Mock modules
 jest.mock("react-code-blocks", () => ({
-  CopyBlock: ({ text }: CodeBlockProps): JSX.Element => (
+  CopyBlock: ({ text }: CodeBlockProps): React.JSX.Element => (
     <div data-testid="code-block">{text}</div>
   ),
   atomOneDark: {},
@@ -33,7 +33,7 @@ jest.mock("react-code-blocks", () => ({
 
 jest.mock("react-markdown", () => ({
   __esModule: true,
-  default: ({ children, components }: ReactMarkdownProps): JSX.Element => {
+  default: ({ children, components }: ReactMarkdownProps): React.JSX.Element => {
     // Split content by code blocks and render appropriately
     const parts: string[] = children.split(/(```[\s\S]*?```)/);
 
@@ -75,7 +75,7 @@ interface WrapperProps {
 // Wrapper component for providing required context
 const Wrapper: React.FC<WrapperProps> = ({
   children,
-}: WrapperProps): JSX.Element => (
+}: WrapperProps): React.JSX.Element => (
   <ThemeProvider theme={createTheme()}>{children}</ThemeProvider>
 );
 
