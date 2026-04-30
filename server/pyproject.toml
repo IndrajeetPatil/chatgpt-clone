@@ -3,7 +3,7 @@ name = "server"
 version = "0.1.0"
 description = "The backend service is a Django REST framework to communicate with Azure OpenAI GPT-4o model."
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "django-cors-headers>=4.4.0",
     "django>=5.1.2",
@@ -71,7 +71,7 @@ docstring-code-format = true
 exclude = [".venv", "build", "dist"]
 
 [tool.ty.environment]
-python-version = "3.13"
+python-version = "3.14"
 
 [tool.coverage.run]
 omit = [
