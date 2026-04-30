@@ -45,7 +45,6 @@ def get_azure_openai_response(
     temperature: AssistantTemperature = AssistantTemperature.BALANCED,
 ) -> str:
     client = AzureOpenAIClient.get_instance()
-    client.azure_deployment = model.value
 
     try:
         start_time = time.time()
