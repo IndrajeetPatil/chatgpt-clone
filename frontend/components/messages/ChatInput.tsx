@@ -5,9 +5,13 @@ import { type KeyboardEvent, useState } from "react";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
+  disabled?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
+const ChatInput: React.FC<ChatInputProps> = ({
+  disabled = false,
+  onSendMessage,
+}) => {
   const [message, setMessage] = useState("");
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -38,6 +42,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
       <TextField
         multiline={true}
         fullWidth={true}
+        disabled={disabled}
         placeholder="Type your message..."
         rows={2}
         value={message}
@@ -48,7 +53,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
       <IconButton
         type="submit"
         color="primary"
-        disabled={!message.trim()}
+        disabled={disabled || !message.trim()}
         aria-label="Send message"
       >
         <SendIcon />

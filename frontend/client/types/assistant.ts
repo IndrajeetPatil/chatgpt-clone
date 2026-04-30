@@ -20,13 +20,3 @@ export const AssistantTemperature = {
   BALANCED: "BALANCED",
   CREATIVE: "CREATIVE",
 } as const satisfies Record<string, AssistantTemperature>;
-
-export const assistantRequestSchema = z.strictObject({
-  prompt: z.string().min(1),
-});
-export type AssistantRequest = z.infer<typeof assistantRequestSchema>;
-
-export const assistantResponseSchema = z.strictObject({
-  response: z.string(),
-});
-export type AssistantResponse = z.infer<typeof assistantResponseSchema>;
