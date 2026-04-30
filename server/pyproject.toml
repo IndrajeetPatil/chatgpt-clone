@@ -6,9 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "django-cors-headers>=4.4.0",
-    "django-stubs>=5.1.0",
     "django>=5.1.2",
-    "djangorestframework-stubs>=3.15.1",
     "djangorestframework>=3.15.2",
     "drf-spectacular>=0.27.2",
     "loguru>=0.7.2",
@@ -17,25 +15,34 @@ dependencies = [
     "requests>=2.32.3",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
+    "add-trailing-comma>=4.0.0",
     "coverage>=7.6.7",
     "crosszip>=1.0.0",
+    "django-stubs>=5.1.0",
+    "djangorestframework-stubs>=3.15.1",
     "locust>=2.32.0",
-    "mypy>=1.13.0",
+    "prek>=0.3.10",
     "pytest-django>=4.9.0",
     "pytest-random-order>=1.1.1",
     "pytest>=8.3.3",
-    "ruff>=0.8.1",
+    "ruff>=0.15.11",
+    "ty>=0.0.32",
 ]
 
+[tool.uv]
+required-version = ">=0.11.2"
+
 [tool.ruff]
+fix = true
+preview = true
+unsafe-fixes = true
 line-length = 88
 indent-width = 4
 
 [tool.ruff.lint]
-preview = true
-#select = ["ALL"]
+select = ["ALL"]
 ignore = ["COM812", "CPY", "D100", "D203", "D212", "DOC502"]
 
 [tool.ruff.lint.per-file-ignores]
@@ -49,6 +56,13 @@ ignore = ["COM812", "CPY", "D100", "D203", "D212", "DOC502"]
 
 [tool.ruff.format]
 preview = true
+docstring-code-format = true
+
+[tool.ty.src]
+exclude = [".venv", "build", "dist"]
+
+[tool.ty.environment]
+python-version = "3.13"
 
 [tool.coverage.run]
 omit = [

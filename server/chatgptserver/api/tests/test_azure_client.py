@@ -8,15 +8,15 @@ from api.entities import AssistantModel, AssistantTemperature
 
 
 class MockAzureClient:
-    def __init__(self):
+    def __init__(self) -> None:
         self.chat = self.MockChat()
 
     class MockChat:
-        def __init__(self):
+        def __init__(self) -> None:
             self.completions = self.MockCompletions()
 
         class MockCompletions:
-            def __init__(self):
+            def __init__(self) -> None:
                 self.create_calls = []
                 self.return_value = None
                 self.side_effect = None

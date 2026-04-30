@@ -15,7 +15,7 @@ MOCK_RESPONSE: str = "The capital of India is New Delhi."
 class MockAzureResponse:
     """Mock class for Azure OpenAI responses"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.calls = []
         self.response = MOCK_RESPONSE
 
