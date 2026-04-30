@@ -1,10 +1,14 @@
+from typing import TYPE_CHECKING
+
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 from django.test import override_settings
 from openai import AzureOpenAI
 
 from api.azure_client import AzureOpenAIClient, get_azure_openai_response
 from api.entities import AssistantModel, AssistantTemperature
+
+if TYPE_CHECKING:
+    from _pytest.monkeypatch import MonkeyPatch
 
 
 class MockAzureClient:

@@ -1,12 +1,14 @@
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
 from api.entities import AssistantModel, AssistantTemperature
+
+if TYPE_CHECKING:
+    from _pytest.monkeypatch import MonkeyPatch
 
 MOCK_PROMPT: str = "What is the capital of India?"
 MOCK_RESPONSE: str = "The capital of India is New Delhi."
@@ -120,7 +122,9 @@ def test_post_chat_view_empty_payload(
             AssistantModel.FULL.value,
             "INVALID",
             status.HTTP_400_BAD_REQUEST,
-            {"error": "Invalid temperature. Choose from DETERMINISTIC, BALANCED, CREATIVE"},  # noqa: E501
+            {
+                "error": "Invalid temperature. Choose from DETERMINISTIC, BALANCED, CREATIVE"
+            },
         ),
         # Case: Both 'model' and 'temperature' invalid
         (

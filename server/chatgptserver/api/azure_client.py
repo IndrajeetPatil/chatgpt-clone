@@ -1,11 +1,14 @@
 import time
+from typing import TYPE_CHECKING
 
 from django.conf import settings
 from openai import AzureOpenAI
-from openai.types.chat import ChatCompletion
 
 from .entities import AssistantModel, AssistantTemperature
 from .logging_config import logger
+
+if TYPE_CHECKING:
+    from openai.types.chat import ChatCompletion
 
 
 class AzureOpenAIClient:
@@ -83,6 +86,6 @@ def get_azure_openai_response(
 def _get_safe_response_content(completion: ChatCompletion) -> str:
     try:
         return completion.choices[0].message.content or ""
-    except (AttributeError, IndexError):
+    except AttributeError, IndexError:
         logger.exception("Unexpected response format from Azure OpenAI")
         return ""

@@ -1,6 +1,7 @@
+from typing import TYPE_CHECKING
+
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status
-from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,6 +9,9 @@ from .azure_client import get_azure_openai_response
 from .entities import AssistantModel, AssistantTemperature
 from .logging_config import logger
 from .serializers import AssistantResponseSerializer, ChatRequestSerializer
+
+if TYPE_CHECKING:
+    from rest_framework.request import Request
 
 
 class ChatView(APIView):
