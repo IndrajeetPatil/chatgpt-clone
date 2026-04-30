@@ -1,6 +1,10 @@
 {
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "vcs": {
     "enabled": true,
@@ -16,7 +20,7 @@
     "lineWidth": 80,
     "attributePosition": "auto",
     "bracketSpacing": true,
-    "ignore": ["**/.next"]
+    "includes": ["**", "!**/.next"]
   },
   "json": {
     "formatter": {
@@ -27,27 +31,12 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "a11y": {
-        "all": true
-      },
-      "complexity": {
-        "all": true
-      },
-      "correctness": {
-        "all": true
-      },
-      "security": {
-        "all": true
-      },
       "style": {
         "noNamespace": "error",
         "useAsConstAssertion": "error"
-      },
-      "suspicious": {
-        "all": true
       }
     },
-    "ignore": ["node_modules", ".next"]
+    "includes": ["**", "!node_modules", "!.next"]
   },
   "javascript": {
     "formatter": {
@@ -73,7 +62,7 @@
   },
   "overrides": [
     {
-      "include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "linter": {
         "rules": {
           "correctness": {

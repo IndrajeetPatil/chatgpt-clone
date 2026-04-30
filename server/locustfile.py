@@ -41,8 +41,8 @@ class ChatAPIUser(HttpUser):
             catch_response=True,
         ) as response:
             if response.status_code == status.HTTP_200_OK:
-                response.success()  # type: ignore
+                response.success()
             else:
-                response.failure(  # type: ignore
+                response.failure(
                     f"Request failed with status code: {response.status_code}",
                 )

@@ -82,7 +82,7 @@ class ChatView(APIView):
                 model=model,
                 temperature=temperature,
             )
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.exception(f"Error generating response: {e!s}")
             return Response(
                 {"error": "Failed to generate response"},
