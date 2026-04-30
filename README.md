@@ -93,7 +93,7 @@ More specifically:
 | Unit testing    | jest       | pytest   |
 | End-to-end test | Playwright | \-       |
 | Code coverage   | jest       | coverage |
-| API client      | axios      | openai   |
+| API client      | fetch      | openai   |
 | API server      | \-         | django   |
 | Import sorter   | biome      | ruff     |
 | Logger          | pino       | loguru   |

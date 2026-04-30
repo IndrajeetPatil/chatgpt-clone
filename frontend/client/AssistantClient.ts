@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import type {
   AssistantModel,
   AssistantResponse,
@@ -25,7 +23,21 @@ export default async function fetchAssistantResponse(
   log.info(`Model: ${model}, Temperature: ${temperature}, Prompt: ${prompt}`);
   log.info(`Fetching assistant response from ${fullUrl}`);
 
-  const response = await axios.post<unknown>(fullUrl, request);
+  const response = await fetch(fullUrl, {
+    body: JSON.stringify(request),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
 
-  return assistantResponseSchema.parse(response.data);
+  if (!response.ok) {
+    const errorText = await response.text();
+    const errorDetails = errorText ? `: ${errorText}` : "";
+    throw new Error(
+      `Assistant request failed with status ${response.status}${errorDetails}`
+    );
+  }
+
+  return assistantResponseSchema.parse(await response.json());
 }
