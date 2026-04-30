@@ -1,5 +1,6 @@
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,6 +11,8 @@ from .serializers import AssistantResponseSerializer, ChatRequestSerializer
 
 
 class ChatView(APIView):
+    """API view for generating chat responses via Azure OpenAI."""
+
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -18,7 +21,10 @@ class ChatView(APIView):
                 location=OpenApiParameter.QUERY,
                 required=False,
                 default=AssistantTemperature.BALANCED.name,
-                description="Temperature for response generation: 0.2 (deterministic), 0.7 (balanced), 0.9 (creative)",
+                description=(
+                    "Temperature for response generation: "
+                    "0.2 (deterministic), 0.7 (balanced), 0.9 (creative)"
+                ),
                 enum=[temp.name for temp in AssistantTemperature],
             ),
             OpenApiParameter(
@@ -32,9 +38,16 @@ class ChatView(APIView):
         ],
         request=ChatRequestSerializer,
         responses={200: AssistantResponseSerializer},
-        description="Generate a chat response based on the provided prompt and settings.",
+        description="Generate a chat response based on the provided prompt.",
     )
-    def post(self, request, model: str | AssistantModel) -> Response:
+    def post(self, request: Request, model: str | AssistantModel) -> Response:  # noqa: PLR6301
+        """
+        Generate a chat response for the given model and prompt.
+
+        Returns:
+            A DRF Response containing the assistant's reply or an error.
+
+        """
         # Validate model
         try:
             model = AssistantModel(model)
@@ -73,7 +86,10 @@ class ChatView(APIView):
         prompt: str = serializer.validated_data["prompt"]
 
         logger.info(
-            f"Received chat request with:\n prompt: {prompt},\n model: {model.value},\n temperature: {temperature.value}",
+            "Received chat request with:"
+            f"\n prompt: {prompt},"
+            f"\n model: {model.value},"
+            f"\n temperature: {temperature.value}",
         )
 
         try:

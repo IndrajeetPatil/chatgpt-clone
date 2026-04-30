@@ -21,7 +21,7 @@ class MockAzureClient:
                 self.return_value = None
                 self.side_effect = None
 
-            def create(self, **kwargs):
+            def create(self, **kwargs: object) -> object:
                 self.create_calls.append(kwargs)
                 if self.side_effect is not None:
                     raise self.side_effect
@@ -33,7 +33,7 @@ def mock_azure_client(monkeypatch: MonkeyPatch) -> MockAzureClient:
     """Fixture that provides a mock AzureOpenAIClient instance using monkeypatch."""
     mock_client = MockAzureClient()
 
-    def mock_get_instance():
+    def mock_get_instance() -> MockAzureClient:
         return mock_client
 
     monkeypatch.setattr(AzureOpenAIClient, "get_instance", mock_get_instance)
@@ -42,9 +42,9 @@ def mock_azure_client(monkeypatch: MonkeyPatch) -> MockAzureClient:
 
 def create_mock_completion(content: str) -> object:
     """Helper function to create mock completion objects."""
-    MockMessage = type("MockMessage", (), {"content": content})
-    MockChoice = type("MockChoice", (), {"message": MockMessage()})
-    return type("MockCompletion", (), {"choices": [MockChoice()]})()
+    mock_message_cls = type("MockMessage", (), {"content": content})
+    mock_choice_cls = type("MockChoice", (), {"message": mock_message_cls()})
+    return type("MockCompletion", (), {"choices": [mock_choice_cls()]})()
 
 
 @pytest.mark.django_db
@@ -54,7 +54,7 @@ def create_mock_completion(content: str) -> object:
     AZURE_OPENAI_API_KEY="test-api-key",
 )
 def test_singleton_instance() -> None:
-    """Test that AzureOpenAIClient maintains singleton pattern and proper configuration."""
+    """Test that AzureOpenAIClient maintains singleton pattern."""
     instance1 = AzureOpenAIClient.get_instance()
     instance2 = AzureOpenAIClient.get_instance()
 

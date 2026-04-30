@@ -19,7 +19,7 @@ class MockAzureResponse:
         self.calls = []
         self.response = MOCK_RESPONSE
 
-    def __call__(self, **kwargs):
+    def __call__(self, **kwargs: object) -> str:
         self.calls.append(kwargs)
         return self.response
 
@@ -120,9 +120,7 @@ def test_post_chat_view_empty_payload(
             AssistantModel.FULL.value,
             "INVALID",
             status.HTTP_400_BAD_REQUEST,
-            {
-                "error": "Invalid temperature. Choose from DETERMINISTIC, BALANCED, CREATIVE",
-            },
+            {"error": "Invalid temperature. Choose from DETERMINISTIC, BALANCED, CREATIVE"},  # noqa: E501
         ),
         # Case: Both 'model' and 'temperature' invalid
         (
@@ -141,7 +139,7 @@ def test_chat_view_parameters(
     expected_status: int,
     expected_errors: dict[str, str] | None,
 ) -> None:
-    """Test chat view with different combinations of model and temperature parameters."""
+    """Test chat view with different model and temperature parameter combinations."""
     url: str = reverse("chat", kwargs={"model": model})
     response = api_client.post(
         f"{url}?temperature={temperature}",

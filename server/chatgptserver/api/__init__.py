@@ -1,3 +1,5 @@
+"""Public API for the chatgptserver API module."""
+
 from .azure_client import AzureOpenAIClient as AzureOpenAIClient
 from .azure_client import get_azure_openai_response as get_azure_openai_response
 from .entities import AssistantModel as AssistantModel

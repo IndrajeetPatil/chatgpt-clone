@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # > from django.core.management.utils import get_random_secret_key
 # > print(get_random_secret_key())
-SECRET_KEY = "6eza00@ycc*!%a$-$hl6qhbk5$(zkgnp75d_qfgd^a4eu_lkia"  # noqa
+SECRET_KEY = "6eza00@ycc*!%a$-$hl6qhbk5$(zkgnp75d_qfgd^a4eu_lkia"  # noqa: S105
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
