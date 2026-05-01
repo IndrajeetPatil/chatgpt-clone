@@ -1,16 +1,16 @@
 FRONTEND_DIR=./frontend
 
 # Frontend tool commands
-LINT=npm run lint
-TSC=npm run check-types
-AUDIT=npm audit --audit-level=moderate
-BUILD=npm run build
-VITEST=npm run test
-VITE_START=npm run start
-PLAYWRIGHT=npm run test:e2e
-FALLOW=npm run fallow
-CSS_QUALITY=npm run css-quality
-LHCI=npx lhci
+LINT=pnpm run lint
+TSC=pnpm run check-types
+AUDIT=pnpm audit --audit-level=moderate
+BUILD=pnpm run build
+VITEST=pnpm run test
+VITE_START=pnpm run start
+PLAYWRIGHT=pnpm run test:e2e
+FALLOW=pnpm run fallow
+CSS_QUALITY=pnpm run css-quality
+LHCI=pnpm dlx lhci
 
 # Frontend Targets
 frontend-lint:
