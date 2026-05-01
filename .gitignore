@@ -1,5 +1,10 @@
 server/.dev/*
 
+# fallow cache
+frontend/.fallow/
+# Lighthouse CI results
+.lighthouseci/
+
 server/.DS_Store
 .DS_Store
 server/.env
