@@ -54,7 +54,7 @@ jobs:
 
       - name: Lighthouse CI (collect)
         working-directory: ./frontend
-        run: pnpm dlx lhci@0.15.1 collect
+        run: pnpm dlx @lhci/cli@0.15.1 collect
 
       - name: Lighthouse CI (scores)
         working-directory: ./frontend
@@ -87,11 +87,11 @@ jobs:
 
       - name: Lighthouse CI (assert)
         working-directory: ./frontend
-        run: pnpm dlx lhci@0.15.1 assert
+        run: pnpm dlx @lhci/cli@0.15.1 assert
 
       - name: Lighthouse CI (upload)
         working-directory: ./frontend
-        run: pnpm dlx lhci@0.15.1 upload
+        run: pnpm dlx @lhci/cli@0.15.1 upload
         continue-on-error: true
 
       #- name: Run end-to-end tests

@@ -10,7 +10,7 @@ VITE_START=pnpm run start
 PLAYWRIGHT=pnpm run test:e2e
 FALLOW=pnpm run fallow
 CSS_QUALITY=pnpm run css-quality
-LHCI=pnpm dlx lhci@0.15.1
+LHCI=pnpm dlx @lhci/cli@0.15.1
 
 # Frontend Targets
 frontend-lint:
