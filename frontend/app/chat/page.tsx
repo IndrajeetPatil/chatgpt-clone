@@ -76,6 +76,24 @@ function MessageList({
   );
 }
 
+interface DarkModeToggleProps {
+  darkMode: boolean;
+  onToggle: () => void;
+}
+
+function DarkModeToggle({ darkMode, onToggle }: DarkModeToggleProps) {
+  return (
+    <Tooltip title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
+      <IconButton
+        onClick={onToggle}
+        aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+      >
+        {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+      </IconButton>
+    </Tooltip>
+  );
+}
+
 interface ControlPanelProps {
   model: AssistantModel;
   setModel: (m: AssistantModel) => void;
@@ -128,13 +146,10 @@ function ControlPanel({
             <RefreshCcw size={20} />
           </IconButton>
         </Tooltip>
-        <Tooltip
-          title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-        >
-          <IconButton onClick={onToggleDarkMode}>
-            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </IconButton>
-        </Tooltip>
+        <DarkModeToggle
+          darkMode={darkMode}
+          onToggle={onToggleDarkMode}
+        />
       </Stack>
       <ChatInput
         onSendMessage={onSendMessage}
