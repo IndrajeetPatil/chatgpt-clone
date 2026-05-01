@@ -117,10 +117,11 @@ function ControlPanel({
           setTemperature={setTemperature}
         />
         <Tooltip title="Regenerate Response">
-          <span>
+          <span role="group">
             <IconButton
               onClick={onRegenerate}
               disabled={disabled || !canRegenerate}
+              aria-label="Regenerate response"
             >
               <RefreshCcw size={20} />
             </IconButton>
