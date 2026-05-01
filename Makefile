@@ -28,12 +28,16 @@ lint: backend-lint frontend-lint
 format: backend-format frontend-format
 type-check: backend-type-check frontend-type-check
 test: backend-test frontend-test
+fallow: frontend-fallow
+css-quality: frontend-css-quality
 
 # Quality Assurance targets
-qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit
+qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit frontend-fallow frontend-css-quality
 qa-backend: backend-lint backend-format backend-type-check backend-audit backend-test
 hooks: backend-hooks
-qa: format lint type-check backend-validate-api-schema test
+qa: format lint type-check backend-validate-api-schema test fallow css-quality
+lighthouse: frontend-build frontend-lighthouse
+clean: backend-clean frontend-clean
 
 # Run targets
 run-backend:

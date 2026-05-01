@@ -30,13 +30,134 @@ const INITIAL_MESSAGES: UIMessage[] = [
     id: INITIAL_MESSAGE_ID,
     role: "assistant",
     parts: [
-      {
-        type: "text",
-        text: "Hi, I am a chat bot. How can I help you today?",
-      },
+      { type: "text", text: "Hi, I am a chat bot. How can I help you today?" },
     ],
   },
 ];
+
+function renderMessage(message: UIMessage) {
+  const content = message.parts
+    .map((part) => (part.type === "text" ? part.text : ""))
+    .join("");
+
+  return message.role === "user" ? (
+    <UserMessage
+      key={message.id}
+      content={content}
+    />
+  ) : (
+    <AssistantMessage
+      key={message.id}
+      content={content}
+      isFirstMessage={message.id === INITIAL_MESSAGE_ID}
+    />
+  );
+}
+
+interface MessageListProps {
+  messages: UIMessage[];
+  assistantIsLoading: boolean;
+  error: Error | undefined;
+}
+
+function MessageList({
+  messages,
+  assistantIsLoading,
+  error,
+}: MessageListProps) {
+  return (
+    <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
+      <Stack spacing={2}>
+        {messages.map(renderMessage)}
+        {assistantIsLoading && <CircularProgress />}
+        {error && <Alert severity="error">Error: {error.message}</Alert>}
+      </Stack>
+    </Box>
+  );
+}
+
+interface DarkModeToggleProps {
+  darkMode: boolean;
+  onToggle: () => void;
+}
+
+function DarkModeToggle({ darkMode, onToggle }: DarkModeToggleProps) {
+  return (
+    <Tooltip title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
+      <IconButton
+        onClick={onToggle}
+        aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+      >
+        {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+      </IconButton>
+    </Tooltip>
+  );
+}
+
+interface ControlPanelProps {
+  model: AssistantModel;
+  setModel: (m: AssistantModel) => void;
+  temperature: AssistantTemperature;
+  setTemperature: (t: AssistantTemperature) => void;
+  onRegenerate: () => void;
+  canRegenerate: boolean;
+  darkMode: boolean;
+  onToggleDarkMode: () => void;
+  disabled: boolean;
+  onSendMessage: (message: string) => Promise<void>;
+}
+
+function ControlPanel({
+  model,
+  setModel,
+  temperature,
+  setTemperature,
+  onRegenerate,
+  canRegenerate,
+  darkMode,
+  onToggleDarkMode,
+  disabled,
+  onSendMessage,
+}: ControlPanelProps) {
+  return (
+    <Box sx={{ p: 2 }}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ mb: 2 }}
+      >
+        <AssistantModelParameter
+          model={model}
+          setModel={setModel}
+        />
+        <AssistantTemperatureParameter
+          temperature={temperature}
+          setTemperature={setTemperature}
+        />
+        <Tooltip title="Regenerate Response">
+          <IconButton
+            onClick={() => {
+              if (!disabled && canRegenerate) onRegenerate();
+            }}
+            aria-label="Regenerate response"
+            aria-disabled={disabled || !canRegenerate}
+            sx={{ opacity: disabled || !canRegenerate ? 0.38 : 1 }}
+          >
+            <RefreshCcw size={20} />
+          </IconButton>
+        </Tooltip>
+        <DarkModeToggle
+          darkMode={darkMode}
+          onToggle={onToggleDarkMode}
+        />
+      </Stack>
+      <ChatInput
+        onSendMessage={onSendMessage}
+        disabled={disabled}
+      />
+    </Box>
+  );
+}
 
 export default function Home() {
   const [model, setModel] = useState<AssistantModel>(AssistantModel.FULL);
@@ -63,43 +184,13 @@ export default function Home() {
   );
 
   const handleSendMessage = async (message: string) => {
-    await sendMessage(
-      { text: message },
-      {
-        body: {
-          model,
-          temperature,
-        },
-      }
-    );
+    await sendMessage({ text: message }, { body: { model, temperature } });
   };
 
   const handleRegenerateResponse = async () => {
     if (hasUserMessage) {
-      await regenerate({
-        body: {
-          model,
-          temperature,
-        },
-      });
+      await regenerate({ body: { model, temperature } });
     }
-  };
-
-  const renderMessage = (message: UIMessage) => {
-    const content = getMessageText(message);
-
-    return message.role === "user" ? (
-      <UserMessage
-        key={message.id}
-        content={content}
-      />
-    ) : (
-      <AssistantMessage
-        key={message.id}
-        content={content}
-        isFirstMessage={message.id === INITIAL_MESSAGE_ID}
-      />
-    );
   };
 
   return (
@@ -109,65 +200,24 @@ export default function Home() {
         maxWidth="md"
         sx={{ height: "100vh", display: "flex", flexDirection: "column" }}
       >
-        {/* Chat Messages */}
-        <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
-          <Stack spacing={2}>
-            {messages.map(renderMessage)}
-            {assistantIsLoading && <CircularProgress />}
-            {error && <Alert severity="error">Error: {error.message}</Alert>}
-          </Stack>
-        </Box>
-
-        {/* Control Panel */}
-        <Box sx={{ p: 2 }}>
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{ mb: 2 }}
-          >
-            <AssistantModelParameter
-              model={model}
-              setModel={setModel}
-            />
-            <AssistantTemperatureParameter
-              temperature={temperature}
-              setTemperature={setTemperature}
-            />
-            <Tooltip title="Regenerate Response">
-              <span>
-                <IconButton
-                  onClick={handleRegenerateResponse}
-                  disabled={assistantIsLoading || !hasUserMessage}
-                >
-                  <RefreshCcw size={20} />
-                </IconButton>
-              </span>
-            </Tooltip>
-            <Tooltip
-              title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              <IconButton onClick={() => setDarkMode(!darkMode)}>
-                {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-              </IconButton>
-            </Tooltip>
-          </Stack>
-          <ChatInput
-            onSendMessage={handleSendMessage}
-            disabled={assistantIsLoading}
-          />
-        </Box>
+        <MessageList
+          messages={messages}
+          assistantIsLoading={assistantIsLoading}
+          error={error}
+        />
+        <ControlPanel
+          model={model}
+          setModel={setModel}
+          temperature={temperature}
+          setTemperature={setTemperature}
+          onRegenerate={handleRegenerateResponse}
+          canRegenerate={hasUserMessage}
+          darkMode={darkMode}
+          onToggleDarkMode={() => setDarkMode((prev) => !prev)}
+          disabled={assistantIsLoading}
+          onSendMessage={handleSendMessage}
+        />
       </Container>
     </ThemeProvider>
   );
-}
-
-function getMessageText(message: UIMessage): string {
-  return message.parts
-    .map((part) => {
-      if (part.type === "text") {
-        return part.text;
-      }
-      return "";
-    })
-    .join("");
 }
