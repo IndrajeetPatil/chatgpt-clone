@@ -196,7 +196,7 @@ export default function Home() {
           onRegenerate={handleRegenerateResponse}
           canRegenerate={hasUserMessage}
           darkMode={darkMode}
-          onToggleDarkMode={() => setDarkMode(!darkMode)}
+          onToggleDarkMode={() => setDarkMode((prev) => !prev)}
           disabled={assistantIsLoading}
           onSendMessage={handleSendMessage}
         />
