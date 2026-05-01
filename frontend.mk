@@ -47,6 +47,16 @@ frontend-lighthouse:
 	@echo "$(COLOR_BLUE_BG)Running Lighthouse CI...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(LHCI) autorun
 
+frontend-clean:
+	@echo "$(COLOR_BLUE_BG)Cleaning frontend build artifacts and caches...$(COLOR_RESET)"
+	rm -rf $(FRONTEND_DIR)/node_modules \
+	       $(FRONTEND_DIR)/dist \
+	       $(FRONTEND_DIR)/coverage \
+	       $(FRONTEND_DIR)/playwright-report \
+	       $(FRONTEND_DIR)/test-results \
+	       $(FRONTEND_DIR)/.fallow \
+	       $(FRONTEND_DIR)/.lighthouseci
+
 _run-frontend:
 	@echo "$(COLOR_BLUE_BG)Running frontend server...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(VITE_START) & echo $$! > frontend.pid
@@ -57,4 +67,5 @@ _run-e2e-test:
 
 .PHONY: frontend-lint frontend-format frontend-type-check \
 	frontend-test frontend-build frontend-audit frontend-fallow \
-	frontend-css-quality frontend-lighthouse _run-frontend _run-e2e-test
+	frontend-css-quality frontend-lighthouse frontend-clean \
+	_run-frontend _run-e2e-test

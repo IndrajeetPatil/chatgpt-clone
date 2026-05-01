@@ -1,15 +1,16 @@
 FROM node:24-bookworm-slim
 
+# Activate the package manager declared in package.json (pnpm@11.0.3)
+RUN corepack enable
+
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 
-# Copy the project files 
-# (remember that Dockerfile is in the frontend directory)
 COPY . .
 
-RUN npm run build
+RUN pnpm run build
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "run", "start"]

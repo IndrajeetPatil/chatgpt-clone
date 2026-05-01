@@ -37,6 +37,7 @@ qa-backend: backend-lint backend-format backend-type-check backend-audit backend
 hooks: backend-hooks
 qa: format lint type-check backend-validate-api-schema test fallow css-quality
 lighthouse: frontend-build frontend-lighthouse
+clean: backend-clean frontend-clean
 
 # Run targets
 run-backend:

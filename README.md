@@ -37,12 +37,12 @@ API backed by Azure OpenAI GPT-4o deployments.
 
 The UI is built with [Material
 UI](https://mui.com/material-ui/getting-started/) components and follows
-Google’s Material Design.
+Google's Material Design.
 
 ## Setup
 
 - Clone the repository
-- Create `server/.env` file (cf. `server/.env.example`)
+- Create `server/.env` file (cf. `server/.env.example`)
 - Restore needed dependencies:
 
 ``` bash
@@ -52,7 +52,7 @@ uv sync --frozen
 
 # frontend
 cd frontend
-npm install
+pnpm install --frozen-lockfile
 ```
 
 - Run the services:
@@ -71,45 +71,47 @@ REST API can be interactively explored using FastAPI's Swagger UI:
 
 ### Automated checks
 
-The frontend and backend services have their own quality checks
-(linters, formatters, static type checkers, OpenAPI schema validation,
-unit testing, code coverage).
-
-Assuming you have the necessary tools locally installed, these checks
-can be run locally using the following commands:
+The frontend and backend services have their own quality checks.
+All checks can be run locally with:
 
 ``` bash
 make qa
 ```
 
+To validate Lighthouse scores against thresholds locally:
+
+``` bash
+make lighthouse
+```
+
+To remove all build artifacts and tool caches for a clean slate (useful
+for testing cold-cache behaviour):
+
+``` bash
+make clean
+```
+
 More specifically:
 
-| Step            | Frontend   | Backend  |
-|-----------------|------------|----------|
-| Package Manager | npm        | uv       |
-| Formatter       | biome      | ruff     |
-| Linter          | biome      | ruff     |
-| Type checking   | Typescript | ty       |
-| Unit testing    | vitest     | pytest   |
-| End-to-end test | Playwright | \-       |
-| Code coverage   | vitest     | coverage |
-| API client      | Vercel AI SDK | openai |
-| API server      | \-         | FastAPI  |
-| Import sorter   | biome      | ruff     |
-| Logger          | pino       | loguru   |
+| Step                  | Frontend                | Backend  |
+|-----------------------|-------------------------|----------|
+| Package Manager       | pnpm                    | uv       |
+| Formatter             | biome                   | ruff     |
+| Linter                | biome                   | ruff     |
+| Type checking         | TypeScript              | ty       |
+| Dead-code / complexity| fallow                  | \-       |
+| CSS code quality      | @projectwallace/css-code-quality | \- |
+| Unit testing          | vitest                  | pytest   |
+| End-to-end test       | Playwright              | \-       |
+| Code coverage         | vitest                  | coverage |
+| Performance / a11y    | Lighthouse CI           | \-       |
+| API client            | Vercel AI SDK           | openai   |
+| API server            | \-                      | FastAPI  |
+| Import sorter         | biome                   | ruff     |
+| Logger                | \-                      | loguru   |
 
 These checks are also run on every push to the repository using GitHub
 Actions.
-
-### Manual checks
-
-- UI (Desktop + mobile view) checked on multiple browsers: Chrome,
-  Safari, Edge
-- Deployment checked on two Operating Systems: macOS, Windows
-- Accessibility and performance checks with
-  [Lighthouse](https://developers.google.com/web/tools/lighthouse)
-
-![Lighthouse report](./lighthouse.png)
 
 ## Grievances/Mistakes
 
