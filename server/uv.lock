@@ -1213,7 +1213,6 @@ dependencies = [
     { name = "loguru" },
     { name = "openai" },
     { name = "pydantic-settings" },
-    { name = "python-dotenv" },
 ]
 
 [package.dev-dependencies]
@@ -1235,7 +1234,6 @@ requires-dist = [
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "openai", specifier = ">=2.33.0" },
     { name = "pydantic-settings", specifier = ">=2.14.0" },
-    { name = "python-dotenv", specifier = ">=1.2.2" },
 ]
 
 [package.metadata.requires-dev]

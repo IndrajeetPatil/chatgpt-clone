@@ -13,14 +13,14 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { TextStreamChatTransport } from "ai";
-import { Moon, RefreshCcw, Sun } from "lucide-react";
+import { Bot, Moon, RefreshCcw, Sun, Thermometer } from "lucide-react";
 import { useMemo, useState } from "react";
+import { getModelDisplay, getTemperatureDisplay } from "@/client/helpers";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 import AssistantMessage from "@/components/messages/AssistantMessage";
 import ChatInput from "@/components/messages/ChatInput";
 import UserMessage from "@/components/messages/UserMessage";
-import AssistantModelParameter from "@/components/parameters/AssistantModelParameter";
-import AssistantTemperatureParameter from "@/components/parameters/AssistantTemperatureParameter";
+import DropdownParameter from "@/components/parameters/DropdownParameter";
 
 const INITIAL_MESSAGE_ID = "initial-message";
 const CHAT_API_URL =
@@ -33,6 +33,20 @@ const INITIAL_MESSAGES: UIMessage[] = [
       { type: "text", text: "Hi, I am a chat bot. How can I help you today?" },
     ],
   },
+];
+
+const MODEL_OPTIONS = [
+  { value: AssistantModel.FULL, label: "GPT-4o" },
+  { value: AssistantModel.MINI, label: "GPT-4o Mini" },
+];
+
+const TEMPERATURE_OPTIONS = [
+  {
+    value: AssistantTemperature.DETERMINISTIC,
+    label: "0.2 - More Deterministic",
+  },
+  { value: AssistantTemperature.BALANCED, label: "0.7 - Balanced" },
+  { value: AssistantTemperature.CREATIVE, label: "0.9 - More Creative" },
 ];
 
 function renderMessage(message: UIMessage) {
@@ -126,13 +140,33 @@ function ControlPanel({
         spacing={2}
         sx={{ mb: 2 }}
       >
-        <AssistantModelParameter
-          model={model}
-          setModel={setModel}
+        <DropdownParameter
+          value={model}
+          onChange={setModel}
+          icon={<Bot size={20} />}
+          tooltipTitle={
+            <>
+              Choose Assistant Model
+              <br />
+              (Current: {getModelDisplay(model)})
+            </>
+          }
+          ariaLabel={`Select assistant model. Current model: ${getModelDisplay(model)}`}
+          options={MODEL_OPTIONS}
         />
-        <AssistantTemperatureParameter
-          temperature={temperature}
-          setTemperature={setTemperature}
+        <DropdownParameter
+          value={temperature}
+          onChange={setTemperature}
+          icon={<Thermometer size={20} />}
+          tooltipTitle={
+            <>
+              Choose Temperature
+              <br />
+              (Current: {getTemperatureDisplay(temperature)})
+            </>
+          }
+          ariaLabel={`Select assistant temperature. Current temperature: ${getTemperatureDisplay(temperature)}`}
+          options={TEMPERATURE_OPTIONS}
         />
         <Tooltip title="Regenerate Response">
           <IconButton
