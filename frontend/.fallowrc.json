@@ -1,0 +1,7 @@
+{
+  "$schema": "https://fallow.tools/schema/config.json",
+  "ignoreDependencies": [
+    "@emotion/react",
+    "@emotion/styled"
+  ]
+}

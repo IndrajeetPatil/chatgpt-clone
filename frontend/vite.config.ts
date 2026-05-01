@@ -3,6 +3,15 @@ import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
+const VENDOR_CHUNKS: [string, string][] = [
+  ["react", "/react/"],
+  ["react", "/react-dom/"],
+  ["mui", "/@emotion/"],
+  ["mui", "/@mui/icons-material/"],
+  ["mui", "/@mui/material/"],
+  ["markdown", "/react-markdown/"],
+];
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -20,22 +29,7 @@ export default defineConfig({
           if (!id.includes("node_modules")) {
             return;
           }
-
-          if (id.includes("/react/") || id.includes("/react-dom/")) {
-            return "react";
-          }
-
-          if (
-            id.includes("/@emotion/") ||
-            id.includes("/@mui/icons-material/") ||
-            id.includes("/@mui/material/")
-          ) {
-            return "mui";
-          }
-
-          if (id.includes("/react-markdown/")) {
-            return "markdown";
-          }
+          return VENDOR_CHUNKS.find(([, pattern]) => id.includes(pattern))?.[0];
         },
       },
     },

@@ -43,6 +43,52 @@ jobs:
       - name: Run QA checks
         run: make qa
 
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Lighthouse CI (collect)
+        working-directory: ./frontend
+        run: npx lhci collect
+
+      - name: Lighthouse CI (scores)
+        working-directory: ./frontend
+        run: |
+          node -e "
+            const fs = require('fs');
+            const dir = '.lighthouseci';
+            const files = fs.readdirSync(dir).filter(f => f.startsWith('lhr-') && f.endsWith('.json'));
+            const byUrl = {};
+            for (const f of files) {
+              const r = JSON.parse(fs.readFileSync(dir + '/' + f, 'utf8'));
+              (byUrl[r.finalUrl] = byUrl[r.finalUrl] || []).push(r);
+            }
+            const cats = ['performance','accessibility','best-practices','seo'];
+            const U = 32, C = 16;
+            const lpad = (s, n) => String(s).padStart(n);
+            const rpad = (s, n) => String(s).length >= n ? String(s).slice(0, n-1) + '…' : String(s).padEnd(n);
+            console.log('\n' + rpad('URL', U) + cats.map(c => lpad(c, C)).join(''));
+            console.log('-'.repeat(U + C * cats.length));
+            for (const [url, runs] of Object.entries(byUrl)) {
+              const avg = cats.map(c => {
+                const scores = runs.map(r => r.categories[c]?.score ?? null).filter(s => s !== null);
+                return scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length*100) : '-';
+              });
+              const label = url.replace('http://localhost','').replace(/\/$/,'') || '/';
+              console.log(rpad(label, U) + avg.map(s => lpad(s, C)).join(''));
+            }
+            console.log('');
+          "
+
+      - name: Lighthouse CI (assert)
+        working-directory: ./frontend
+        run: npx lhci assert
+
+      - name: Lighthouse CI (upload)
+        working-directory: ./frontend
+        run: npx lhci upload
+        continue-on-error: true
+
       #- name: Run end-to-end tests
       #  run: make e2e-test
 

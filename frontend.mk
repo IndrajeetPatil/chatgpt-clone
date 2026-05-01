@@ -8,6 +8,9 @@ BUILD=npm run build
 VITEST=npm run test
 VITE_START=npm run start
 PLAYWRIGHT=npm run test:e2e
+FALLOW=npm run fallow
+CSS_QUALITY=npm run css-quality
+LHCI=npx lhci
 
 # Frontend Targets
 frontend-lint:
@@ -32,6 +35,18 @@ frontend-audit:
 	@echo "$(COLOR_BLUE_BG)Auditing frontend dependencies...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(AUDIT)
 
+frontend-fallow:
+	@echo "$(COLOR_BLUE_BG)Running frontend dead-code/complexity/duplication checks with fallow...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(FALLOW)
+
+frontend-css-quality:
+	@echo "$(COLOR_BLUE_BG)Running frontend CSS code quality checks...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(CSS_QUALITY)
+
+frontend-lighthouse:
+	@echo "$(COLOR_BLUE_BG)Running Lighthouse CI...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(LHCI) autorun
+
 _run-frontend:
 	@echo "$(COLOR_BLUE_BG)Running frontend server...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(VITE_START) & echo $$! > frontend.pid
@@ -41,4 +56,5 @@ _run-e2e-test:
 	cd $(FRONTEND_DIR) && $(PLAYWRIGHT)
 
 .PHONY: frontend-lint frontend-format frontend-type-check \
-	frontend-test frontend-build frontend-audit _run-frontend _run-e2e-test
+	frontend-test frontend-build frontend-audit frontend-fallow \
+	frontend-css-quality frontend-lighthouse _run-frontend _run-e2e-test
