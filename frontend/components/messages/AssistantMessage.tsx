@@ -17,12 +17,6 @@ interface AssistantMessageProps {
   isFirstMessage: boolean;
 }
 
-interface CodeProps {
-  inline?: boolean;
-  className?: string;
-  children: React.ReactNode;
-}
-
 const AssistantMessage: React.FC<AssistantMessageProps> = ({
   content,
   isFirstMessage,
@@ -35,50 +29,6 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const renderers: Record<string, React.FC<CodeProps>> = {
-    code({ inline, className, children }: CodeProps) {
-      const [, language = ""] = (className ?? "").match(/language-(\w+)/) || [];
-      const codeString = String(children).replace(/\n$/, "");
-      if (!inline && language) {
-        return (
-          <Box
-            component="pre"
-            data-testid="code-block"
-            sx={{
-              mt: 2,
-              p: 2,
-              overflowX: "auto",
-              borderRadius: 1,
-              backgroundColor: isDark ? "#1e1e1e" : "#f6f8fa",
-            }}
-          >
-            <Typography
-              component="code"
-              sx={{
-                fontFamily:
-                  '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
-                fontSize: "0.875rem",
-                whiteSpace: "pre",
-              }}
-            >
-              {codeString}
-            </Typography>
-          </Box>
-        );
-      }
-      return (
-        <code
-          style={{
-            backgroundColor: isDark ? "#2d2d2d" : "#f5f5f5",
-            color: isDark ? "#e0e0e0" : "inherit",
-          }}
-        >
-          {children}
-        </code>
-      );
-    },
   };
 
   return (
@@ -99,7 +49,54 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
           variant="body1"
           component="div"
         >
-          <ReactMarkdown components={renderers}>{content}</ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              pre: ({ children }) => <>{children}</>,
+              code: ({ className, children }) => {
+                const [, language = ""] =
+                  (className ?? "").match(/language-(\w+)/) || [];
+                if (language) {
+                  return (
+                    <Box
+                      component="pre"
+                      data-testid="code-block"
+                      sx={{
+                        mt: 2,
+                        p: 2,
+                        overflowX: "auto",
+                        borderRadius: 1,
+                        backgroundColor: isDark ? "#1e1e1e" : "#f6f8fa",
+                      }}
+                    >
+                      <Typography
+                        component="code"
+                        sx={{
+                          fontFamily:
+                            '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+                          fontSize: "0.875rem",
+                          whiteSpace: "pre",
+                        }}
+                      >
+                        {String(children).replace(/\n$/, "")}
+                      </Typography>
+                    </Box>
+                  );
+                }
+                return (
+                  <code
+                    style={{
+                      backgroundColor: isDark ? "#2d2d2d" : "#f5f5f5",
+                      color: isDark ? "#e0e0e0" : "inherit",
+                    }}
+                  >
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          >
+            {content}
+          </ReactMarkdown>
         </Typography>
         {!isFirstMessage && (
           <Tooltip title={copied ? "Copied!" : "Copy entire message"}>

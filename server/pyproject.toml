@@ -9,7 +9,6 @@ dependencies = [
     "loguru>=0.7.2",
     "openai>=2.33.0",
     "pydantic-settings>=2.14.0",
-    "python-dotenv>=1.2.2",
 ]
 
 [dependency-groups]
