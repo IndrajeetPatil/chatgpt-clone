@@ -117,15 +117,16 @@ function ControlPanel({
           setTemperature={setTemperature}
         />
         <Tooltip title="Regenerate Response">
-          <span role="group">
-            <IconButton
-              onClick={onRegenerate}
-              disabled={disabled || !canRegenerate}
-              aria-label="Regenerate response"
-            >
-              <RefreshCcw size={20} />
-            </IconButton>
-          </span>
+          <IconButton
+            onClick={() => {
+              if (!disabled && canRegenerate) onRegenerate();
+            }}
+            aria-label="Regenerate response"
+            aria-disabled={disabled || !canRegenerate}
+            sx={{ opacity: disabled || !canRegenerate ? 0.38 : 1 }}
+          >
+            <RefreshCcw size={20} />
+          </IconButton>
         </Tooltip>
         <Tooltip
           title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
