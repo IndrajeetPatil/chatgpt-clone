@@ -14,6 +14,7 @@ const VENDOR_CHUNKS: [string, string][] = [
 
 export default defineConfig({
   plugins: [react()],
+  publicDir: "app/favicon",
   resolve: {
     alias: {
       "@": fileURLToPath(new URL(".", import.meta.url)),
