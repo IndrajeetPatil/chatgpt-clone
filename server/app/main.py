@@ -16,8 +16,8 @@ if TYPE_CHECKING:
 settings = get_settings()
 
 app = FastAPI(
-    title="chatgpt-clone backend",
-    description="Streaming backend API for the ChatGPT clone.",
+    title="chatbot-template backend",
+    description="Streaming backend API for the chatbot template.",
     version="1.0.0",
 )
 

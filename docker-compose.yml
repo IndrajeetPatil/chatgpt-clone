@@ -3,7 +3,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: chatgpt-clone-backend
+    container_name: chatbot-template-backend
     ports:
       - "8000:8000"
     env_file:
@@ -13,7 +13,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: chatgpt-clone-frontend
+    container_name: chatbot-template-frontend
     ports:
       - "3000:3000"
     depends_on:
