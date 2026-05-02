@@ -11,6 +11,13 @@ hooks = [
 ]
 
 [[repos]]
+repo = "https://github.com/rvben/rumdl-pre-commit"
+rev = "v0.1.86"
+hooks = [
+  { id = "rumdl" },
+]
+
+[[repos]]
 repo = "builtin"
 hooks = [
   { id = "trailing-whitespace", exclude = "\\.snap$" },
