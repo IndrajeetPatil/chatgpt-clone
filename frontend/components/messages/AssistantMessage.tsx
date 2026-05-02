@@ -51,35 +51,38 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         >
           <ReactMarkdown
             components={{
-              pre: ({ children }) => <>{children}</>,
+              pre: ({ children }) => (
+                <Box
+                  component="pre"
+                  data-testid="code-block"
+                  sx={{
+                    mt: 2,
+                    p: 2,
+                    overflowX: "auto",
+                    borderRadius: 1,
+                    backgroundColor: isDark ? "#1e1e1e" : "#f6f8fa",
+                  }}
+                >
+                  {children}
+                </Box>
+              ),
               code: ({ className, children }) => {
-                const [, language = ""] =
-                  (className ?? "").match(/language-(\w+)/) || [];
-                if (language) {
+                const language =
+                  (className ?? "").match(/language-(\w+)/)?.[1] ?? "";
+                const text = String(children ?? "");
+                if (language || text.includes("\n")) {
                   return (
-                    <Box
-                      component="pre"
-                      data-testid="code-block"
+                    <Typography
+                      component="code"
                       sx={{
-                        mt: 2,
-                        p: 2,
-                        overflowX: "auto",
-                        borderRadius: 1,
-                        backgroundColor: isDark ? "#1e1e1e" : "#f6f8fa",
+                        fontFamily:
+                          '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+                        fontSize: "0.875rem",
+                        whiteSpace: "pre",
                       }}
                     >
-                      <Typography
-                        component="code"
-                        sx={{
-                          fontFamily:
-                            '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
-                          fontSize: "0.875rem",
-                          whiteSpace: "pre",
-                        }}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </Typography>
-                    </Box>
+                      {text.replace(/\n$/, "")}
+                    </Typography>
                   );
                 }
                 return (

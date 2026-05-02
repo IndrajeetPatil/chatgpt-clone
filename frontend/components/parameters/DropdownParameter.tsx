@@ -3,12 +3,12 @@ import { ChevronDown } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 
-interface DropdownOption<T> {
+interface DropdownOption<T extends string | number> {
   value: T;
   label: string;
 }
 
-interface DropdownParameterProps<T> {
+interface DropdownParameterProps<T extends string | number> {
   value: T;
   onChange: (value: T) => void;
   icon: React.ReactNode;
@@ -17,7 +17,7 @@ interface DropdownParameterProps<T> {
   options: DropdownOption<T>[];
 }
 
-function DropdownParameter<T>({
+function DropdownParameter<T extends string | number>({
   value,
   onChange,
   icon,
