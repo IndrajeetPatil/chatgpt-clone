@@ -6,6 +6,79 @@ import { useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useIsDark } from "@/client/hooks";
 
+const DARK_COLORS = {
+  codeBlock: "#1e1e1e",
+  inlineBg: "#2d2d2d",
+  inlineFg: "#e0e0e0",
+  paper: "#2d2d2d",
+  icon: "#4caf50",
+} as const;
+
+const LIGHT_COLORS = {
+  codeBlock: "#f6f8fa",
+  inlineBg: "#f5f5f5",
+  inlineFg: "inherit",
+  paper: "#fff3e0",
+  icon: "#ff9800",
+} as const;
+
+const COPY_BTN_COLORS = {
+  dark: { bg: "#4caf50", hover: "#45a049" },
+  light: { bg: "#ff9800", hover: "#e65100" },
+} as const;
+
+function BlockCode({ text }: { text: string }) {
+  return (
+    <Typography
+      component="code"
+      sx={{
+        fontFamily:
+          '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+        fontSize: "0.875rem",
+        whiteSpace: "pre",
+      }}
+    >
+      {text.replace(/\n$/, "")}
+    </Typography>
+  );
+}
+
+interface CopyButtonProps {
+  content: string;
+  isDark: boolean;
+}
+
+function CopyButton({ content, isDark }: CopyButtonProps) {
+  const [copied, setCopied] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const btnColors = isDark ? COPY_BTN_COLORS.dark : COPY_BTN_COLORS.light;
+
+  const handleCopy = () => {
+    /* v8 ignore next */
+    navigator.clipboard.writeText(content).catch(() => {});
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setCopied(true);
+    timerRef.current = setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Tooltip title={copied ? "Copied!" : "Copy entire message"}>
+      <IconButton
+        onClick={handleCopy}
+        sx={{
+          position: "absolute",
+          top: 4,
+          right: 4,
+          backgroundColor: btnColors.bg,
+          "&:hover": { backgroundColor: btnColors.hover },
+        }}
+      >
+        <ContentCopyIcon fontSize="small" />
+      </IconButton>
+    </Tooltip>
+  );
+}
+
 interface AssistantMessageProps {
   content: string;
   isFirstMessage: boolean;
@@ -15,16 +88,8 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
   content,
   isFirstMessage,
 }) => {
-  const [copied, setCopied] = useState(false);
-  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isDark = useIsDark();
-
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text).catch(() => {});
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    setCopied(true);
-    copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
-  };
+  const colors = isDark ? DARK_COLORS : LIGHT_COLORS;
 
   const markdownComponents = useMemo(
     () => ({
@@ -37,46 +102,31 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
             p: 2,
             overflowX: "auto",
             borderRadius: 1,
-            backgroundColor: isDark ? "#1e1e1e" : "#f6f8fa",
+            backgroundColor: colors.codeBlock,
           }}
         >
           {children}
         </Box>
       ),
       code: ({
-        className,
+        className = "",
         children,
       }: React.ComponentPropsWithoutRef<"code">) => {
-        const language = (className ?? "").match(/language-(\w+)/)?.[1] ?? "";
+        const language = className.match(/language-(\w+)/)?.[1];
         const text = String(children ?? "");
         if (language || text.includes("\n")) {
-          return (
-            <Typography
-              component="code"
-              sx={{
-                fontFamily:
-                  '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
-                fontSize: "0.875rem",
-                whiteSpace: "pre",
-              }}
-            >
-              {text.replace(/\n$/, "")}
-            </Typography>
-          );
+          return <BlockCode text={text} />;
         }
         return (
           <code
-            style={{
-              backgroundColor: isDark ? "#2d2d2d" : "#f5f5f5",
-              color: isDark ? "#e0e0e0" : "inherit",
-            }}
+            style={{ backgroundColor: colors.inlineBg, color: colors.inlineFg }}
           >
             {children}
           </code>
         );
       },
     }),
-    [isDark]
+    [colors]
   );
 
   return (
@@ -85,14 +135,14 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         elevation={2}
         sx={{
           p: 2,
-          backgroundColor: isDark ? "#2d2d2d" : "#fff3e0",
+          backgroundColor: colors.paper,
           maxWidth: "80%",
           wordWrap: "break-word",
           overflowWrap: "anywhere",
           position: "relative",
         }}
       >
-        <SmartToyIcon sx={{ color: isDark ? "#4caf50" : "#ff9800" }} />
+        <SmartToyIcon sx={{ color: colors.icon }} />
         <Typography
           variant="body1"
           component="div"
@@ -102,22 +152,10 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
           </ReactMarkdown>
         </Typography>
         {!isFirstMessage && (
-          <Tooltip title={copied ? "Copied!" : "Copy entire message"}>
-            <IconButton
-              onClick={() => handleCopy(content)}
-              sx={{
-                position: "absolute",
-                top: 4,
-                right: 4,
-                backgroundColor: isDark ? "#4caf50" : "#ff9800",
-                "&:hover": {
-                  backgroundColor: isDark ? "#45a049" : "#e65100",
-                },
-              }}
-            >
-              <ContentCopyIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+          <CopyButton
+            content={content}
+            isDark={isDark}
+          />
         )}
       </Paper>
     </Box>

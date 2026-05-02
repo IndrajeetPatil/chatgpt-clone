@@ -1,7 +1,34 @@
 {
-  "$schema": "https://fallow.tools/schema/config.json",
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": ["src/main.tsx", "scripts/css-quality.mjs"],
+  "ignorePatterns": ["**/*.css"],
   "ignoreDependencies": [
     "@emotion/react",
     "@emotion/styled"
-  ]
+  ],
+  "rules": {
+    "unused-files": "error",
+    "unused-exports": "error",
+    "unused-types": "error",
+    "unused-dependencies": "error",
+    "unused-dev-dependencies": "error",
+    "unused-optional-dependencies": "error",
+    "unused-enum-members": "error",
+    "unused-class-members": "error",
+    "unresolved-imports": "error",
+    "unlisted-dependencies": "error",
+    "duplicate-exports": "error",
+    "circular-dependencies": "error",
+    "type-only-dependencies": "error",
+    "test-only-dependencies": "error"
+  },
+  "duplicates": {
+    "mode": "strict",
+    "minTokens": 50,
+    "minLines": 4
+  },
+  "health": {
+    "maxCyclomatic": 5,
+    "maxCognitive": 5
+  }
 }
