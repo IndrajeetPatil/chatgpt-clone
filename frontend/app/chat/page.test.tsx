@@ -13,10 +13,7 @@ vi.mock("@ai-sdk/react", () => ({
 }));
 
 vi.mock("ai", () => ({
-  // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-  TextStreamChatTransport: class {
-    constructor() {}
-  },
+  TextStreamChatTransport: class {},
 }));
 
 // Mock child components so we can test page.tsx logic in isolation

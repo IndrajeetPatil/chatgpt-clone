@@ -56,13 +56,16 @@ describe("ChatInput component", () => {
     expect(onSendMessageMock).not.toHaveBeenCalled();
   });
 
-  test("should send on button click", () => {
+  test("should send message when send button is clicked", () => {
     const onSendMessageMock = vi.fn();
-    render(<ChatInput onSendMessage={onSendMessageMock} />);
+    const { getByPlaceholderText, getByLabelText } = render(
+      <ChatInput onSendMessage={onSendMessageMock} />
+    );
 
-    const input = document.querySelector("textarea")!;
-    fireEvent.change(input, { target: { value: "Hello via button" } });
-    fireEvent.submit(input.closest("form")!);
+    fireEvent.change(getByPlaceholderText("Type your message..."), {
+      target: { value: "Hello via button" },
+    });
+    fireEvent.click(getByLabelText("Send message"));
 
     expect(onSendMessageMock).toHaveBeenCalledWith("Hello via button");
   });

@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from app.entities import AssistantModel, AssistantTemperature
 from app.main import app
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterator
 
 
@@ -100,7 +100,7 @@ def test_ui_message_text_returns_content_field() -> None:
     assert message.text == "Hello from content"
 
 
-def test_stream_chat_logs_and_reraises_exception(
+def test_stream_chat_reraises_exception(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     from collections.abc import Iterator

@@ -18,7 +18,7 @@ ChatMessage = dict[str, str]
 
 
 @lru_cache(maxsize=1)
-def get_azure_openai_client() -> AzureOpenAI:  # pragma: no cover
+def get_azure_openai_client() -> AzureOpenAI:
     settings = get_settings()
     return AzureOpenAI(
         azure_endpoint=settings.azure_openai_endpoint,

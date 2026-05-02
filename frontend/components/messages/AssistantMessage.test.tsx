@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import { type RenderResult, fireEvent, render, screen } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import type React from "react";
 import { vi } from "vitest";
 
@@ -121,21 +122,39 @@ describe("AssistantMessage", () => {
     expect(getByRole("button")).toBeInTheDocument();
   });
 
-  test("copy button calls clipboard writeText on click", async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.assign(navigator, {
-      clipboard: { writeText },
+  describe("copy button clipboard interaction", () => {
+    let savedClipboard: Clipboard;
+
+    beforeEach(() => {
+      savedClipboard = navigator.clipboard;
     });
 
-    const { getByRole } = render(
-      <AssistantMessage
-        content="Copy me!"
-        isFirstMessage={false}
-      />,
-      { wrapper: Wrapper }
-    );
+    afterEach(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        value: savedClipboard,
+        configurable: true,
+        writable: true,
+      });
+    });
 
-    fireEvent.click(getByRole("button"));
-    expect(writeText).toHaveBeenCalledWith("Copy me!");
+    test("calls clipboard writeText with message content on click", () => {
+      const writeText = vi.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, "clipboard", {
+        value: { writeText },
+        configurable: true,
+        writable: true,
+      });
+
+      const { getByRole } = render(
+        <AssistantMessage
+          content="Copy me!"
+          isFirstMessage={false}
+        />,
+        { wrapper: Wrapper }
+      );
+
+      fireEvent.click(getByRole("button"));
+      expect(writeText).toHaveBeenCalledWith("Copy me!");
+    });
   });
 });
