@@ -10,7 +10,7 @@ from app.azure_client import ChatMessage, stream_azure_openai_response
 from app.config import get_settings
 from app.entities import AssistantModel, AssistantTemperature, OpenAIMessageRole
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterator
 
 settings = get_settings()

@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import { type RenderResult, render, screen } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import type React from "react";
 import { vi } from "vitest";
 
@@ -97,5 +98,63 @@ describe("AssistantMessage", () => {
       { wrapper: Wrapper }
     );
     expect(container).toMatchSnapshot();
+  });
+
+  test("does not show copy button when isFirstMessage is true", () => {
+    const { queryByRole } = render(
+      <AssistantMessage
+        content="Welcome!"
+        isFirstMessage={true}
+      />,
+      { wrapper: Wrapper }
+    );
+    expect(queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  test("shows copy button when isFirstMessage is false", () => {
+    const { getByRole } = render(
+      <AssistantMessage
+        content="A response"
+        isFirstMessage={false}
+      />,
+      { wrapper: Wrapper }
+    );
+    expect(getByRole("button")).toBeInTheDocument();
+  });
+
+  describe("copy button clipboard interaction", () => {
+    let savedClipboard: Clipboard;
+
+    beforeEach(() => {
+      savedClipboard = navigator.clipboard;
+    });
+
+    afterEach(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        value: savedClipboard,
+        configurable: true,
+        writable: true,
+      });
+    });
+
+    test("calls clipboard writeText with message content on click", () => {
+      const writeText = vi.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, "clipboard", {
+        value: { writeText },
+        configurable: true,
+        writable: true,
+      });
+
+      const { getByRole } = render(
+        <AssistantMessage
+          content="Copy me!"
+          isFirstMessage={false}
+        />,
+        { wrapper: Wrapper }
+      );
+
+      fireEvent.click(getByRole("button"));
+      expect(writeText).toHaveBeenCalledWith("Copy me!");
+    });
   });
 });

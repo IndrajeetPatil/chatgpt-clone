@@ -4,23 +4,6 @@
 A minimal full-stack chatbot template using React and FastAPI, backed by
 Azure OpenAI GPT-4o.
 
-## Requirements
-
-The specified requirements were the following:
-
-- Use FastAPI as the backend and React as the frontend.
-- Allow users to select between GPT-4o and GPT-4o mini and change the
-  temperature of the responses (0.2, 0.7, and 0.9).
-- Request answers in Markdown format and display the answers in respect
-  to the given format.
-
-## Implementation
-
-![](demo.mov)
-
-If the video is not accessible on GitHub README, have a look at it
-[here](https://github.com/IndrajeetPatil/chatbot-template/blob/main/demo.mov).
-
 ## Architecture/Design
 
 The project is structured as a monorepo with two services:
@@ -101,6 +84,7 @@ More specifically:
 | Type checking         | TypeScript              | ty       |
 | Dead-code / complexity| fallow                  | \-       |
 | CSS code quality      | @projectwallace/css-code-quality | \- |
+| Security linting      | eslint (react/no-unsanitized)   | \- |
 | Unit testing          | vitest                  | pytest   |
 | End-to-end test       | Playwright              | \-       |
 | Code coverage         | vitest                  | coverage |
@@ -113,17 +97,3 @@ More specifically:
 These checks are also run on every push to the repository using GitHub
 Actions.
 
-## Grievances/Mistakes
-
-- Using Next.js only for the frontend was a total overkill. The frontend
-  has since been migrated to a Vite React SPA, which is a better fit for
-  this app.
-
-## Room for Improvement
-
-- Although this is PoC project that uses a monorepo approach to host the
-  entire stack, the production-grade project should use separate
-  repositories for the ease of development, maintenance, and deployment.
-
-- The project could be improved by adding more features like user
-  authentication and saving chat history.

@@ -11,6 +11,7 @@ const getTemperatureDisplay = (temperature: AssistantTemperature) => {
       return "0.7 - Balanced";
     case AssistantTemperature.CREATIVE:
       return "0.9 - More Creative";
+    /* v8 ignore next */
     default:
       return "";
   }

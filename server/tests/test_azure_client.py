@@ -105,3 +105,54 @@ def test_api_exception(
                 temperature=AssistantTemperature.BALANCED,
             ),
         )
+
+
+def test_get_azure_openai_client_wires_settings_correctly(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    get_azure_openai_client.cache_clear()
+
+    class MockSettings:
+        azure_openai_endpoint = "https://test.openai.azure.com/"
+        azure_openai_api_key = "test-key-123"
+        azure_openai_api_version = "2024-02-01"
+
+    monkeypatch.setattr("app.azure_client.get_settings", MockSettings)
+
+    captured: dict[str, object] = {}
+
+    class MockAzureOpenAI:
+        def __init__(self, **kwargs: object) -> None:
+            captured.update(kwargs)
+
+    monkeypatch.setattr("app.azure_client.AzureOpenAI", MockAzureOpenAI)
+
+    client = get_azure_openai_client()
+    get_azure_openai_client.cache_clear()
+
+    assert isinstance(client, MockAzureOpenAI)
+    assert captured["azure_endpoint"] == "https://test.openai.azure.com/"
+    assert captured["api_key"] == "test-key-123"
+    assert captured["api_version"] == "2024-02-01"
+    assert captured["max_retries"] == 5
+
+
+def test_stream_skips_chunks_with_empty_choices(
+    mock_azure_client: MockAzureClient,
+) -> None:
+    empty_chunk = type("MockChunk", (), {"choices": []})()
+    mock_azure_client.chat.completions.return_value = [
+        empty_chunk,
+        create_chunk("Hello"),
+        empty_chunk,
+    ]
+
+    result = list(
+        stream_azure_openai_response(
+            messages=[{"role": "user", "content": "Test"}],
+            model=AssistantModel.FULL,
+            temperature=AssistantTemperature.BALANCED,
+        ),
+    )
+
+    assert result == ["Hello"]

@@ -32,10 +32,10 @@ fallow: frontend-fallow
 css-quality: frontend-css-quality
 
 # Quality Assurance targets
-qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit frontend-fallow frontend-css-quality
+qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit frontend-fallow frontend-css-quality frontend-security-lint
 qa-backend: backend-lint backend-format backend-type-check backend-audit backend-test
 hooks: backend-hooks
-qa: format lint type-check backend-validate-api-schema test fallow css-quality
+qa: format lint type-check backend-validate-api-schema test fallow css-quality frontend-security-lint
 lighthouse: frontend-build frontend-lighthouse
 clean: backend-clean frontend-clean
 

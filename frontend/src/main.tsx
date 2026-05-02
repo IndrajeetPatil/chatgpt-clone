@@ -1,3 +1,4 @@
+/* v8 ignore file */
 import React from "react";
 import { createRoot } from "react-dom/client";
 

@@ -3,10 +3,10 @@ from typing import TYPE_CHECKING
 import pytest
 from fastapi.testclient import TestClient
 
-from app.entities import AssistantModel, AssistantTemperature
-from app.main import app
+from app.entities import AssistantModel, AssistantTemperature, OpenAIMessageRole
+from app.main import UIMessage, app
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterator
 
 
@@ -91,3 +91,29 @@ def test_health() -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+def test_ui_message_text_returns_content_field() -> None:
+    message = UIMessage(role=OpenAIMessageRole.USER, content="Hello from content")
+    assert message.text == "Hello from content"
+
+
+def test_stream_chat_reraises_exception(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def mock_stream(**kwargs: object) -> None:
+        msg = "Upstream failure"
+        raise RuntimeError(msg)
+
+    monkeypatch.setattr("app.main.stream_azure_openai_response", mock_stream)
+
+    client = TestClient(app, raise_server_exceptions=True)
+    with pytest.raises(RuntimeError, match="Upstream failure"):
+        client.post(
+            "/api/v1/chat",
+            json={
+                "messages": [
+                    {"role": "user", "parts": [{"type": "text", "text": "Hi"}]},
+                ],
+            },
+        )

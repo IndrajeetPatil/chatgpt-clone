@@ -65,12 +65,6 @@ exclude = [".venv", "build", "dist"]
 [tool.ty.environment]
 python-version = "3.14"
 
-[tool.coverage.run]
-omit = [
-    # FastAPI wires this through OpenAPI and smoke tests.
-    "app/main.py",
-]
-
 [tool.pytest.ini_options]
 addopts = [
     "--strict-markers",
