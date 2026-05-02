@@ -1,5 +1,6 @@
 import PersonIcon from "@mui/icons-material/Person";
-import { Box, Paper, Typography, useTheme } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
+import { useIsDark } from "@/client/hooks";
 import type React from "react";
 
 interface UserMessageProps {
@@ -7,8 +8,7 @@ interface UserMessageProps {
 }
 
 const UserMessage: React.FC<UserMessageProps> = ({ content }) => {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
+  const isDark = useIsDark();
 
   return (
     <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
