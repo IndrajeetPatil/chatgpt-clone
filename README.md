@@ -96,4 +96,3 @@ More specifically:
 
 These checks are also run on every push to the repository using GitHub
 Actions.
-

@@ -41,7 +41,7 @@ exports[`AssistantMessage > matches snapshot for mixed content snapshot 1`] = `
             </code>
           </pre>
           <span>
-            
+
 And more text
           </span>
         </div>
