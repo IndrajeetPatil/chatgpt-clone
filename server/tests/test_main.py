@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.entities import AssistantModel, AssistantTemperature
-from app.main import app
+from app.main import UIMessage, app
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterator
@@ -94,8 +94,6 @@ def test_health() -> None:
 
 
 def test_ui_message_text_returns_content_field() -> None:
-    from app.main import UIMessage
-
     message = UIMessage(role="user", content="Hello from content")
     assert message.text == "Hello from content"
 
@@ -103,21 +101,19 @@ def test_ui_message_text_returns_content_field() -> None:
 def test_stream_chat_reraises_exception(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    from collections.abc import Iterator
-
-    from app.main import _stream_chat
-
-    def mock_stream(**kwargs: object) -> Iterator[str]:
+    def mock_stream(**kwargs: object) -> None:
         msg = "Upstream failure"
         raise RuntimeError(msg)
 
     monkeypatch.setattr("app.main.stream_azure_openai_response", mock_stream)
 
+    client = TestClient(app, raise_server_exceptions=True)
     with pytest.raises(RuntimeError, match="Upstream failure"):
-        list(
-            _stream_chat(
-                messages=[{"role": "user", "content": "Hi"}],
-                model=AssistantModel.FULL,
-                temperature=AssistantTemperature.BALANCED,
-            ),
+        client.post(
+            "/api/v1/chat",
+            json={
+                "messages": [
+                    {"role": "user", "parts": [{"type": "text", "text": "Hi"}]},
+                ],
+            },
         )
