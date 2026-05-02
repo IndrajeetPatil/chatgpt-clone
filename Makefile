@@ -23,6 +23,11 @@ markdown-lint:
 	@echo "$(COLOR_BLUE_BG)Running markdown linting with rumdl...$(COLOR_RESET)"
 	uv tool run --from rumdl==0.1.86 rumdl check .
 
+# File naming conventions
+file-naming:
+	@echo "$(COLOR_BLUE_BG)Running file naming checks with ls-lint...$(COLOR_RESET)"
+	ls-lint
+
 type-check: backend-type-check frontend-type-check
 test: backend-test frontend-test
 fallow: frontend-fallow
@@ -32,7 +37,7 @@ css-quality: frontend-css-quality
 qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit frontend-fallow frontend-css-quality frontend-security-lint frontend-type-coverage
 qa-backend: backend-lint backend-format backend-type-check backend-audit backend-test backend-type-coverage
 hooks: backend-hooks
-qa: format lint type-check backend-validate-api-schema test fallow css-quality frontend-security-lint type-coverage
+qa: format lint type-check backend-validate-api-schema test fallow css-quality frontend-security-lint type-coverage file-naming
 lighthouse: frontend-build frontend-lighthouse
 clean: backend-clean frontend-clean
 
