@@ -7,7 +7,7 @@ from openai import AzureOpenAI
 
 from app.config import get_settings
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterator, Sequence
 
     from openai.types.chat import ChatCompletionMessageParam
@@ -18,7 +18,7 @@ ChatMessage = dict[str, str]
 
 
 @lru_cache(maxsize=1)
-def get_azure_openai_client() -> AzureOpenAI:
+def get_azure_openai_client() -> AzureOpenAI:  # pragma: no cover
     settings = get_settings()
     return AzureOpenAI(
         azure_endpoint=settings.azure_openai_endpoint,

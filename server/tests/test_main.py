@@ -91,3 +91,33 @@ def test_health() -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+def test_ui_message_text_returns_content_field() -> None:
+    from app.main import UIMessage
+
+    message = UIMessage(role="user", content="Hello from content")
+    assert message.text == "Hello from content"
+
+
+def test_stream_chat_logs_and_reraises_exception(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from collections.abc import Iterator
+
+    from app.main import _stream_chat
+
+    def mock_stream(**kwargs: object) -> Iterator[str]:
+        msg = "Upstream failure"
+        raise RuntimeError(msg)
+
+    monkeypatch.setattr("app.main.stream_azure_openai_response", mock_stream)
+
+    with pytest.raises(RuntimeError, match="Upstream failure"):
+        list(
+            _stream_chat(
+                messages=[{"role": "user", "content": "Hi"}],
+                model=AssistantModel.FULL,
+                temperature=AssistantTemperature.BALANCED,
+            ),
+        )

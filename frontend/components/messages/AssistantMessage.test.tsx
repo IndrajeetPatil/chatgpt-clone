@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import { type RenderResult, render, screen } from "@testing-library/react";
+import { type RenderResult, fireEvent, render, screen } from "@testing-library/react";
 import type React from "react";
 import { vi } from "vitest";
 
@@ -97,5 +97,45 @@ describe("AssistantMessage", () => {
       { wrapper: Wrapper }
     );
     expect(container).toMatchSnapshot();
+  });
+
+  test("does not show copy button when isFirstMessage is true", () => {
+    const { queryByRole } = render(
+      <AssistantMessage
+        content="Welcome!"
+        isFirstMessage={true}
+      />,
+      { wrapper: Wrapper }
+    );
+    expect(queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  test("shows copy button when isFirstMessage is false", () => {
+    const { getByRole } = render(
+      <AssistantMessage
+        content="A response"
+        isFirstMessage={false}
+      />,
+      { wrapper: Wrapper }
+    );
+    expect(getByRole("button")).toBeInTheDocument();
+  });
+
+  test("copy button calls clipboard writeText on click", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, {
+      clipboard: { writeText },
+    });
+
+    const { getByRole } = render(
+      <AssistantMessage
+        content="Copy me!"
+        isFirstMessage={false}
+      />,
+      { wrapper: Wrapper }
+    );
+
+    fireEvent.click(getByRole("button"));
+    expect(writeText).toHaveBeenCalledWith("Copy me!");
   });
 });

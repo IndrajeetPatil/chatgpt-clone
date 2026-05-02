@@ -105,3 +105,24 @@ def test_api_exception(
                 temperature=AssistantTemperature.BALANCED,
             ),
         )
+
+
+def test_stream_skips_chunks_with_empty_choices(
+    mock_azure_client: MockAzureClient,
+) -> None:
+    empty_chunk = type("MockChunk", (), {"choices": []})()
+    mock_azure_client.chat.completions.return_value = [
+        empty_chunk,
+        create_chunk("Hello"),
+        empty_chunk,
+    ]
+
+    result = list(
+        stream_azure_openai_response(
+            messages=[{"role": "user", "content": "Test"}],
+            model=AssistantModel.FULL,
+            temperature=AssistantTemperature.BALANCED,
+        ),
+    )
+
+    assert result == ["Hello"]

@@ -37,4 +37,54 @@ describe("ChatInput component", () => {
 
     expect(onSendMessageMock).not.toHaveBeenCalled();
   });
+
+  test("should not send when Shift+Enter is pressed", () => {
+    const onSendMessageMock = vi.fn();
+    const { getByPlaceholderText } = render(
+      <ChatInput onSendMessage={onSendMessageMock} />
+    );
+
+    const input = getByPlaceholderText("Type your message...");
+    fireEvent.change(input, { target: { value: "Hello" } });
+    fireEvent.keyDown(input, {
+      key: "Enter",
+      code: "Enter",
+      charCode: 13,
+      shiftKey: true,
+    });
+
+    expect(onSendMessageMock).not.toHaveBeenCalled();
+  });
+
+  test("should send on button click", () => {
+    const onSendMessageMock = vi.fn();
+    render(<ChatInput onSendMessage={onSendMessageMock} />);
+
+    const input = document.querySelector("textarea")!;
+    fireEvent.change(input, { target: { value: "Hello via button" } });
+    fireEvent.submit(input.closest("form")!);
+
+    expect(onSendMessageMock).toHaveBeenCalledWith("Hello via button");
+  });
+
+  test("send button is disabled when message is empty", () => {
+    const onSendMessageMock = vi.fn();
+    const { getByLabelText } = render(
+      <ChatInput onSendMessage={onSendMessageMock} />
+    );
+
+    expect(getByLabelText("Send message")).toBeDisabled();
+  });
+
+  test("send button is disabled when disabled prop is true", () => {
+    const onSendMessageMock = vi.fn();
+    const { getByLabelText } = render(
+      <ChatInput
+        onSendMessage={onSendMessageMock}
+        disabled={true}
+      />
+    );
+
+    expect(getByLabelText("Send message")).toBeDisabled();
+  });
 });
