@@ -1,7 +1,7 @@
 import PersonIcon from "@mui/icons-material/Person";
 import { Box, Paper, Typography } from "@mui/material";
-import { useIsDark } from "@/client/hooks";
 import type React from "react";
+import { useIsDark } from "@/client/hooks";
 
 interface UserMessageProps {
   content: string;

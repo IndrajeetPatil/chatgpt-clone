@@ -73,10 +73,11 @@ omit = [
 
 [tool.pytest.ini_options]
 addopts = [
-    # error on using unregistered marker
     "--strict-markers",
-    # show extra test summary info for everything
+    "--strict-config",
+    "--random-order",
     "-ra",
 ]
 xfail_strict = true
+filterwarnings = ["error"]
 python_files = ["test_*.py", "test-*.py", "tests.py", "test.py"]

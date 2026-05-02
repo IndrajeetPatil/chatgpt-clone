@@ -41,6 +41,12 @@ export default defineConfig({
       provider: "v8",
       reportsDirectory: "coverage",
       reporter: ["text", "html"],
+      thresholds: {
+        statements: 75,
+        branches: 50,
+        functions: 65,
+        lines: 80,
+      },
     },
     environment: "jsdom",
     exclude: ["**/node_modules/**", "**/dist/**", "**/e2e-tests/**"],

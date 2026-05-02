@@ -5,17 +5,9 @@ import { vi } from "vitest";
 
 import AssistantMessage from "./AssistantMessage";
 
-interface ReactMarkdownProps {
-  children: string;
-  components: {
-    code: React.FC<CodeProps>;
-  };
-}
-
-interface CodeProps {
-  inline?: boolean;
-  className?: string;
-  children: React.ReactNode;
+interface MockComponents {
+  pre: React.FC<{ children?: React.ReactNode }>;
+  code: React.FC<{ className?: string; children?: React.ReactNode }>;
 }
 
 vi.mock("react-markdown", () => ({
@@ -23,32 +15,29 @@ vi.mock("react-markdown", () => ({
   default: ({
     children,
     components,
-  }: ReactMarkdownProps): React.JSX.Element => {
-    // Split content by code blocks and render appropriately
-    const parts: string[] = children.split(/(```[\s\S]*?```)/);
-
-    // Use a cumulative offset to generate a key that is derived from the content's position
-    let cumulativeOffset = 0;
+  }: {
+    children: string;
+    components: MockComponents;
+  }): React.JSX.Element => {
+    const parts = children.split(/(```[\s\S]*?```)/);
+    let offset = 0;
 
     return (
       <div data-testid="markdown-content">
-        {parts.map((part: string) => {
-          // Use the current cumulativeOffset as the key.
-          // To ensure keys for empty strings are unique, always increment by at least 1.
-          const key = `part-${cumulativeOffset}`;
-          cumulativeOffset += part.length || 1;
+        {parts.map((part) => {
+          const key = `part-${offset}`;
+          offset += part.length || 1;
 
           if (part.startsWith("```")) {
+            const Pre = components.pre;
             const Code = components.code;
-            // Remove the backticks and optional language identifier
-            const codeContent: string = part.replace(/```\w*\n?|\n?```/g, "");
+            const lang = part.match(/^```(\w*)/)?.[1];
+            const className = lang ? `language-${lang}` : undefined;
+            const codeContent = part.replace(/```\w*\n?|\n?```/g, "");
             return (
-              <Code
-                key={key}
-                className="language-javascript"
-              >
-                {codeContent}
-              </Code>
+              <Pre key={key}>
+                <Code className={className}>{codeContent}</Code>
+              </Pre>
             );
           }
           return <span key={key}>{part}</span>;
@@ -58,96 +47,55 @@ vi.mock("react-markdown", () => ({
   },
 }));
 
-interface WrapperProps {
-  children: React.ReactNode;
-}
-
-// Wrapper component for providing required context
-const Wrapper: React.FC<WrapperProps> = ({
+const Wrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
-}: WrapperProps): React.JSX.Element => (
+}): React.JSX.Element => (
   <ThemeProvider theme={createTheme()}>{children}</ThemeProvider>
 );
 
 describe("AssistantMessage", () => {
-  test("renders plain text content", () => {
-    const content = "This is a simple text message";
+  test.each([
+    ["plain text", "This is a simple text message"],
+    ["empty content", ""],
+    ["inline code", "Use the `console.log()` function"],
+  ])("renders %s without error", (_label, content) => {
     render(
-      <AssistantMessage
-        content={content}
-        isFirstMessage={false}
-      />,
-      {
-        wrapper: Wrapper,
-      }
-    );
-
-    const element = screen.getByTestId("markdown-content");
-    expect(element).toHaveTextContent(content);
-  });
-
-  test("renders code block content", () => {
-    const content = '```javascript\nconsole.log("hello");\n```';
-    render(
-      <AssistantMessage
-        content={content}
-        isFirstMessage={false}
-      />,
-      {
-        wrapper: Wrapper,
-      }
-    );
-
-    const markdownElement = screen.getByTestId("markdown-content");
-    const codeElement = screen.getByTestId("code-block");
-
-    expect(markdownElement).toBeInTheDocument();
-    expect(codeElement).toBeInTheDocument();
-  });
-
-  test("renders inline code within text", () => {
-    const content = "Use the `console.log()` function";
-    render(
-      <AssistantMessage
-        content={content}
-        isFirstMessage={false}
-      />,
-      {
-        wrapper: Wrapper,
-      }
-    );
-
-    const element = screen.getByTestId("markdown-content");
-    expect(element).toHaveTextContent(content);
-  });
-
-  test("renders mixed content with code blocks and text", () => {
-    const content =
-      'Here is some code:\n```javascript\nconsole.log("hello");\n```\nAnd more text';
-    const { container }: RenderResult = render(
       <AssistantMessage
         content={content}
         isFirstMessage={false}
       />,
       { wrapper: Wrapper }
     );
-
-    expect(container).toMatchSnapshot();
+    expect(screen.getByTestId("markdown-content")).toBeInTheDocument();
   });
 
-  test("handles empty content", () => {
+  test("renders code block with block container", () => {
     render(
       <AssistantMessage
-        content=""
+        content={'```javascript\nconsole.log("hello");\n```'}
         isFirstMessage={false}
       />,
-      {
-        wrapper: Wrapper,
-      }
+      { wrapper: Wrapper }
     );
+    expect(screen.getByTestId("markdown-content")).toBeInTheDocument();
+    expect(screen.getByTestId("code-block")).toBeInTheDocument();
+  });
 
-    const element = screen.getByTestId("markdown-content");
-    expect(element).toBeInTheDocument();
-    expect(element).toHaveTextContent("");
+  test.each([
+    ["plain text snapshot", "Hello, this is a plain message.", false],
+    [
+      "mixed content snapshot",
+      'Here is some code:\n```javascript\nconsole.log("hello");\n```\nAnd more text',
+      false,
+    ],
+  ])("matches snapshot for %s", (_label, content, isFirstMessage) => {
+    const { container }: RenderResult = render(
+      <AssistantMessage
+        content={content}
+        isFirstMessage={isFirstMessage}
+      />,
+      { wrapper: Wrapper }
+    );
+    expect(container).toMatchSnapshot();
   });
 });

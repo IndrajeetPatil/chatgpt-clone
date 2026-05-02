@@ -1,16 +1,10 @@
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
-import {
-  Box,
-  IconButton,
-  Paper,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { useIsDark } from "@/client/hooks";
+import { Box, IconButton, Paper, Tooltip, Typography } from "@mui/material";
 import type React from "react";
 import { useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { useIsDark } from "@/client/hooks";
 
 interface AssistantMessageProps {
   content: string;
@@ -53,8 +47,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         className,
         children,
       }: React.ComponentPropsWithoutRef<"code">) => {
-        const language =
-          (className ?? "").match(/language-(\w+)/)?.[1] ?? "";
+        const language = (className ?? "").match(/language-(\w+)/)?.[1] ?? "";
         const text = String(children ?? "");
         if (language || text.includes("\n")) {
           return (
@@ -83,7 +76,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         );
       },
     }),
-    [isDark],
+    [isDark]
   );
 
   return (
@@ -100,7 +93,10 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         }}
       >
         <SmartToyIcon sx={{ color: isDark ? "#4caf50" : "#ff9800" }} />
-        <Typography variant="body1" component="div">
+        <Typography
+          variant="body1"
+          component="div"
+        >
           <ReactMarkdown components={markdownComponents}>
             {content}
           </ReactMarkdown>
