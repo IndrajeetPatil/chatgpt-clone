@@ -13,7 +13,7 @@ hooks = [
 [[repos]]
 repo = "builtin"
 hooks = [
-  { id = "trailing-whitespace" },
+  { id = "trailing-whitespace", exclude = "\\.snap$" },
   { id = "end-of-file-fixer" },
   { id = "check-yaml" },
   { id = "check-toml" },
