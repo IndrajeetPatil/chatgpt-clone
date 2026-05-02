@@ -103,9 +103,15 @@ const INITIAL_MESSAGES = [
   },
 ];
 
+type TestMessage = {
+  id: string;
+  role: string;
+  parts: Array<{ type: string; text?: string }>;
+};
+
 function setupChat(
   overrides: Partial<{
-    messages: typeof INITIAL_MESSAGES;
+    messages: TestMessage[];
     status: string;
     error: Error | undefined;
   }> = {}
