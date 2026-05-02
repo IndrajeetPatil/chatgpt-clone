@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import pytest
 from fastapi.testclient import TestClient
 
-from app.entities import AssistantModel, AssistantTemperature
+from app.entities import AssistantModel, AssistantTemperature, OpenAIMessageRole
 from app.main import UIMessage, app
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -94,7 +94,7 @@ def test_health() -> None:
 
 
 def test_ui_message_text_returns_content_field() -> None:
-    message = UIMessage(role="user", content="Hello from content")
+    message = UIMessage(role=OpenAIMessageRole.USER, content="Hello from content")
     assert message.text == "Hello from content"
 
 
