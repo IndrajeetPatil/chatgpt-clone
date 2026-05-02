@@ -2,6 +2,7 @@
   "name": "chatbot-template-client",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@11.0.3",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3000",
@@ -13,7 +14,8 @@
     "test:update": "vitest run --update",
     "test:e2e": "npx playwright test",
     "fallow": "fallow --fail-on-issues",
-    "css-quality": "node scripts/css-quality.mjs"
+    "css-quality": "node scripts/css-quality.mjs",
+    "lint:security": "eslint app client components src"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.174",
@@ -42,6 +44,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.13",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.59.1",
     "@projectwallace/css-code-quality": "^3.1.2",
     "@testing-library/jest-dom": "^6.9.1",
@@ -50,9 +53,14 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-gtm-module": "^2.0.4",
+    "@typescript-eslint/parser": "^8.59.1",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.5",
+    "eslint": "^10.2.1",
+    "eslint-plugin-no-unsanitized": "^4.1.5",
+    "eslint-plugin-react": "^7.37.5",
     "fallow": "^2.57.0",
+    "globals": "^17.5.0",
     "jsdom": "^29.1.1",
     "markdownlint": "^0.40.0",
     "typescript": "^6",

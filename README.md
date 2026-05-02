@@ -84,6 +84,7 @@ More specifically:
 | Type checking         | TypeScript              | ty       |
 | Dead-code / complexity| fallow                  | \-       |
 | CSS code quality      | @projectwallace/css-code-quality | \- |
+| Security linting      | eslint (react/no-unsanitized)   | \- |
 | Unit testing          | vitest                  | pytest   |
 | End-to-end test       | Playwright              | \-       |
 | Code coverage         | vitest                  | coverage |

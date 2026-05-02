@@ -49,6 +49,7 @@ vi.mock("@/components/messages/ChatInput", () => ({
     disabled: boolean;
   }) => (
     <button
+      type="button"
       data-testid="chat-input-send"
       data-disabled={String(disabled)}
       onClick={() => void onSendMessage("test message")}
@@ -94,7 +95,10 @@ const INITIAL_MESSAGES = [
     id: "initial-message",
     role: "assistant" as const,
     parts: [
-      { type: "text" as const, text: "Hi, I am a chat bot. How can I help you today?" },
+      {
+        type: "text" as const,
+        text: "Hi, I am a chat bot. How can I help you today?",
+      },
     ],
   },
 ];
@@ -104,7 +108,7 @@ function setupChat(
     messages: typeof INITIAL_MESSAGES;
     status: string;
     error: Error | undefined;
-  }> = {},
+  }> = {}
 ) {
   mockUseChat.mockReturnValue({
     messages: INITIAL_MESSAGES,
@@ -163,24 +167,20 @@ describe("Home page", () => {
 
   test("starts in dark mode (toggle shows Switch to light mode)", () => {
     render(<Home />);
-    expect(
-      screen.getByLabelText("Switch to light mode"),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Switch to light mode")).toBeInTheDocument();
   });
 
   test("toggles from dark to light mode", () => {
     render(<Home />);
     fireEvent.click(screen.getByLabelText("Switch to light mode"));
-    expect(
-      screen.getByLabelText("Switch to dark mode"),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Switch to dark mode")).toBeInTheDocument();
   });
 
   test("regenerate button is aria-disabled when no user messages", () => {
     render(<Home />);
     expect(screen.getByLabelText("Regenerate response")).toHaveAttribute(
       "aria-disabled",
-      "true",
+      "true"
     );
   });
 
@@ -224,20 +224,18 @@ describe("Home page", () => {
     fireEvent.click(screen.getByTestId("chat-input-send"));
     expect(mockSendMessage).toHaveBeenCalledWith(
       { text: "test message" },
-      { body: { model: "gpt-4o", temperature: "BALANCED" } },
+      { body: { model: "gpt-4o", temperature: "BALANCED" } }
     );
   });
 
   test("sends message with updated model after dropdown change", async () => {
     render(<Home />);
-    const modelSelect = screen.getByLabelText(
-      /Select assistant model/i,
-    );
+    const modelSelect = screen.getByLabelText(/Select assistant model/i);
     fireEvent.change(modelSelect, { target: { value: "gpt-4o-mini" } });
     fireEvent.click(screen.getByTestId("chat-input-send"));
     expect(mockSendMessage).toHaveBeenCalledWith(
       { text: "test message" },
-      { body: { model: "gpt-4o-mini", temperature: "BALANCED" } },
+      { body: { model: "gpt-4o-mini", temperature: "BALANCED" } }
     );
   });
 
@@ -248,7 +246,7 @@ describe("Home page", () => {
     fireEvent.click(screen.getByTestId("chat-input-send"));
     expect(mockSendMessage).toHaveBeenCalledWith(
       { text: "test message" },
-      { body: { model: "gpt-4o", temperature: "CREATIVE" } },
+      { body: { model: "gpt-4o", temperature: "CREATIVE" } }
     );
   });
 
@@ -258,6 +256,7 @@ describe("Home page", () => {
         {
           id: "a1",
           role: "assistant" as const,
+          // biome-ignore lint/suspicious/noExplicitAny: mock data for non-text part
           parts: [{ type: "tool-invocation" as any, text: undefined as any }],
         },
       ],
