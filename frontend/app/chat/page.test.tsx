@@ -90,6 +90,12 @@ vi.mock("@/components/parameters/DropdownParameter", () => ({
 
 import Home from "./page";
 
+type TestMessage = {
+  id: string;
+  role: string;
+  parts: Array<{ type: string; text?: string }>;
+};
+
 const INITIAL_MESSAGES = [
   {
     id: "initial-message",
@@ -103,11 +109,14 @@ const INITIAL_MESSAGES = [
   },
 ];
 
-type TestMessage = {
-  id: string;
-  role: string;
-  parts: Array<{ type: string; text?: string }>;
-};
+const WITH_USER_MESSAGE: TestMessage[] = [
+  ...INITIAL_MESSAGES,
+  {
+    id: "u1",
+    role: "user" as const,
+    parts: [{ type: "text" as const, text: "Hi" }],
+  },
+];
 
 function setupChat(
   overrides: Partial<{
@@ -191,16 +200,7 @@ describe("Home page", () => {
   });
 
   test("regenerate calls callback when there is a user message and not loading", () => {
-    setupChat({
-      messages: [
-        ...INITIAL_MESSAGES,
-        {
-          id: "u1",
-          role: "user" as const,
-          parts: [{ type: "text" as const, text: "Hi" }],
-        },
-      ],
-    });
+    setupChat({ messages: WITH_USER_MESSAGE });
     render(<Home />);
     fireEvent.click(screen.getByLabelText("Regenerate response"));
     expect(mockRegenerate).toHaveBeenCalledWith({
@@ -209,17 +209,7 @@ describe("Home page", () => {
   });
 
   test("regenerate does not fire when disabled (loading)", () => {
-    setupChat({
-      status: "streaming",
-      messages: [
-        ...INITIAL_MESSAGES,
-        {
-          id: "u1",
-          role: "user" as const,
-          parts: [{ type: "text" as const, text: "Hi" }],
-        },
-      ],
-    });
+    setupChat({ status: "streaming", messages: WITH_USER_MESSAGE });
     render(<Home />);
     fireEvent.click(screen.getByLabelText("Regenerate response"));
     expect(mockRegenerate).not.toHaveBeenCalled();
