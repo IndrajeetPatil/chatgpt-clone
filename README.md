@@ -75,23 +75,29 @@ make clean
 
 More specifically:
 
-| Step                  | Frontend                | Backend  |
-|-----------------------|-------------------------|----------|
-| Package Manager       | pnpm                    | uv       |
-| Formatter             | biome                   | ruff     |
-| Linter                | biome                   | ruff     |
-| Type checking         | TypeScript              | ty       |
-| Dead-code / complexity| fallow                  | \-       |
-| CSS code quality      | @projectwallace/css-code-quality | \- |
-| Security linting      | eslint (react/no-unsanitized)   | \- |
-| Unit testing          | vitest                  | pytest   |
-| End-to-end test       | Playwright              | \-       |
-| Code coverage         | vitest                  | coverage |
-| Performance / a11y    | Lighthouse CI           | \-       |
-| API client            | Vercel AI SDK           | openai   |
-| API server            | \-                      | FastAPI  |
-| Import sorter         | biome                   | ruff     |
-| Logger                | \-                      | loguru   |
+| Step                      | Frontend                            | Backend                   |
+|---------------------------|-------------------------------------|---------------------------|
+| Package manager           | pnpm                                | uv                        |
+| Formatter                 | biome                               | ruff                      |
+| Linter                    | biome                               | ruff                      |
+| Import sorter             | biome                               | ruff                      |
+| Type checker              | TypeScript                          | ty                        |
+| Type annotation coverage  | type-coverage                       | typecoverage              |
+| Security linting          | eslint (react/no-unsanitized)       | \-                        |
+| Dead-code / complexity    | fallow                              | \-                        |
+| CSS code quality          | @projectwallace/css-code-quality    | \-                        |
+| Markdown linting          | rumdl                               | rumdl                     |
+| File naming               | ls-lint                             | ls-lint                   |
+| Pre-commit hooks          | prek                                | prek                      |
+| Unit testing              | vitest                              | pytest                    |
+| Code coverage             | vitest                              | coverage.py               |
+| Load testing              | \-                                  | locust                    |
+| End-to-end testing        | Playwright                          | \-                        |
+| Dependency audit          | pnpm audit                          | uv audit                  |
+| Performance / a11y        | Lighthouse CI                       | \-                        |
+| API client                | Vercel AI SDK                       | openai                    |
+| API server                | \-                                  | FastAPI                   |
+| Logger                    | \-                                  | loguru                    |
 
 These checks are also run on every push to the repository using GitHub
 Actions.
