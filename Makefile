@@ -1,20 +1,10 @@
 # Main Makefile for the project
 
-# Detect operating system and shell
+# Detect operating system for color support
 ifeq ($(OS),Windows_NT)
-    # Detect if using PowerShell
-    ifneq ($(findstring pwsh,$(SHELL)),)
-        VENV_ACTIVATE=.\.venv\Scripts\Activate.ps1
-    else ifneq ($(findstring powershell,$(SHELL)),)
-        VENV_ACTIVATE=.\.venv\Scripts\Activate.ps1
-    else
-        # Default to CMD
-        VENV_ACTIVATE=.venv\Scripts\activate
-    endif
     COLOR_RESET=
     COLOR_BLUE_BG=
 else
-    VENV_ACTIVATE=. .venv/bin/activate
     COLOR_RESET=\033[0m
     COLOR_BLUE_BG=\033[44m
 endif
@@ -24,8 +14,14 @@ include frontend.mk
 include backend.mk
 
 # Aggregate targets
-lint: backend-lint frontend-lint
+lint: backend-lint frontend-lint markdown-lint
 format: backend-format frontend-format
+
+# Markdown linting
+markdown-lint:
+	@echo "$(COLOR_BLUE_BG)Running markdown linting with rumdl...$(COLOR_RESET)"
+	uv tool run --from rumdl==0.1.86 rumdl check .
+
 type-check: backend-type-check frontend-type-check
 test: backend-test frontend-test
 fallow: frontend-fallow

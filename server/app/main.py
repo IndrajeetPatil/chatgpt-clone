@@ -69,7 +69,7 @@ def health() -> dict[str, str]:
 )
 def chat(request: ChatRequest) -> StreamingResponse:
     messages = _to_openai_messages(request.messages)
-    logger.info(
+    logger.debug(
         "Received chat stream request with {} messages, model={}, temperature={}",
         len(messages),
         request.model.value,

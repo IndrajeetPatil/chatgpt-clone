@@ -1,6 +1,5 @@
 # Chatbot Template
 
-
 A minimal full-stack chatbot template using React and FastAPI, backed by
 Azure OpenAI GPT-4o.
 
