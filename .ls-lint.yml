@@ -1,0 +1,41 @@
+ls:
+  server:
+    .py: "snakecase | regex:^__[a-z]+__$"
+
+  frontend/components:
+    .tsx: pascalcase
+    .test.tsx: pascalcase
+
+  frontend/app:
+    .tsx: camelcase
+    .test.tsx: camelcase
+    .css: camelcase
+
+  frontend/client:
+    .ts: camelcase
+    .test.ts: camelcase
+    .tsx: camelcase
+    .test.tsx: camelcase
+
+  frontend/src:
+    .tsx: camelcase
+
+  frontend/e2e-tests:
+    .spec.ts: kebabcase
+
+  frontend/scripts:
+    .mjs: kebabcase
+
+ignore:
+  - .git
+  - node_modules
+  - .venv
+  - __pycache__
+  - dist
+  - coverage
+  - htmlcov
+  - .lighthouseci
+  - frontend/app/favicon
+  - frontend/app/fonts
+  - frontend/components/messages/__snapshots__
+  - frontend/components/parameters/__snapshots__

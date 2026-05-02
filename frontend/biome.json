@@ -50,6 +50,14 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": {
+            "maxAllowedComplexity": 5
+          }
+        }
+      },
       "style": {
         "noNamespace": "error",
         "useAsConstAssertion": "error"
