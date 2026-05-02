@@ -20,7 +20,7 @@ format: backend-format frontend-format
 # Markdown linting
 markdown-lint:
 	@echo "$(COLOR_BLUE_BG)Running markdown linting with rumdl...$(COLOR_RESET)"
-	uv tool run rumdl check .
+	uv tool run --from rumdl==0.1.86 rumdl check .
 
 type-check: backend-type-check frontend-type-check
 test: backend-test frontend-test
