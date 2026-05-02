@@ -13,7 +13,10 @@ class Settings(BaseSettings):
         alias="CORS_ALLOWED_ORIGINS",
     )
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config: SettingsConfigDict = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+    )
 
 
 @lru_cache(maxsize=1)

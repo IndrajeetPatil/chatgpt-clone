@@ -11,6 +11,7 @@ PLAYWRIGHT=pnpm run test:e2e
 FALLOW=pnpm run fallow
 CSS_QUALITY=pnpm run css-quality
 SECURITY_LINT=pnpm run lint:security
+TSCOVERAGE=pnpm run type-coverage
 LHCI=pnpm dlx @lhci/cli@0.15.1
 
 # Frontend Targets
@@ -48,6 +49,10 @@ frontend-security-lint:
 	@echo "$(COLOR_BLUE_BG)Running frontend security linting with ESLint...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(SECURITY_LINT)
 
+frontend-type-coverage:
+	@echo "$(COLOR_BLUE_BG)Running frontend type coverage check...$(COLOR_RESET)"
+	cd $(FRONTEND_DIR) && $(TSCOVERAGE)
+
 frontend-lighthouse:
 	@echo "$(COLOR_BLUE_BG)Running Lighthouse CI...$(COLOR_RESET)"
 	cd $(FRONTEND_DIR) && $(LHCI) autorun
@@ -72,5 +77,5 @@ _run-e2e-test:
 
 .PHONY: frontend-lint frontend-format frontend-type-check \
 	frontend-test frontend-build frontend-audit frontend-fallow \
-	frontend-css-quality frontend-security-lint frontend-lighthouse \
-	frontend-clean _run-frontend _run-e2e-test
+	frontend-css-quality frontend-security-lint frontend-type-coverage \
+	frontend-lighthouse frontend-clean _run-frontend _run-e2e-test

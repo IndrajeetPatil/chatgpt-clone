@@ -22,6 +22,7 @@ dev = [
     "pytest>=8.3.3",
     "ruff>=0.15.11",
     "ty>=0.0.32",
+    "typecoverage>=1.0.1",
 ]
 
 [tool.uv]

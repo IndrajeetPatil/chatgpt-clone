@@ -3,6 +3,7 @@ SERVER_DIR=./server
 # Backend tool commands
 PYTEST=uv run pytest app tests --verbose
 PYCOVERAGE=uv run coverage run -m pytest app tests && uv run coverage report --fail-under=95 && uv run coverage html
+PYTYPECOVERAGE=uv run python -m typecoverage app tests locustfile.py --recursive --exit-nonzero-on-issues
 FASTAPI_RUNSERVER=uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
 OPENAPI_SCHEMA=uv run python -c "from app.main import app; app.openapi()"
 LOCUST=uv run locust -H http://127.0.0.1:8000/
@@ -33,6 +34,10 @@ backend-test:
 	@echo "$(COLOR_BLUE_BG)Running backend unit tests...$(COLOR_RESET)"
 	cd $(SERVER_DIR) && $(PYTEST) && $(PYCOVERAGE)
 
+backend-type-coverage:
+	@echo "$(COLOR_BLUE_BG)Running backend type coverage check...$(COLOR_RESET)"
+	cd $(SERVER_DIR) && $(PYTYPECOVERAGE)
+
 backend-hooks:
 	@echo "$(COLOR_BLUE_BG)Running prek hooks on all files...$(COLOR_RESET)"
 	prek run --all-files
@@ -56,5 +61,5 @@ backend-load-test:
 	cd $(SERVER_DIR) && $(LOCUST)
 
 .PHONY: backend-lint backend-format backend-type-check backend-audit \
-	backend-validate-api-schema backend-test backend-hooks _run-backend \
-	backend-load-test backend-clean
+	backend-validate-api-schema backend-test backend-type-coverage backend-hooks \
+	_run-backend backend-load-test backend-clean

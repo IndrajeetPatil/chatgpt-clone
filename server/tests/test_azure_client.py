@@ -28,14 +28,14 @@ class MockAzureClient:
 
 
 def create_chunk(content: str | None) -> object:
-    delta = type("MockDelta", (), {"content": content})()
-    choice = type("MockChoice", (), {"delta": delta})()
+    delta: object = type("MockDelta", (), {"content": content})()
+    choice: object = type("MockChoice", (), {"delta": delta})()
     return type("MockChunk", (), {"choices": [choice]})()
 
 
 @pytest.fixture
 def mock_azure_client(monkeypatch: pytest.MonkeyPatch) -> MockAzureClient:
-    mock_client = MockAzureClient()
+    mock_client: MockAzureClient = MockAzureClient()
     get_azure_openai_client.cache_clear()
     monkeypatch.setattr("app.azure_client.get_azure_openai_client", lambda: mock_client)
     return mock_client
@@ -63,7 +63,7 @@ def test_stream_successful_response(
         create_chunk(" world"),
     ]
 
-    response = list(
+    response: list[str] = list(
         stream_azure_openai_response(
             messages=[{"role": "user", "content": "Test prompt"}],
             model=model,
@@ -113,9 +113,9 @@ def test_get_azure_openai_client_wires_settings_correctly(
     get_azure_openai_client.cache_clear()
 
     class MockSettings:
-        azure_openai_endpoint = "https://test.openai.azure.com/"
-        azure_openai_api_key = "test-key-123"
-        azure_openai_api_version = "2024-02-01"
+        azure_openai_endpoint: str = "https://test.openai.azure.com/"
+        azure_openai_api_key: str = "test-key-123"
+        azure_openai_api_version: str = "2024-02-01"
 
     monkeypatch.setattr("app.azure_client.get_settings", MockSettings)
 
@@ -127,7 +127,7 @@ def test_get_azure_openai_client_wires_settings_correctly(
 
     monkeypatch.setattr("app.azure_client.AzureOpenAI", MockAzureOpenAI)
 
-    client = get_azure_openai_client()
+    client: object = get_azure_openai_client()
     get_azure_openai_client.cache_clear()
 
     assert isinstance(client, MockAzureOpenAI)
@@ -140,14 +140,14 @@ def test_get_azure_openai_client_wires_settings_correctly(
 def test_stream_skips_chunks_with_empty_choices(
     mock_azure_client: MockAzureClient,
 ) -> None:
-    empty_chunk = type("MockChunk", (), {"choices": []})()
+    empty_chunk: object = type("MockChunk", (), {"choices": []})()
     mock_azure_client.chat.completions.return_value = [
         empty_chunk,
         create_chunk("Hello"),
         empty_chunk,
     ]
 
-    result = list(
+    result: list[str] = list(
         stream_azure_openai_response(
             messages=[{"role": "user", "content": "Test"}],
             model=AssistantModel.FULL,

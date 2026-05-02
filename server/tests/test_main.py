@@ -9,9 +9,11 @@ from app.main import UIMessage, app
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterator
 
+    from httpx import Response
+
 
 def test_post_chat_stream_success(monkeypatch: pytest.MonkeyPatch) -> None:
-    calls = []
+    calls: list[dict[str, object]] = []
 
     def mock_stream(**kwargs: object) -> Iterator[str]:
         calls.append(kwargs)
@@ -20,8 +22,8 @@ def test_post_chat_stream_success(monkeypatch: pytest.MonkeyPatch) -> None:
 
     monkeypatch.setattr("app.main.stream_azure_openai_response", mock_stream)
 
-    client = TestClient(app)
-    response = client.post(
+    client: TestClient = TestClient(app)
+    response: Response = client.post(
         "/api/v1/chat",
         json={
             "messages": [
@@ -48,8 +50,8 @@ def test_post_chat_stream_success(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_post_chat_rejects_empty_messages() -> None:
-    client = TestClient(app)
-    response = client.post(
+    client: TestClient = TestClient(app)
+    response: Response = client.post(
         "/api/v1/chat",
         json={
             "messages": [{"role": "user", "parts": [{"type": "text", "text": "  "}]}],
@@ -72,8 +74,8 @@ def test_post_chat_rejects_invalid_model_or_temperature(
     model: str,
     temperature: str,
 ) -> None:
-    client = TestClient(app)
-    response = client.post(
+    client: TestClient = TestClient(app)
+    response: Response = client.post(
         "/api/v1/chat",
         json={
             "messages": [{"role": "user", "parts": [{"type": "text", "text": "Hi"}]}],
@@ -86,15 +88,17 @@ def test_post_chat_rejects_invalid_model_or_temperature(
 
 
 def test_health() -> None:
-    client = TestClient(app)
-    response = client.get("/health")
+    client: TestClient = TestClient(app)
+    response: Response = client.get("/health")
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
 
 def test_ui_message_text_returns_content_field() -> None:
-    message = UIMessage(role=OpenAIMessageRole.USER, content="Hello from content")
+    message: UIMessage = UIMessage(
+        role=OpenAIMessageRole.USER, content="Hello from content"
+    )
     assert message.text == "Hello from content"
 
 
@@ -102,12 +106,12 @@ def test_stream_chat_reraises_exception(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def mock_stream(**kwargs: object) -> None:
-        msg = "Upstream failure"
+        msg: str = "Upstream failure"
         raise RuntimeError(msg)
 
     monkeypatch.setattr("app.main.stream_azure_openai_response", mock_stream)
 
-    client = TestClient(app, raise_server_exceptions=True)
+    client: TestClient = TestClient(app, raise_server_exceptions=True)
     with pytest.raises(RuntimeError, match="Upstream failure"):
         client.post(
             "/api/v1/chat",
