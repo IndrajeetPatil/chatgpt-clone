@@ -38,6 +38,14 @@ indent-width = 4
 select = ["ALL"]
 ignore = ["COM812", "CPY", "D", "DOC"]
 
+[tool.ruff.lint.mccabe]
+max-complexity = 5
+
+[tool.ruff.lint.pylint]
+max-branches = 6
+max-returns = 3
+max-statements = 20
+
 [tool.ruff.lint.per-file-ignores]
 "test_*.py" = [
     # tests can have asserts
