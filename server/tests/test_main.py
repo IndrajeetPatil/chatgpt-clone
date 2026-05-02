@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.entities import AssistantModel, AssistantTemperature
@@ -7,8 +8,6 @@ from app.main import app
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
-
-    import pytest
 
 
 def test_post_chat_stream_success(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -61,14 +60,25 @@ def test_post_chat_rejects_empty_messages() -> None:
     assert response.json() == {"detail": "At least one text message is required."}
 
 
-def test_post_chat_validates_model_and_temperature() -> None:
+@pytest.mark.parametrize(
+    ("model", "temperature"),
+    [
+        ("invalid_model", "BALANCED"),
+        ("gpt-4o", "HOT"),
+        ("invalid_model", "HOT"),
+    ],
+)
+def test_post_chat_rejects_invalid_model_or_temperature(
+    model: str,
+    temperature: str,
+) -> None:
     client = TestClient(app)
     response = client.post(
         "/api/v1/chat",
         json={
             "messages": [{"role": "user", "parts": [{"type": "text", "text": "Hi"}]}],
-            "model": "invalid",
-            "temperature": "HOT",
+            "model": model,
+            "temperature": temperature,
         },
     )
 

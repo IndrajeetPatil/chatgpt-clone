@@ -1,14 +1,14 @@
-import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { ChevronDown } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useId, useState } from "react";
 
-interface DropdownOption<T> {
+interface DropdownOption<T extends string | number> {
   value: T;
   label: string;
 }
 
-interface DropdownParameterProps<T> {
+interface DropdownParameterProps<T extends string | number> {
   value: T;
   onChange: (value: T) => void;
   icon: React.ReactNode;
@@ -17,7 +17,7 @@ interface DropdownParameterProps<T> {
   options: DropdownOption<T>[];
 }
 
-function DropdownParameter<T>({
+function DropdownParameter<T extends string | number>({
   value,
   onChange,
   icon,
@@ -26,6 +26,7 @@ function DropdownParameter<T>({
   options,
 }: DropdownParameterProps<T>) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const menuId = useId();
 
   return (
     <>
@@ -33,14 +34,20 @@ function DropdownParameter<T>({
         <IconButton
           onClick={(e) => setAnchorEl(e.currentTarget)}
           aria-label={ariaLabel}
+          aria-haspopup="true"
+          aria-controls={anchorEl !== null ? menuId : undefined}
+          aria-expanded={anchorEl !== null}
         >
-          {icon}
-          <ChevronDown size={16} />
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            {icon}
+            <ChevronDown size={16} />
+          </Box>
         </IconButton>
       </Tooltip>
       <Menu
+        id={menuId}
         anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
+        open={anchorEl !== null}
         onClose={() => setAnchorEl(null)}
       >
         {options.map((option) => (

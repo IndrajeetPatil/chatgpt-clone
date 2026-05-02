@@ -1,8 +1,8 @@
-# ChatGPT Clone
+# Chatbot Template
 
 
-This is a minimal clone of the [ChatGPT
-website](https://chat.openai.com/).
+A minimal full-stack chatbot template using React and FastAPI, backed by
+Azure OpenAI GPT-4o.
 
 ## Requirements
 
@@ -19,7 +19,7 @@ The specified requirements were the following:
 ![](demo.mov)
 
 If the video is not accessible on GitHub README, have a look at it
-[here](https://github.com/IndrajeetPatil/chatgpt-clone/blob/main/demo.mov).
+[here](https://github.com/IndrajeetPatil/chatbot-template/blob/main/demo.mov).
 
 ## Architecture/Design
 

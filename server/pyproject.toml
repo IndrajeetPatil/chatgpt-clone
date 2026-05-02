@@ -1,6 +1,6 @@
 [project]
 name = "server"
-version = "0.1.0"
+version = "1.0.0"
 description = "FastAPI backend service for streaming Azure OpenAI GPT-4o responses."
 readme = "README.md"
 requires-python = ">=3.14"
@@ -73,10 +73,11 @@ omit = [
 
 [tool.pytest.ini_options]
 addopts = [
-    # error on using unregistered marker
     "--strict-markers",
-    # show extra test summary info for everything
+    "--strict-config",
+    "--random-order",
     "-ra",
 ]
 xfail_strict = true
+filterwarnings = ["error"]
 python_files = ["test_*.py", "test-*.py", "tests.py", "test.py"]
