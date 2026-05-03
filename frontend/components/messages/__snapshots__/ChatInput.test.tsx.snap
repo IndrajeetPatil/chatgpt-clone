@@ -3,19 +3,30 @@
 exports[`ChatInput component > should render the ChatInput component and match the snapshot 1`] = `
 <DocumentFragment>
   <form
-    class="MuiBox-root css-mkkhhh"
+    class="MuiBox-root css-gpjb9n"
   >
     <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-15e2bhn-MuiFormControl-root-MuiTextField-root"
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-11ot7ee-MuiFormControl-root-MuiTextField-root"
     >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root"
+        data-shrink="false"
+        for="message-input"
+        id="message-input-label"
+      >
+        Message
+      </label>
       <div
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-zsp0bh-MuiInputBase-root-MuiOutlinedInput-root"
       >
         <textarea
+          aria-describedby="message-input-helper-text"
           aria-invalid="false"
+          autocomplete="off"
           class="MuiInputBase-input MuiOutlinedInput-input css-w4nesw-MuiInputBase-input-MuiOutlinedInput-input"
-          id="_r_0_"
-          placeholder="Type your message..."
+          id="message-input"
+          name="message"
+          placeholder="Type your message…"
           rows="2"
           style="height: 0px; overflow: hidden;"
         />
@@ -31,36 +42,42 @@ exports[`ChatInput component > should render the ChatInput component and match t
           class="MuiOutlinedInput-notchedOutline css-18p5xg2-MuiNotchedOutlined-root-MuiOutlinedInput-notchedOutline"
         >
           <legend
-            class="css-1nf2c5d-MuiNotchedOutlined-root"
+            class="css-1n64csd-MuiNotchedOutlined-root"
           >
-            <span
-              aria-hidden="true"
-              class="notranslate"
-            >
-              ​
+            <span>
+              Message
             </span>
           </legend>
         </fieldset>
       </div>
+      <p
+        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-er619e-MuiFormHelperText-root"
+        id="message-input-helper-text"
+      >
+        Press Enter for a new line. Press Ctrl+Enter or Cmd+Enter to send.
+      </p>
     </div>
     <button
-      aria-label="Send message"
-      class="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-1svfwy9-MuiButtonBase-root-MuiIconButton-root"
-      disabled=""
-      tabindex="-1"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary css-17aun4j-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
       type="submit"
     >
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
-        data-testid="SendIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
+      Send
+      <span
+        class="MuiButton-icon MuiButton-endIcon css-1gulhci-MuiButton-endIcon"
       >
-        <path
-          d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
-        />
-      </svg>
+        <svg
+          aria-hidden="true"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+          data-testid="SendIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
+          />
+        </svg>
+      </span>
     </button>
   </form>
 </DocumentFragment>

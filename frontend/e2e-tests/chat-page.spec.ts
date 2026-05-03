@@ -56,11 +56,11 @@ test.describe("Chat Page Model and Temperature Combinations", () => {
         exact: true,
       })
       .click();
-    await page.getByPlaceholder("Type your message...").click();
+    await page.getByLabel("Message").click();
     // Send a user message
-    await page.getByPlaceholder("Type your message...").click();
-    await page.getByPlaceholder("Type your message...").fill("test message");
-    await page.locator("form").getByRole("button").click();
+    await page.getByLabel("Message").click();
+    await page.getByLabel("Message").fill("test message");
+    await page.locator("form").getByRole("button", { name: "Send" }).click();
 
     await expect(page.getByText(expectedResponse)).toBeVisible();
   });

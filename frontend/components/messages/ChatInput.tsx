@@ -1,10 +1,10 @@
 import SendIcon from "@mui/icons-material/Send";
-import { Box, IconButton, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import type React from "react";
-import { type KeyboardEvent, useState } from "react";
+import { type KeyboardEvent, useRef, useState } from "react";
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void;
+  onSendMessage: (message: string) => void | Promise<void>;
   disabled?: boolean;
 }
 
@@ -12,24 +12,33 @@ const ChatInput: React.FC<ChatInputProps> = ({
   disabled = false,
   onSendMessage,
 }) => {
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const [message, setMessage] = useState("");
+  const [submittedEmpty, setSubmittedEmpty] = useState(false);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    sendMessage();
+    void sendMessage();
   };
 
-  const sendMessage = () => {
-    if (message.trim()) {
-      onSendMessage(message.trim());
-      setMessage("");
+  const sendMessage = async () => {
+    const trimmedMessage = message.trim();
+
+    if (!trimmedMessage) {
+      setSubmittedEmpty(true);
+      inputRef.current?.focus();
+      return;
     }
+
+    setSubmittedEmpty(false);
+    setMessage("");
+    await onSendMessage(trimmedMessage);
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
       event.preventDefault();
-      sendMessage();
+      void sendMessage();
     }
   };
 
@@ -37,27 +46,57 @@ const ChatInput: React.FC<ChatInputProps> = ({
     <Box
       component="form"
       onSubmit={handleSubmit}
-      sx={{ display: "flex", alignItems: "flex-end", mt: 2 }}
+      sx={{
+        alignItems: "flex-start",
+        display: "flex",
+        gap: 1,
+        mt: 2,
+      }}
     >
       <TextField
+        id="message-input"
+        inputRef={inputRef}
         multiline={true}
         fullWidth={true}
         disabled={disabled}
-        placeholder="Type your message..."
+        label="Message"
+        name="message"
+        autoComplete="off"
+        placeholder="Type your message…"
         rows={2}
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={(e) => {
+          setMessage(e.target.value);
+          if (submittedEmpty) setSubmittedEmpty(false);
+        }}
         onKeyDown={handleKeyDown}
-        sx={{ mr: 1 }}
+        error={submittedEmpty}
+        helperText={
+          submittedEmpty
+            ? "Enter a message before sending."
+            : "Press Enter for a new line. Press Ctrl+Enter or Cmd+Enter to send."
+        }
+        sx={{ flexGrow: 1 }}
       />
-      <IconButton
+      <Button
         type="submit"
-        color="primary"
-        disabled={disabled || !message.trim()}
-        aria-label="Send message"
+        variant="contained"
+        disabled={disabled}
+        endIcon={
+          disabled ? (
+            <CircularProgress
+              aria-hidden={true}
+              color="inherit"
+              size={16}
+            />
+          ) : (
+            <SendIcon />
+          )
+        }
+        sx={{ minHeight: 56, mt: 2, touchAction: "manipulation" }}
       >
-        <SendIcon />
-      </IconButton>
+        Send
+      </Button>
     </Box>
   );
 };

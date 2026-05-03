@@ -15,10 +15,11 @@ import {
   IconButton,
   Stack,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { TextStreamChatTransport } from "ai";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getModelDisplay, getTemperatureDisplay } from "@/client/helpers";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 import AssistantMessage from "@/components/messages/AssistantMessage";
@@ -38,6 +39,43 @@ const INITIAL_MESSAGES: UIMessage[] = [
     ],
   },
 ];
+
+const DARK_THEME_COLOR = "#121212";
+const LIGHT_THEME_COLOR = "#ffffff";
+
+const VISUALLY_HIDDEN_SX = {
+  border: 0,
+  clip: "rect(0 0 0 0)",
+  height: 1,
+  margin: -1,
+  overflow: "hidden",
+  padding: 0,
+  position: "absolute",
+  whiteSpace: "nowrap",
+  width: 1,
+} as const;
+
+const SKIP_LINK_SX = {
+  backgroundColor: "background.paper",
+  border: 1,
+  borderColor: "primary.main",
+  borderRadius: 1,
+  boxShadow: 2,
+  color: "primary.main",
+  left: 16,
+  px: 2,
+  py: 1,
+  position: "absolute",
+  top: 16,
+  transform: "translateY(-200%)",
+  zIndex: "tooltip",
+  "&:focus-visible": {
+    outline: "2px solid",
+    outlineColor: "primary.main",
+    outlineOffset: 2,
+    transform: "translateY(0)",
+  },
+} as const;
 
 const MODEL_OPTIONS = [
   { value: AssistantModel.FULL, label: "GPT-4o" },
@@ -84,11 +122,34 @@ function MessageList({
   error,
 }: MessageListProps) {
   return (
-    <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
+    <Box
+      component="section"
+      aria-label="Chat conversation"
+      sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}
+    >
       <Stack spacing={2}>
         {messages.map(renderMessage)}
-        {assistantIsLoading && <CircularProgress />}
-        {error && <Alert severity="error">Error: {error.message}</Alert>}
+        {assistantIsLoading && (
+          <Stack
+            aria-live="polite"
+            direction="row"
+            role="status"
+            spacing={1}
+            sx={{ alignItems: "center" }}
+          >
+            <CircularProgress
+              aria-hidden={true}
+              size={20}
+            />
+            <Typography variant="body2">Generating…</Typography>
+          </Stack>
+        )}
+        {error && (
+          <Alert severity="error">
+            Something went wrong. Try sending your message again. Details:{" "}
+            {error.message}
+          </Alert>
+        )}
       </Stack>
     </Box>
   );
@@ -173,16 +234,15 @@ function ControlPanel({
           options={TEMPERATURE_OPTIONS}
         />
         <Tooltip title="Regenerate Response">
-          <IconButton
-            onClick={() => {
-              if (!disabled && canRegenerate) onRegenerate();
-            }}
-            aria-label="Regenerate response"
-            aria-disabled={disabled || !canRegenerate}
-            sx={{ opacity: disabled || !canRegenerate ? 0.38 : 1 }}
-          >
-            <RefreshIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              disabled={disabled || !canRegenerate}
+              onClick={onRegenerate}
+              aria-label="Regenerate response"
+            >
+              <RefreshIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <DarkModeToggle
           darkMode={darkMode}
@@ -197,12 +257,23 @@ function ControlPanel({
   );
 }
 
+function syncBrowserTheme(darkMode: boolean) {
+  document.documentElement.style.colorScheme = darkMode ? "dark" : "light";
+  document
+    .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+    ?.setAttribute("content", darkMode ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+}
+
 export default function Home() {
   const [model, setModel] = useState<AssistantModel>(AssistantModel.FULL);
   const [temperature, setTemperature] = useState<AssistantTemperature>(
     AssistantTemperature.BALANCED,
   );
   const [darkMode, setDarkMode] = useState(true);
+
+  useEffect(() => {
+    syncBrowserTheme(darkMode);
+  }, [darkMode]);
 
   const transport = useMemo(
     () => new TextStreamChatTransport({ api: CHAT_API_URL }),
@@ -234,10 +305,30 @@ export default function Home() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container
-        maxWidth="md"
-        sx={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      <Box
+        href="#message-input"
+        component="a"
+        sx={SKIP_LINK_SX}
       >
+        Skip to Message
+      </Box>
+      <Container
+        id="chat-main"
+        component="main"
+        maxWidth="md"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100dvh",
+          minHeight: 0,
+        }}
+      >
+        <Typography
+          component="h1"
+          sx={VISUALLY_HIDDEN_SX}
+        >
+          Chatbot Template
+        </Typography>
         <MessageList
           messages={messages}
           assistantIsLoading={assistantIsLoading}

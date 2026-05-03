@@ -147,6 +147,20 @@ describe("Home page", () => {
     expect(msg).toHaveAttribute("data-first-message", "true");
   });
 
+  test("renders main landmark, page heading, and skip link", () => {
+    render(<Home />);
+    expect(screen.getByRole("main")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Chatbot Template",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Skip to Message" }),
+    ).toHaveAttribute("href", "#message-input");
+  });
+
   test("renders user messages via renderMessage", () => {
     setupChat({
       messages: [
@@ -165,19 +179,21 @@ describe("Home page", () => {
   test("shows CircularProgress when status is submitted", () => {
     setupChat({ status: "submitted" });
     render(<Home />);
-    expect(screen.getByRole("progressbar")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Generating…");
   });
 
   test("shows CircularProgress when status is streaming", () => {
     setupChat({ status: "streaming" });
     render(<Home />);
-    expect(screen.getByRole("progressbar")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Generating…");
   });
 
   test("shows error Alert when error is present", () => {
     setupChat({ error: new Error("Network error") });
     render(<Home />);
-    expect(screen.getByText(/Network error/)).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Something went wrong. Try sending your message again. Details: Network error",
+    );
   });
 
   test("starts in dark mode (toggle shows Switch to light mode)", () => {
@@ -191,12 +207,9 @@ describe("Home page", () => {
     expect(screen.getByLabelText("Switch to dark mode")).toBeInTheDocument();
   });
 
-  test("regenerate button is aria-disabled when no user messages", () => {
+  test("regenerate button is disabled when no user messages", () => {
     render(<Home />);
-    expect(screen.getByLabelText("Regenerate response")).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByLabelText("Regenerate response")).toBeDisabled();
   });
 
   test("regenerate invokes chat retry when there is a user message and not loading", () => {
@@ -211,6 +224,22 @@ describe("Home page", () => {
     render(<Home />);
     fireEvent.click(screen.getByLabelText("Regenerate response"));
     expect(mockRegenerate).not.toHaveBeenCalled();
+  });
+
+  test("syncs browser chrome metadata with the selected theme", () => {
+    const meta = document.createElement("meta");
+    meta.name = "theme-color";
+    document.head.append(meta);
+
+    render(<Home />);
+    expect(document.documentElement.style.colorScheme).toBe("dark");
+    expect(meta.content).toBe("#121212");
+
+    fireEvent.click(screen.getByLabelText("Switch to light mode"));
+    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(meta.content).toBe("#ffffff");
+
+    meta.remove();
   });
 
   test("sends message from the chat input", async () => {
