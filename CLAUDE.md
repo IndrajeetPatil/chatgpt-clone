@@ -1,10 +1,11 @@
 # Agents
 
-Minimal full-stack chatbot: React frontend + FastAPI backend, streamed via Azure OpenAI GPT-4o.
+Minimal full-stack chatbot: React frontend + FastAPI backend,
+streamed via Azure OpenAI GPT-4o.
 
 ## Architecture
 
-```
+```text
 frontend/   React + Vite + Vercel AI SDK + Material UI
 server/     FastAPI + openai + loguru
 ```
@@ -33,7 +34,9 @@ make run             # start both servers locally
 docker-compose up    # run via Docker
 ```
 
-Frontend: `http://localhost:3000` — Backend: `http://localhost:8000` — Swagger: `http://localhost:8000/docs`
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:8000`
+- Swagger: `http://localhost:8000/docs`
 
 ## Constraints
 
