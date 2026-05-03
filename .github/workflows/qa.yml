@@ -6,12 +6,18 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   qa:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Install uv
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
@@ -98,7 +104,9 @@ jobs:
 
       - name: Lighthouse CI (upload)
         working-directory: ./frontend
-        run: pnpm dlx @lhci/cli@0.15.1 upload
+        run: pnpm dlx @lhci/cli@0.15.1 upload --githubToken="$GITHUB_TOKEN"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         continue-on-error: true
 
       - name: Upload coverage reports
