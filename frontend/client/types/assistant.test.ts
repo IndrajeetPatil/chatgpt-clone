@@ -7,7 +7,7 @@ import {
 
 describe("assistantModelSchema", () => {
   test.each(
-    Object.values(AssistantModel)
+    Object.values(AssistantModel),
   )("accepts valid model %s", (model) => {
     expect(assistantModelSchema.parse(model)).toBe(model);
   });
@@ -24,7 +24,7 @@ describe("assistantModelSchema", () => {
 
 describe("assistantTemperatureSchema", () => {
   test.each(
-    Object.values(AssistantTemperature)
+    Object.values(AssistantTemperature),
   )("accepts valid temperature %s", (temperature) => {
     expect(assistantTemperatureSchema.parse(temperature)).toBe(temperature);
   });

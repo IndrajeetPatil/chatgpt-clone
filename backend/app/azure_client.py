@@ -2,6 +2,7 @@ import time
 from functools import lru_cache
 from typing import TYPE_CHECKING, cast
 
+import openai
 from loguru import logger
 from openai import AzureOpenAI
 
@@ -30,6 +31,36 @@ def get_azure_openai_client() -> AzureOpenAI:
     )
 
 
+def _create_openai_stream(
+    client: AzureOpenAI,
+    *,
+    messages: Sequence[ChatMessage],
+    model: AssistantModel,
+    temperature: AssistantTemperature,
+) -> Stream[ChatCompletionChunk]:
+    try:
+        return client.chat.completions.create(
+            model=model.value,
+            temperature=temperature.openai_value,
+            messages=cast("Sequence[ChatCompletionMessageParam]", messages),
+            stream=True,
+        )
+    except openai.AuthenticationError:
+        logger.error("Azure OpenAI authentication failed — verify API key and endpoint")
+        raise
+    except openai.RateLimitError:
+        logger.warning("Azure OpenAI rate limit exceeded")
+        raise
+    except openai.APIConnectionError:
+        logger.warning(
+            "Azure OpenAI connection failed — check network and endpoint settings",
+        )
+        raise
+    except openai.APIError:
+        logger.exception("Azure OpenAI API error creating stream")
+        raise
+
+
 def stream_azure_openai_response(
     *,
     messages: Sequence[ChatMessage],
@@ -38,23 +69,29 @@ def stream_azure_openai_response(
 ) -> Iterator[str]:
     client: AzureOpenAI = get_azure_openai_client()
     start_time: float = time.time()
-
-    stream: Stream[ChatCompletionChunk] = client.chat.completions.create(
-        model=model.value,
-        temperature=temperature.openai_value,
-        messages=cast("Sequence[ChatCompletionMessageParam]", messages),
-        stream=True,
+    stream: Stream[ChatCompletionChunk] = _create_openai_stream(
+        client,
+        messages=messages,
+        model=model,
+        temperature=temperature,
     )
 
     total_length: int = 0
-    for chunk in stream:
-        if not chunk.choices:
-            continue
+    try:
+        for chunk in stream:
+            if not chunk.choices:
+                continue
 
-        content: str = chunk.choices[0].delta.content or ""
-        if content:
-            total_length += len(content)
-            yield content
+            content: str = chunk.choices[0].delta.content or ""
+            if content:
+                total_length += len(content)
+                yield content
+    except openai.APIError:
+        logger.exception(
+            "Azure OpenAI error during streaming after {} characters",
+            total_length,
+        )
+        raise
 
     logger.info(
         "Azure OpenAI streaming completion took {:.2f}s and returned {} characters",

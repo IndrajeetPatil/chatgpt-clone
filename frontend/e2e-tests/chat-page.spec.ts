@@ -37,7 +37,7 @@ test.describe("Chat Page Model and Temperature Combinations", () => {
 
     // Verify the initial assistant message is present
     await expect(
-      page.getByText("Hi, I am a chat bot. How can I help you today?")
+      page.getByText("Hi, I am a chat bot. How can I help you today?"),
     ).toBeVisible();
 
     // Set the model and temperature (using selectors or any UI interaction method you have)

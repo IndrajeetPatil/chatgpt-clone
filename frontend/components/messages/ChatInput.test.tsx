@@ -7,7 +7,7 @@ describe("ChatInput component", () => {
   it("should render the ChatInput component and match the snapshot", () => {
     const onSendMessageMock = vi.fn();
     const { asFragment } = render(
-      <ChatInput onSendMessage={onSendMessageMock} />
+      <ChatInput onSendMessage={onSendMessageMock} />,
     );
 
     expect(asFragment()).toMatchSnapshot();
@@ -16,7 +16,7 @@ describe("ChatInput component", () => {
   test("should call onSendMessage with the message when Enter is pressed", () => {
     const onSendMessageMock = vi.fn();
     const { getByPlaceholderText } = render(
-      <ChatInput onSendMessage={onSendMessageMock} />
+      <ChatInput onSendMessage={onSendMessageMock} />,
     );
 
     const input = getByPlaceholderText("Type your message...");
@@ -29,7 +29,7 @@ describe("ChatInput component", () => {
   test("should not call onSendMessage if Enter is pressed with an empty message", () => {
     const onSendMessageMock = vi.fn();
     const { getByPlaceholderText } = render(
-      <ChatInput onSendMessage={onSendMessageMock} />
+      <ChatInput onSendMessage={onSendMessageMock} />,
     );
 
     const input = getByPlaceholderText("Type your message...");
@@ -41,7 +41,7 @@ describe("ChatInput component", () => {
   test("should not send when Shift+Enter is pressed", () => {
     const onSendMessageMock = vi.fn();
     const { getByPlaceholderText } = render(
-      <ChatInput onSendMessage={onSendMessageMock} />
+      <ChatInput onSendMessage={onSendMessageMock} />,
     );
 
     const input = getByPlaceholderText("Type your message...");
@@ -59,7 +59,7 @@ describe("ChatInput component", () => {
   test("should send message when send button is clicked", () => {
     const onSendMessageMock = vi.fn();
     const { getByPlaceholderText, getByLabelText } = render(
-      <ChatInput onSendMessage={onSendMessageMock} />
+      <ChatInput onSendMessage={onSendMessageMock} />,
     );
 
     fireEvent.change(getByPlaceholderText("Type your message..."), {
@@ -73,7 +73,7 @@ describe("ChatInput component", () => {
   test("send button is disabled when message is empty", () => {
     const onSendMessageMock = vi.fn();
     const { getByLabelText } = render(
-      <ChatInput onSendMessage={onSendMessageMock} />
+      <ChatInput onSendMessage={onSendMessageMock} />,
     );
 
     expect(getByLabelText("Send message")).toBeDisabled();
@@ -85,7 +85,7 @@ describe("ChatInput component", () => {
       <ChatInput
         onSendMessage={onSendMessageMock}
         disabled={true}
-      />
+      />,
     );
 
     expect(getByLabelText("Send message")).toBeDisabled();

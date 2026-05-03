@@ -126,7 +126,7 @@ const AssistantMessage: React.FC<AssistantMessageProps> = ({
         );
       },
     }),
-    [colors]
+    [colors],
   );
 
   return (

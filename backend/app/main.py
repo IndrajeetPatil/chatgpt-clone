@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Annotated, Literal
 
+import openai
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -116,6 +117,8 @@ def _stream_chat(
             model=model,
             temperature=temperature,
         )
+    except openai.APIError:
+        raise  # all openai.APIError subtypes are logged in azure_client.py
     except Exception:
-        logger.exception("Error while streaming Azure OpenAI response")
+        logger.exception("Unexpected error while streaming response")
         raise

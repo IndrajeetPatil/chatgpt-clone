@@ -18,7 +18,7 @@ describe("DropdownParameter", () => {
         tooltipTitle="Select option"
         ariaLabel="Select an option"
         options={OPTIONS}
-      />
+      />,
     );
     expect(screen.getByLabelText("Select an option")).toBeInTheDocument();
   });
@@ -32,7 +32,7 @@ describe("DropdownParameter", () => {
         tooltipTitle="Select"
         ariaLabel="Select an option"
         options={OPTIONS}
-      />
+      />,
     );
     expect(screen.queryByText("Option 1")).not.toBeInTheDocument();
   });
@@ -46,7 +46,7 @@ describe("DropdownParameter", () => {
         tooltipTitle="Select"
         ariaLabel="Select an option"
         options={OPTIONS}
-      />
+      />,
     );
     fireEvent.click(screen.getByLabelText("Select an option"));
     expect(screen.getByText("Option 1")).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe("DropdownParameter", () => {
         tooltipTitle="Select"
         ariaLabel="Select an option"
         options={OPTIONS}
-      />
+      />,
     );
     fireEvent.click(screen.getByLabelText("Select an option"));
     fireEvent.click(screen.getByText("Option 2"));

@@ -65,7 +65,7 @@ describe("AssistantMessage", () => {
         content={content}
         isFirstMessage={false}
       />,
-      { wrapper: Wrapper }
+      { wrapper: Wrapper },
     );
     expect(screen.getByTestId("markdown-content")).toBeInTheDocument();
   });
@@ -76,7 +76,7 @@ describe("AssistantMessage", () => {
         content={'```javascript\nconsole.log("hello");\n```'}
         isFirstMessage={false}
       />,
-      { wrapper: Wrapper }
+      { wrapper: Wrapper },
     );
     expect(screen.getByTestId("markdown-content")).toBeInTheDocument();
     expect(screen.getByTestId("code-block")).toBeInTheDocument();
@@ -95,7 +95,7 @@ describe("AssistantMessage", () => {
         content={content}
         isFirstMessage={isFirstMessage}
       />,
-      { wrapper: Wrapper }
+      { wrapper: Wrapper },
     );
     expect(container).toMatchSnapshot();
   });
@@ -106,7 +106,7 @@ describe("AssistantMessage", () => {
         content="Welcome!"
         isFirstMessage={true}
       />,
-      { wrapper: Wrapper }
+      { wrapper: Wrapper },
     );
     expect(queryByRole("button")).not.toBeInTheDocument();
   });
@@ -117,7 +117,7 @@ describe("AssistantMessage", () => {
         content="A response"
         isFirstMessage={false}
       />,
-      { wrapper: Wrapper }
+      { wrapper: Wrapper },
     );
     expect(getByRole("button")).toBeInTheDocument();
   });
@@ -150,7 +150,7 @@ describe("AssistantMessage", () => {
           content="Copy me!"
           isFirstMessage={false}
         />,
-        { wrapper: Wrapper }
+        { wrapper: Wrapper },
       );
 
       fireEvent.click(getByRole("button"));

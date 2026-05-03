@@ -123,7 +123,7 @@ function setupChat(
     messages: TestMessage[];
     status: string;
     error: Error | undefined;
-  }> = {}
+  }> = {},
 ) {
   mockUseChat.mockReturnValue({
     messages: INITIAL_MESSAGES,
@@ -195,7 +195,7 @@ describe("Home page", () => {
     render(<Home />);
     expect(screen.getByLabelText("Regenerate response")).toHaveAttribute(
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -220,7 +220,7 @@ describe("Home page", () => {
     fireEvent.click(screen.getByTestId("chat-input-send"));
     expect(mockSendMessage).toHaveBeenCalledWith(
       { text: "test message" },
-      { body: { model: "gpt-4o", temperature: "BALANCED" } }
+      { body: { model: "gpt-4o", temperature: "BALANCED" } },
     );
   });
 
@@ -231,7 +231,7 @@ describe("Home page", () => {
     fireEvent.click(screen.getByTestId("chat-input-send"));
     expect(mockSendMessage).toHaveBeenCalledWith(
       { text: "test message" },
-      { body: { model: "gpt-4o-mini", temperature: "BALANCED" } }
+      { body: { model: "gpt-4o-mini", temperature: "BALANCED" } },
     );
   });
 
@@ -242,7 +242,7 @@ describe("Home page", () => {
     fireEvent.click(screen.getByTestId("chat-input-send"));
     expect(mockSendMessage).toHaveBeenCalledWith(
       { text: "test message" },
-      { body: { model: "gpt-4o", temperature: "CREATIVE" } }
+      { body: { model: "gpt-4o", temperature: "CREATIVE" } },
     );
   });
 

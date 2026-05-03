@@ -77,7 +77,7 @@
     "formatter": {
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
-      "trailingCommas": "es5",
+      "trailingCommas": "all",
       "semicolons": "always",
       "arrowParentheses": "always",
       "bracketSameLine": false,

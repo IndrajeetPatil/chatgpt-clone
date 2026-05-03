@@ -1,0 +1,34 @@
+coverage:
+  precision: 2
+  round: down
+  range: "90...100"
+
+  status:
+    project:
+      backend:
+        target: 100%
+        flags:
+          - backend
+      frontend:
+        target: 90%
+        flags:
+          - frontend
+    patch:
+      default:
+        target: 100%
+        threshold: 0%
+
+flags:
+  backend:
+    paths:
+      - backend/app/
+    carryforward: false
+  frontend:
+    paths:
+      - frontend/
+    carryforward: false
+
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  require_changes: false
