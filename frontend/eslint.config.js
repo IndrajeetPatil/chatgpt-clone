@@ -1,5 +1,6 @@
 import globals from "globals";
 import noUnsanitized from "eslint-plugin-no-unsanitized";
+import reactDom from "eslint-plugin-react-dom";
 import tsParser from "@typescript-eslint/parser";
 
 /**
@@ -34,13 +35,27 @@ export default [
     },
     plugins: {
       "no-unsanitized": noUnsanitized,
+      "react-dom": reactDom,
     },
     rules: {
-      // Prevent XSS via React's dangerouslySetInnerHTML escape hatch
+      // Prevent XSS via React DOM escape hatches and dangerous URL patterns
+      "react-dom/no-dangerously-set-innerhtml": "error",
+      "react-dom/no-dangerously-set-innerhtml-with-children": "error",
+      "react-dom/no-script-url": "error",
+      "react-dom/no-unsafe-iframe-sandbox": "error",
+      "react-dom/no-unsafe-target-blank": "error",
+
+      // Catch dangerouslySetInnerHTML keys hidden inside spread props
       "no-restricted-syntax": [
         "error",
         {
-          selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+          selector:
+            "ObjectExpression > Property[key.name='dangerouslySetInnerHTML']",
+          message: "Do not create React dangerouslySetInnerHTML props.",
+        },
+        {
+          selector:
+            "ObjectExpression > Property[key.value='dangerouslySetInnerHTML']",
           message: "Do not use React dangerouslySetInnerHTML.",
         },
       ],
