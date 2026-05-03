@@ -1,4 +1,4 @@
-SERVER_DIR=./backend
+BACKEND_DIR=./backend
 
 # Backend tool commands
 PYTEST=uv run pytest app tests --verbose
@@ -10,50 +10,50 @@ LOCUST=uv run locust -H http://127.0.0.1:8000/
 
 backend-lint:
 	@echo "$(COLOR_BLUE_BG)Running backend linting with ruff...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && uv run ruff check --fix .
+	cd $(BACKEND_DIR) && uv run ruff check --fix .
 
 backend-format:
 	@echo "$(COLOR_BLUE_BG)Running backend formatting...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && find . -name '*.py' -not -path './.venv/*' -print0 | xargs -0 uv run add-trailing-comma --exit-zero-even-if-changed
-	cd $(SERVER_DIR) && uv run ruff format .
+	cd $(BACKEND_DIR) && find . -name '*.py' -not -path './.venv/*' -print0 | xargs -0 uv run add-trailing-comma --exit-zero-even-if-changed
+	cd $(BACKEND_DIR) && uv run ruff format .
 
 backend-type-check:
 	@echo "$(COLOR_BLUE_BG)Running backend static type checking with ty...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && uv run ty check
+	cd $(BACKEND_DIR) && uv run ty check
 
 backend-audit:
 	@echo "$(COLOR_BLUE_BG)Auditing backend dependencies...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && uv audit --no-dev --locked --preview-features audit
+	cd $(BACKEND_DIR) && uv audit --no-dev --locked --preview-features audit
 
 backend-validate-api-schema:
 	@echo "$(COLOR_BLUE_BG)Validating API schema...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && $(OPENAPI_SCHEMA)
+	cd $(BACKEND_DIR) && $(OPENAPI_SCHEMA)
 
 backend-test:
 	@echo "$(COLOR_BLUE_BG)Running backend unit tests...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && $(PYTEST) && $(PYCOVERAGE)
+	cd $(BACKEND_DIR) && $(PYTEST) && $(PYCOVERAGE)
 
 backend-type-coverage:
 	@echo "$(COLOR_BLUE_BG)Running backend type coverage check...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && $(PYTYPECOVERAGE)
+	cd $(BACKEND_DIR) && $(PYTYPECOVERAGE)
 
 backend-load-test:
 	@echo "$(COLOR_BLUE_BG)Running backend load tests...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && $(FASTAPI_RUNSERVER) & echo $$! > backend.pid
-	cd $(SERVER_DIR) && $(LOCUST)
+	cd $(BACKEND_DIR) && $(FASTAPI_RUNSERVER) & echo $$! > backend.pid
+	cd $(BACKEND_DIR) && $(LOCUST)
 
 backend-clean:
 	@echo "$(COLOR_BLUE_BG)Cleaning backend build artifacts and caches...$(COLOR_RESET)"
-	rm -rf $(SERVER_DIR)/.venv \
-	       $(SERVER_DIR)/htmlcov \
-	       $(SERVER_DIR)/.coverage \
-	       $(SERVER_DIR)/.pytest_cache \
-	       $(SERVER_DIR)/.ruff_cache
-	find $(SERVER_DIR) -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	rm -rf $(BACKEND_DIR)/.venv \
+	       $(BACKEND_DIR)/htmlcov \
+	       $(BACKEND_DIR)/.coverage \
+	       $(BACKEND_DIR)/.pytest_cache \
+	       $(BACKEND_DIR)/.ruff_cache
+	find $(BACKEND_DIR) -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 
 run-backend:
 	@echo "$(COLOR_BLUE_BG)Running backend server...$(COLOR_RESET)"
-	cd $(SERVER_DIR) && $(FASTAPI_RUNSERVER) & echo $$! > backend.pid
+	cd $(BACKEND_DIR) && $(FASTAPI_RUNSERVER) & echo $$! > backend.pid
 
 .PHONY: backend-lint backend-format backend-type-check backend-audit \
 	backend-validate-api-schema backend-test backend-type-coverage \
