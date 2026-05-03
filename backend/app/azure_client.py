@@ -53,11 +53,11 @@ def _create_openai_stream(
         raise
     except openai.APIConnectionError:
         logger.warning(
-            "Azure OpenAI connection failed — check network and endpoint settings"
+            "Azure OpenAI connection failed — check network and endpoint settings",
         )
         raise
-    except openai.APIStatusError as exc:
-        logger.error("Azure OpenAI returned HTTP {} creating stream", exc.status_code)
+    except openai.APIError:
+        logger.exception("Azure OpenAI API error creating stream")
         raise
 
 

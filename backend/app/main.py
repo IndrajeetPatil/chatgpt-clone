@@ -118,7 +118,7 @@ def _stream_chat(
             temperature=temperature,
         )
     except openai.APIError:
-        raise  # already logged with API context in azure_client.py
+        raise  # all openai.APIError subtypes are logged in azure_client.py
     except Exception:
         logger.exception("Unexpected error while streaming response")
         raise
