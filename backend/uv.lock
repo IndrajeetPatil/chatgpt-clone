@@ -405,18 +405,6 @@ wheels = [
 ]
 
 [[package]]
-name = "crosszip"
-version = "1.4.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pytest" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/d3/68/e5b6121df73db971482f4c5523fd8f889d4fa55f5e0de0575114cc445e8a/crosszip-1.4.0.tar.gz", hash = "sha256:03c105778d241531acc8d1ac3aa59d0785d68375bd7070dddc7eb7c27e71c423", size = 5661, upload-time = "2026-04-04T06:42:11.225Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/33/cc/b6c829997f9f0f237018d44870b26da75b416585ca94feb09ed4aef23c4e/crosszip-1.4.0-py3-none-any.whl", hash = "sha256:0212f19e652241a74447c96368f27af13f056e1a8f0bb03b9cc5f9f07f3c64e7", size = 7113, upload-time = "2026-04-04T06:42:10.184Z" },
-]
-
-[[package]]
 name = "cryptography"
 version = "47.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1785,7 +1773,6 @@ dependencies = [
 dev = [
     { name = "add-trailing-comma" },
     { name = "coverage" },
-    { name = "crosszip" },
     { name = "locust" },
     { name = "prek" },
     { name = "pytest" },
@@ -1807,7 +1794,6 @@ requires-dist = [
 dev = [
     { name = "add-trailing-comma", specifier = ">=4.0.0" },
     { name = "coverage", specifier = ">=7.13.5" },
-    { name = "crosszip", specifier = ">=1.4.0" },
     { name = "locust", specifier = ">=2.43.4" },
     { name = "prek", specifier = ">=0.3.11" },
     { name = "pytest", specifier = ">=9.0.3" },
