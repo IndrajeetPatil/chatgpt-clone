@@ -1,16 +1,11 @@
-const conventionalTypes = [
-  "build",
-  "chore",
-  "ci",
-  "docs",
-  "feat",
-  "fix",
-  "perf",
-  "refactor",
-  "revert",
-  "style",
-  "test",
-];
+import { createRequire } from "node:module";
+
+const requireFromCommitlint = createRequire(process.argv[1] ?? import.meta.url);
+const conventionalConfigPath = requireFromCommitlint.resolve(
+  "@commitlint/config-conventional",
+);
+const conventionalConfig = (await import(conventionalConfigPath)).default;
+const conventionalTypes = conventionalConfig.rules["type-enum"][2];
 
 export default {
   extends: ["@commitlint/config-conventional"],

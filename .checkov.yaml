@@ -8,6 +8,7 @@ framework:
 quiet: true
 compact: true
 skip-path:
+  - (^|/)backend/\.env$
   - (^|/)node_modules/
   - (^|/)frontend/(coverage|dist|playwright-report)/
   - (^|/)backend/(htmlcov|\.venv)/

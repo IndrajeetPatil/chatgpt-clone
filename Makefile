@@ -9,6 +9,8 @@ endif
 include makefiles/backend.mk
 include makefiles/frontend.mk
 
+CHECKOV_VERSION := 3.2.526
+
 # Aggregate targets
 lint: backend-lint frontend-lint markdown-lint
 format: backend-format frontend-format
@@ -34,7 +36,7 @@ markdown-lint:
 
 security-scan:
 	@echo "$(COLOR_BLUE_BG)Running security scanning with Checkov...$(COLOR_RESET)"
-	uv tool run --from checkov==3.2.526 checkov --config-file .checkov.yaml
+	uv tool run --from checkov==$(CHECKOV_VERSION) checkov --config-file .checkov.yaml
 
 file-naming:
 	@echo "$(COLOR_BLUE_BG)Running file naming checks with ls-lint...$(COLOR_RESET)"

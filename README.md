@@ -117,11 +117,14 @@ The config follows conventional commits and accepts both lowercase and
 uppercase commit types, for example `feat: ...` and `FEAT: ...`.
 
 Checkov scans the repository's Dockerfiles, Docker Compose/YAML files,
-GitHub Actions workflows, and secrets surface:
+GitHub Actions workflows, and secrets surface. Local-only secrets in
+`backend/.env` are excluded because that file is required for development
+and must not be committed:
 
 ``` bash
 make security-scan
 ```
 
-These checks are also run on every push to the repository using GitHub
-Actions, including a dedicated Checkov security scan workflow.
+The Checkov scan also runs on every push and pull request through the
+dedicated GitHub Actions security workflow. Commitlint is enforced locally
+through the `commit-msg` prek hook.

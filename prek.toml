@@ -34,9 +34,8 @@ hooks = [
   {
     id = "checkov",
     name = "checkov security scan",
-    language = "python",
-    entry = "checkov --config-file .checkov.yaml",
-    additional_dependencies = ["checkov==3.2.526"],
+    language = "system",
+    entry = "make security-scan",
     pass_filenames = false,
     stages = ["pre-push"],
   },
