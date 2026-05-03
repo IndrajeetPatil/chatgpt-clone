@@ -1,4 +1,4 @@
-SERVER_DIR=./server
+SERVER_DIR=./backend
 
 # Backend tool commands
 PYTEST=uv run pytest app tests --verbose

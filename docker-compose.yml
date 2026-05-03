@@ -1,13 +1,13 @@
 services:
   backend:
     build:
-      context: ./server
+      context: ./backend
       dockerfile: Dockerfile
     container_name: chatbot-template-backend
     ports:
       - "8000:8000"
     env_file:
-      - ./server/.env
+      - ./backend/.env
 
   frontend:
     build:

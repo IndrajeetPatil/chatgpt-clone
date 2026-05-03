@@ -9,9 +9,9 @@
       "type": "debugpy",
       "request": "launch",
       "django": true,
-      "python": "${workspaceFolder}/server/.venv/bin/python",
+      "python": "${workspaceFolder}/backend/.venv/bin/python",
       "autoStartBrowser": false,
-      "program": "${workspaceFolder}/server/chatgptserver/manage.py",
+      "program": "${workspaceFolder}/backend/chatgptbackend/manage.py",
       "args": ["runserver"],
       "env": {
         "DJANGO_SETTINGS_MODULE": "chatgptserver.settings"

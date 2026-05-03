@@ -41,7 +41,7 @@ jobs:
           sudo mv ls-lint-linux-amd64 /usr/local/bin/ls-lint
 
       - name: Install backend dependencies
-        working-directory: ./server
+        working-directory: ./backend
         run: |
           uv python install
           uv sync --frozen
@@ -109,6 +109,6 @@ jobs:
         with:
           name: coverage-reports
           path: |
-            server/htmlcov
+            backend/htmlcov
             frontend/coverage
             frontend/playwright-report
