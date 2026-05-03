@@ -1,5 +1,8 @@
 server/.dev/*
 
+# Claude Code session files
+.claude/scheduled_tasks.lock
+
 # fallow cache
 frontend/.fallow/
 # Lighthouse CI results
