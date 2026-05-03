@@ -17,6 +17,8 @@ if TYPE_CHECKING:  # pragma: no cover
     from app.config import Settings
     from app.entities import AssistantModel, AssistantTemperature
 
+    type OpenAIChatMessages = Sequence[ChatCompletionMessageParam]
+
 type ChatMessage = dict[str, str]
 
 
@@ -42,7 +44,7 @@ def _create_openai_stream(
         return client.chat.completions.create(
             model=model.value,
             temperature=temperature.openai_value,
-            messages=cast("Sequence[ChatCompletionMessageParam]", messages),
+            messages=cast("OpenAIChatMessages", messages),
             stream=True,
         )
     except openai.AuthenticationError:

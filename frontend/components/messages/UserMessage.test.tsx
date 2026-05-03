@@ -4,6 +4,14 @@ import { vi } from "vitest";
 
 import UserMessage from "./UserMessage";
 
+const { mockUseTheme } = vi.hoisted(() => ({
+  mockUseTheme: vi.fn(() => ({
+    palette: {
+      mode: "light",
+    },
+  })),
+}));
+
 vi.mock("@mui/material", () => ({
   Box: ({
     children,
@@ -38,11 +46,7 @@ vi.mock("@mui/material", () => ({
       {children}
     </div>
   ),
-  useTheme: () => ({
-    palette: {
-      mode: "light",
-    },
-  }),
+  useTheme: mockUseTheme,
 }));
 
 vi.mock("@mui/icons-material/Person", () => {
@@ -54,9 +58,28 @@ vi.mock("@mui/icons-material/Person", () => {
 });
 
 describe("UserMessage", () => {
+  beforeEach(() => {
+    mockUseTheme.mockReturnValue({
+      palette: {
+        mode: "light",
+      },
+    });
+  });
+
   it("renders user message with person icon correctly", () => {
     const testContent = "Hello, world!";
     const { asFragment } = render(<UserMessage content={testContent} />);
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it("renders in dark mode", () => {
+    mockUseTheme.mockReturnValue({
+      palette: {
+        mode: "dark",
+      },
+    });
+
+    const { getByText } = render(<UserMessage content="Dark mode message" />);
+    expect(getByText("Dark mode message")).toBeInTheDocument();
   });
 });
