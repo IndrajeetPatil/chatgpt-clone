@@ -74,6 +74,13 @@ exclude = [".venv", "build", "dist"]
 [tool.ty.environment]
 python-version = "3.14"
 
+[tool.coverage.run]
+branch = true
+source = ["app"]
+
+[tool.coverage.report]
+fail_under = 100
+
 [tool.pytest.ini_options]
 addopts = [
     "--strict-markers",

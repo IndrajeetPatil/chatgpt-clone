@@ -1,4 +1,4 @@
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import httpx
 import openai
@@ -6,6 +6,9 @@ import pytest
 
 from app.azure_client import get_azure_openai_client, stream_azure_openai_response
 from app.entities import AssistantModel, AssistantTemperature
+
+if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Iterable, Iterator
 
 
 class MockAzureClient:
@@ -19,10 +22,10 @@ class MockAzureClient:
         class MockCompletions:
             def __init__(self) -> None:
                 self.create_calls: list[dict[str, Any]] = []
-                self.return_value: list[object] = []
+                self.return_value: Iterable[object] = []
                 self.side_effect: Exception | None = None
 
-            def create(self, **kwargs: object) -> list[object]:
+            def create(self, **kwargs: object) -> Iterable[object]:
                 self.create_calls.append(kwargs)
                 if self.side_effect is not None:
                     raise self.side_effect
@@ -185,6 +188,31 @@ def test_get_azure_openai_client_wires_settings_correctly(
     assert captured["api_key"] == "test-key-123"
     assert captured["api_version"] == "2024-02-01"
     assert captured["max_retries"] == 5
+
+
+def test_openai_api_error_mid_stream_is_reraised(
+    mock_azure_client: MockAzureClient,
+) -> None:
+    mid_stream_exc: openai.InternalServerError = openai.InternalServerError(
+        "mid-stream failure",
+        response=_make_response(500),
+        body=None,
+    )
+
+    def failing_stream() -> Iterator[object]:
+        yield create_chunk("partial")
+        raise mid_stream_exc
+
+    mock_azure_client.chat.completions.return_value = failing_stream()
+
+    with pytest.raises(openai.InternalServerError, match="mid-stream failure"):
+        list(
+            stream_azure_openai_response(
+                messages=[{"role": "user", "content": "Test"}],
+                model=AssistantModel.FULL,
+                temperature=AssistantTemperature.BALANCED,
+            ),
+        )
 
 
 def test_stream_skips_chunks_with_empty_choices(

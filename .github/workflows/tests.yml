@@ -30,6 +30,13 @@ jobs:
       - name: Run backend unit tests
         run: make backend-test
 
+      - name: Upload backend coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: backend/coverage.xml
+          flags: backend
+          fail_ci_if_error: true
+
       - name: Upload backend coverage report
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
@@ -65,6 +72,13 @@ jobs:
 
       - name: Run frontend unit tests
         run: make frontend-test
+
+      - name: Upload frontend coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: frontend/coverage/lcov.info
+          flags: frontend
+          fail_ci_if_error: true
 
       - name: Upload frontend coverage report
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1

@@ -40,7 +40,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reportsDirectory: "coverage",
-      reporter: ["text", "html"],
+      reporter: ["text", "html", "lcov"],
       thresholds: {
         statements: 90,
         branches: 75,
@@ -51,6 +51,7 @@ export default defineConfig({
     environment: "jsdom",
     exclude: ["**/node_modules/**", "**/dist/**", "**/e2e-tests/**"],
     globals: true,
+    pool: "threads",
     setupFiles: ["./vitest.setup.ts"],
   },
 });
