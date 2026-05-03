@@ -40,7 +40,8 @@ docker-compose up    # run via Docker
 
 ## Constraints
 
-- Backend test coverage must stay ≥ 95%; frontend at 100%.
+- Backend test coverage must stay ≥ 95%; frontend ≥ 90% statements/functions/lines
+  and ≥ 75% branches.
 - Type annotation coverage must be 100% on both sides.
 - File names must pass `ls-lint` (`make file-naming`).
 - Pre-commit hooks enforced via `prek` — run `make hooks` to check all files.
