@@ -1,4 +1,4 @@
-server/.dev/*
+backend/.dev/*
 
 # Claude Code session files
 .claude/scheduled_tasks.lock
@@ -8,9 +8,9 @@ frontend/.fallow/
 # Lighthouse CI results
 .lighthouseci/
 
-server/.DS_Store
+backend/.DS_Store
 .DS_Store
-server/.env
+backend/.env
 
 # python
 

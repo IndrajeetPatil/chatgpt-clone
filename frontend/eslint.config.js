@@ -1,6 +1,5 @@
 import globals from "globals";
 import noUnsanitized from "eslint-plugin-no-unsanitized";
-import reactPlugin from "eslint-plugin-react";
 import tsParser from "@typescript-eslint/parser";
 
 /**
@@ -34,13 +33,17 @@ export default [
       },
     },
     plugins: {
-      react: reactPlugin,
       "no-unsanitized": noUnsanitized,
     },
     rules: {
       // Prevent XSS via React's dangerouslySetInnerHTML escape hatch
-      "react/no-danger": "error",
-      "react/no-danger-with-children": "error",
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+          message: "Do not use React dangerouslySetInnerHTML.",
+        },
+      ],
 
       // Prevent XSS via direct DOM manipulation (innerHTML, insertAdjacentHTML, …)
       "no-unsanitized/method": "error",

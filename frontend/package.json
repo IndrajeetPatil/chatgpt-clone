@@ -25,13 +25,12 @@
     "@mui/icons-material": "^9.0.0",
     "@mui/material": "^9.0.0",
     "ai": "^6.0.174",
-    "lucide-react": "^1.14.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-markdown": "^10.1.0",
     "zod": "^4.4.2"
   },
-  "browserList": {
+  "browserslist": {
     "production": [
       ">0.2%",
       "not dead",
@@ -58,12 +57,11 @@
     "@vitest/coverage-v8": "^4.1.5",
     "eslint": "^10.3.0",
     "eslint-plugin-no-unsanitized": "^4.1.5",
-    "eslint-plugin-react": "^7.37.5",
     "fallow": "^2.62.0",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
     "type-coverage": "^2.29.7",
-    "typescript": "^6.0.3",
+    "typescript": "^5.9.3",
     "vite": "^8.0.10",
     "vitest": "^4.1.5"
   }

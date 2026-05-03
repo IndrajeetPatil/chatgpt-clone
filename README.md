@@ -1,21 +1,21 @@
 # Chatbot Template
 
 A minimal full-stack chatbot template using React and FastAPI, backed by
-Azure OpenAI GPT-4o.
+Azure OpenAI GPT-4o and GPT-4o mini deployments.
 
 ## Architecture/Design
 
 The project is structured as a monorepo with two services:
 
 - `frontend`: A React application that allows users to interact with the
-  GPT-4o model.
+  configured Azure OpenAI model.
 - `backend`: A FastAPI application that serves as the backend for the
   frontend application.
 
 The frontend service is a Vite React application that uses the Vercel AI
 SDK to manage chat state and streamed responses from the backend service.
 The backend service is a FastAPI application that exposes a streaming
-API backed by Azure OpenAI GPT-4o deployments.
+API backed by Azure OpenAI GPT-4o and GPT-4o mini deployments.
 
 The UI is built with [Material
 UI](https://mui.com/material-ui/getting-started/) components and follows
@@ -49,6 +49,15 @@ docker-compose up
 REST API can be interactively explored using FastAPI's Swagger UI:
 `http://localhost:8000/docs`
 
+## Runtime Versions
+
+| Runtime / tool | Version source | Current value |
+|----------------|----------------|---------------|
+| Python         | `backend/.python-version` / `backend/pyproject.toml` | 3.14 |
+| uv             | `backend/pyproject.toml` / `backend/Dockerfile` | ≥ 0.11.2 locally, 0.11.8 in Docker |
+| Node.js        | `frontend/.nvmrc` / frontend Docker image | 24 |
+| pnpm           | `frontend/package.json` / CI workflows | 11.0.4 |
+
 ## Quality Assurance
 
 ### Automated checks
@@ -75,29 +84,31 @@ make clean
 
 More specifically:
 
-| Step                      | Frontend                            | Backend                   |
-|---------------------------|-------------------------------------|---------------------------|
-| Package manager           | pnpm                                | uv                        |
-| Formatter                 | biome                               | ruff                      |
-| Linter                    | biome                               | ruff                      |
-| Import sorter             | biome                               | ruff                      |
-| Type checker              | TypeScript                          | ty                        |
-| Type annotation coverage  | type-coverage                       | typecoverage              |
-| Security linting          | eslint (react/no-unsanitized)       | \-                        |
-| Dead-code / complexity    | fallow                              | \-                        |
-| CSS code quality          | @projectwallace/css-code-quality    | \-                        |
-| Markdown linting          | rumdl                               | rumdl                     |
-| File naming               | ls-lint                             | ls-lint                   |
-| Pre-commit hooks          | prek                                | prek                      |
-| Unit testing              | vitest                              | pytest                    |
-| Code coverage             | vitest                              | coverage.py               |
-| Load testing              | \-                                  | locust                    |
-| End-to-end testing        | Playwright                          | \-                        |
-| Dependency audit          | pnpm audit                          | uv audit                  |
-| Performance / a11y        | Lighthouse CI                       | \-                        |
-| API client                | Vercel AI SDK                       | openai                    |
-| API server                | \-                                  | FastAPI                   |
-| Logger                    | \-                                  | loguru                    |
+| Step                      | Frontend                         | Backend                   |
+|---------------------------|----------------------------------|---------------------------|
+| Package manager           | pnpm                             | uv                        |
+| Formatter                 | Biome                            | Ruff                      |
+| Linter                    | Biome                            | Ruff                      |
+| Import sorter             | Biome                            | Ruff                      |
+| Type checker              | TypeScript                       | ty                        |
+| Type annotation coverage  | type-coverage                    | typecoverage              |
+| Security linting          | ESLint (`react/no-unsanitized`)  | \-                        |
+| Dead-code / complexity    | fallow                           | \-                        |
+| CSS code quality          | @projectwallace/css-code-quality | \-                        |
+| Markdown linting          | rumdl                            | rumdl                     |
+| File naming               | ls-lint                          | ls-lint                   |
+| Pre-commit hooks          | prek                             | prek                      |
+| Unit testing              | Vitest                           | pytest                    |
+| Code coverage             | Vitest                           | coverage.py               |
+| Coverage floor            | 90% statements/functions/lines; 75% branches | 100% |
+| Load testing              | \-                               | locust                    |
+| End-to-end testing        | Playwright                       | \-                        |
+| Dependency audit          | pnpm audit                       | uv audit                  |
+| Performance / a11y        | Lighthouse CI                    | \-                        |
+| API client                | Vercel AI SDK                    | openai                    |
+| API server                | \-                               | FastAPI                   |
+| UI toolkit                | Material UI                      | \-                        |
+| Logger                    | \-                               | loguru                    |
 
 These checks are also run on every push to the repository using GitHub
 Actions.

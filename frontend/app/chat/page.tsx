@@ -1,6 +1,11 @@
 "use client";
 
 import { type UIMessage, useChat } from "@ai-sdk/react";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import PsychologyIcon from "@mui/icons-material/Psychology";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import ThermostatIcon from "@mui/icons-material/Thermostat";
 import {
   Alert,
   Box,
@@ -13,7 +18,6 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { TextStreamChatTransport } from "ai";
-import { Bot, Moon, RefreshCcw, Sun, Thermometer } from "lucide-react";
 import { useMemo, useState } from "react";
 import { getModelDisplay, getTemperatureDisplay } from "@/client/helpers";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
@@ -102,7 +106,7 @@ function DarkModeToggle({ darkMode, onToggle }: DarkModeToggleProps) {
         onClick={onToggle}
         aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
       >
-        {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
       </IconButton>
     </Tooltip>
   );
@@ -143,7 +147,7 @@ function ControlPanel({
         <DropdownParameter
           value={model}
           onChange={setModel}
-          icon={<Bot size={20} />}
+          icon={<PsychologyIcon />}
           tooltipTitle={
             <>
               Choose Assistant Model
@@ -157,7 +161,7 @@ function ControlPanel({
         <DropdownParameter
           value={temperature}
           onChange={setTemperature}
-          icon={<Thermometer size={20} />}
+          icon={<ThermostatIcon />}
           tooltipTitle={
             <>
               Choose Temperature
@@ -177,7 +181,7 @@ function ControlPanel({
             aria-disabled={disabled || !canRegenerate}
             sx={{ opacity: disabled || !canRegenerate ? 0.38 : 1 }}
           >
-            <RefreshCcw size={20} />
+            <RefreshIcon />
           </IconButton>
         </Tooltip>
         <DarkModeToggle

@@ -14,7 +14,7 @@ backend/     FastAPI + openai + loguru
 
 ```bash
 # Backend
-cd server && uv sync --frozen
+cd backend && uv sync --frozen
 
 # Frontend
 cd frontend && pnpm install --frozen-lockfile
@@ -40,7 +40,7 @@ docker-compose up    # run via Docker
 
 ## Constraints
 
-- Backend test coverage must stay ≥ 95%; frontend ≥ 90% statements/functions/lines
+- Backend test coverage must stay at 100%; frontend ≥ 90% statements/functions/lines
   and ≥ 75% branches.
 - Type annotation coverage must be 100% on both sides.
 - File names must pass `ls-lint` (`make file-naming`).
