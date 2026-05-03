@@ -1,6 +1,3 @@
-# Main Makefile for the project
-
-# Detect operating system for color support
 ifeq ($(OS),Windows_NT)
     COLOR_RESET=
     COLOR_BLUE_BG=
@@ -9,45 +6,41 @@ else
     COLOR_BLUE_BG=\033[44m
 endif
 
-# Include layer-specific makefiles
-include frontend.mk
-include backend.mk
+include makefiles/backend.mk
+include makefiles/frontend.mk
 
 # Aggregate targets
 lint: backend-lint frontend-lint markdown-lint
 format: backend-format frontend-format
+type-check: backend-type-check frontend-type-check
+test: backend-test frontend-test
 type-coverage: backend-type-coverage frontend-type-coverage
+clean: backend-clean frontend-clean
 
-# Markdown linting
+# Convenience aliases for frontend-only tools
+fallow: frontend-fallow
+css-quality: frontend-css-quality
+lighthouse: frontend-build frontend-lighthouse
+
+# Project-wide tools
 markdown-lint:
 	@echo "$(COLOR_BLUE_BG)Running markdown linting with rumdl...$(COLOR_RESET)"
 	uv tool run --from rumdl==0.1.86 rumdl check .
 
-# File naming conventions
 file-naming:
 	@echo "$(COLOR_BLUE_BG)Running file naming checks with ls-lint...$(COLOR_RESET)"
 	ls-lint
 
-type-check: backend-type-check frontend-type-check
-test: backend-test frontend-test
-fallow: frontend-fallow
-css-quality: frontend-css-quality
+hooks:
+	@echo "$(COLOR_BLUE_BG)Running prek hooks on all files...$(COLOR_RESET)"
+	prek run --all-files
 
-# Quality Assurance targets
-qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit frontend-fallow frontend-css-quality frontend-security-lint frontend-type-coverage
+# Quality assurance suites
 qa-backend: backend-lint backend-format backend-type-check backend-audit backend-test backend-type-coverage
-hooks: backend-hooks
+qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit frontend-fallow frontend-css-quality frontend-security-lint frontend-type-coverage
 qa: format lint type-check backend-validate-api-schema test fallow css-quality frontend-security-lint type-coverage file-naming
-lighthouse: frontend-build frontend-lighthouse
-clean: backend-clean frontend-clean
 
 # Run targets
-run-backend:
-	@$(MAKE) _run-backend
-
-run-frontend:
-	@$(MAKE) _run-frontend
-
 run: run-backend run-frontend
 
 # Docker targets
@@ -63,9 +56,15 @@ docker-down:
 	@echo "$(COLOR_BLUE_BG)Stopping containerized services...$(COLOR_RESET)"
 	docker-compose down
 
-# End-to-end testing
-e2e-test:
-	@$(MAKE) run-backend
-	@$(MAKE) run-frontend
-	@sleep 10 # Wait for services to start
-	@$(MAKE) _run-e2e-test
+# End-to-end testing (starts both servers, waits, then runs tests)
+e2e-test: run-backend run-frontend
+	@sleep 10
+	$(MAKE) frontend-e2e-test
+
+.PHONY: lint format type-check test type-coverage clean \
+	fallow css-quality lighthouse \
+	markdown-lint file-naming hooks \
+	qa-backend qa-frontend qa \
+	run \
+	docker-build docker-up docker-down \
+	e2e-test
