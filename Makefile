@@ -56,9 +56,8 @@ docker-down:
 	@echo "$(COLOR_BLUE_BG)Stopping containerized services...$(COLOR_RESET)"
 	docker-compose down
 
-# End-to-end testing (starts both servers, waits, then runs tests)
-e2e-test: run-backend run-frontend
-	@sleep 10
+# End-to-end testing (Playwright manages the frontend dev server via webServer config)
+e2e-test:
 	$(MAKE) frontend-e2e-test
 
 .PHONY: lint format type-check test type-coverage clean \
