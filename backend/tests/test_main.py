@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+import httpx
+import openai
 import pytest
 from fastapi.testclient import TestClient
 
@@ -97,12 +99,13 @@ def test_health() -> None:
 
 def test_ui_message_text_returns_content_field() -> None:
     message: UIMessage = UIMessage(
-        role=OpenAIMessageRole.USER, content="Hello from content"
+        role=OpenAIMessageRole.USER,
+        content="Hello from content",
     )
     assert message.text == "Hello from content"
 
 
-def test_stream_chat_reraises_exception(
+def test_stream_chat_reraises_non_openai_exception(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def mock_stream(**kwargs: object) -> None:
@@ -113,6 +116,61 @@ def test_stream_chat_reraises_exception(
 
     client: TestClient = TestClient(app, raise_server_exceptions=True)
     with pytest.raises(RuntimeError, match="Upstream failure"):
+        client.post(
+            "/api/v1/chat",
+            json={
+                "messages": [
+                    {"role": "user", "parts": [{"type": "text", "text": "Hi"}]},
+                ],
+            },
+        )
+
+
+def _make_openai_request() -> httpx.Request:
+    return httpx.Request("POST", "https://example.openai.azure.com/")
+
+
+def _make_openai_response(status_code: int) -> httpx.Response:
+    return httpx.Response(status_code=status_code, request=_make_openai_request())
+
+
+@pytest.mark.parametrize(
+    "exc",
+    [
+        openai.RateLimitError(
+            "rate limit",
+            response=_make_openai_response(429),
+            body=None,
+        ),
+        openai.AuthenticationError(
+            "auth failed",
+            response=_make_openai_response(401),
+            body=None,
+        ),
+        openai.APIConnectionError(
+            message="connection failed",
+            request=_make_openai_request(),
+        ),
+        openai.InternalServerError(
+            "server error",
+            response=_make_openai_response(500),
+            body=None,
+        ),
+    ],
+)
+def test_stream_chat_reraises_openai_api_errors(
+    monkeypatch: pytest.MonkeyPatch,
+    exc: openai.APIError,
+) -> None:
+    captured_exc: openai.APIError = exc
+
+    def mock_stream(**kwargs: object) -> None:
+        raise captured_exc
+
+    monkeypatch.setattr("app.main.stream_azure_openai_response", mock_stream)
+
+    client: TestClient = TestClient(app, raise_server_exceptions=True)
+    with pytest.raises(type(captured_exc)):
         client.post(
             "/api/v1/chat",
             json={

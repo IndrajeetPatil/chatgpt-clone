@@ -1,5 +1,7 @@
 from typing import Any
 
+import httpx
+import openai
 import pytest
 
 from app.azure_client import get_azure_openai_client, stream_azure_openai_response
@@ -98,6 +100,54 @@ def test_api_exception(
     mock_azure_client.chat.completions.side_effect = exc_class(message)
 
     with pytest.raises(exc_class, match=message):
+        list(
+            stream_azure_openai_response(
+                messages=[{"role": "user", "content": "Test prompt"}],
+                model=AssistantModel.FULL,
+                temperature=AssistantTemperature.BALANCED,
+            ),
+        )
+
+
+def _make_request() -> httpx.Request:
+    return httpx.Request("POST", "https://example.openai.azure.com/")
+
+
+def _make_response(status_code: int) -> httpx.Response:
+    return httpx.Response(status_code=status_code, request=_make_request())
+
+
+@pytest.mark.parametrize(
+    "exc",
+    [
+        openai.AuthenticationError(
+            "auth failed",
+            response=_make_response(401),
+            body=None,
+        ),
+        openai.RateLimitError(
+            "rate limited",
+            response=_make_response(429),
+            body=None,
+        ),
+        openai.APIConnectionError(
+            message="connection failed",
+            request=_make_request(),
+        ),
+        openai.InternalServerError(
+            "server error",
+            response=_make_response(500),
+            body=None,
+        ),
+    ],
+)
+def test_openai_api_exceptions_are_reraised(
+    mock_azure_client: MockAzureClient,
+    exc: openai.APIError,
+) -> None:
+    mock_azure_client.chat.completions.side_effect = exc
+
+    with pytest.raises(type(exc)):
         list(
             stream_azure_openai_response(
                 messages=[{"role": "user", "content": "Test prompt"}],
