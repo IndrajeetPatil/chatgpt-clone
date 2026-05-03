@@ -98,6 +98,8 @@ More specifically:
 | Markdown linting          | rumdl                            | rumdl                     |
 | File naming               | ls-lint                          | ls-lint                   |
 | Pre-commit hooks          | prek                             | prek                      |
+| Commit message linting    | commitlint                       | commitlint                |
+| IaC / workflow scan       | Checkov                          | Checkov                   |
 | Unit testing              | Vitest                           | pytest                    |
 | Code coverage             | Vitest                           | coverage.py               |
 | Coverage floor            | 90% statements/functions/lines; 75% branches | 100% |
@@ -110,5 +112,19 @@ More specifically:
 | UI toolkit                | Material UI                      | \-                        |
 | Logger                    | \-                               | loguru                    |
 
-These checks are also run on every push to the repository using GitHub
-Actions.
+Commit messages are validated by the `commit-msg` prek hook with commitlint.
+The config follows conventional commits and accepts both lowercase and
+uppercase commit types, for example `feat: ...` and `FEAT: ...`.
+
+Checkov scans the repository's Dockerfiles, Docker Compose/YAML files,
+GitHub Actions workflows, and secrets surface. Local-only secrets in
+`backend/.env` are excluded because that file is required for development
+and must not be committed:
+
+``` bash
+make security-scan
+```
+
+The Checkov scan also runs on every push and pull request through the
+dedicated GitHub Actions security workflow. Commitlint is enforced locally
+through the `commit-msg` prek hook.

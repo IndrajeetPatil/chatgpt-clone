@@ -1,5 +1,5 @@
 minimum_prek_version = "0.3.11"
-default_install_hook_types = ["pre-commit", "pre-push"]
+default_install_hook_types = ["pre-commit", "pre-push", "commit-msg"]
 default_stages = ["pre-commit"]
 
 [[repos]]
@@ -15,6 +15,30 @@ repo = "https://github.com/rvben/rumdl-pre-commit"
 rev = "v0.1.86"
 hooks = [
   { id = "rumdl" },
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+  {
+    id = "commitlint",
+    name = "commitlint",
+    language = "node",
+    entry = "commitlint --config commitlint.config.mjs --edit",
+    additional_dependencies = [
+      "@commitlint/cli@20.5.3",
+      "@commitlint/config-conventional@20.5.3",
+    ],
+    stages = ["commit-msg"],
+  },
+  {
+    id = "checkov",
+    name = "checkov security scan",
+    language = "system",
+    entry = "make security-scan",
+    pass_filenames = false,
+    stages = ["pre-push"],
+  },
 ]
 
 [[repos]]

@@ -1,0 +1,22 @@
+directory:
+  - .
+framework:
+  - dockerfile
+  - github_actions
+  - secrets
+  - yaml
+quiet: true
+compact: true
+skip-path:
+  - (^|/)backend/\.env$
+  - (^|/)node_modules/
+  - (^|/)frontend/(coverage|dist|playwright-report)/
+  - (^|/)backend/(htmlcov|\.venv)/
+  - (^|/)\.(git|mypy_cache|pytest_cache|ruff_cache|rumdl_cache)/
+skip-check:
+  # Local development compose publishes service ports intentionally.
+  - CKV_DOCKER_2
+  # Repository workflows pin actions to full commit SHAs instead of semantic tags.
+  - CKV_GHA_7
+  # Codecov requires token access in test workflows.
+  - CKV_GHA_1
