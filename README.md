@@ -9,7 +9,7 @@ The project is structured as a monorepo with two services:
 
 - `frontend`: A React application that allows users to interact with the
   GPT-4o model.
-- `server`: A FastAPI application that serves as the backend for the
+- `backend`: A FastAPI application that serves as the backend for the
   frontend application.
 
 The frontend service is a Vite React application that uses the Vercel AI
@@ -24,12 +24,12 @@ Google's Material Design.
 ## Setup
 
 - Clone the repository
-- Create `server/.env` file (cf. `server/.env.example`)
+- Create `backend/.env` file (cf. `backend/.env.example`)
 - Restore needed dependencies:
 
 ``` bash
 # backend
-cd server
+cd backend
 uv sync --frozen
 
 # frontend

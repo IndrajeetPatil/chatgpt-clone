@@ -1,5 +1,5 @@
 ls:
-  server:
+  backend:
     .py: "snakecase | regex:^__[a-z]+__$"
 
   frontend/components:
@@ -30,7 +30,7 @@ ignore:
   - .git
   - node_modules
   - .venv
-  - server/.venv
+  - backend/.venv
   - __pycache__
   - dist
   - coverage

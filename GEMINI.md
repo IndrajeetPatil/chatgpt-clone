@@ -7,7 +7,7 @@ streamed via Azure OpenAI GPT-4o.
 
 ```text
 frontend/   React + Vite + Vercel AI SDK + Material UI
-server/     FastAPI + openai + loguru
+backend/     FastAPI + openai + loguru
 ```
 
 ## Setup
@@ -20,7 +20,7 @@ cd server && uv sync --frozen
 cd frontend && pnpm install --frozen-lockfile
 ```
 
-Requires `server/.env` (see `server/.env.example`).
+Requires `backend/.env` (see `backend/.env.example`).
 
 ## Commands
 
