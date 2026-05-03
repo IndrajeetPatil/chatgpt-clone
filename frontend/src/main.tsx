@@ -19,5 +19,5 @@ if (!root) {
 createRoot(root).render(
   <React.StrictMode>
     <ChatPage />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

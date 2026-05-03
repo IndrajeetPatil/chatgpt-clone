@@ -3,8 +3,10 @@
   "entry": ["src/main.tsx", "scripts/css-quality.mjs"],
   "ignorePatterns": ["**/*.css"],
   "ignoreDependencies": [
+    "@ai-sdk/__mocks__",
     "@emotion/react",
-    "@emotion/styled"
+    "@emotion/styled",
+    "@mui/__mocks__"
   ],
   "rules": {
     "unused-files": "error",

@@ -196,13 +196,13 @@ function ControlPanel({
 export default function Home() {
   const [model, setModel] = useState<AssistantModel>(AssistantModel.FULL);
   const [temperature, setTemperature] = useState<AssistantTemperature>(
-    AssistantTemperature.BALANCED
+    AssistantTemperature.BALANCED,
   );
   const [darkMode, setDarkMode] = useState(true);
 
   const transport = useMemo(
     () => new TextStreamChatTransport({ api: CHAT_API_URL }),
-    []
+    [],
   );
   const { messages, sendMessage, regenerate, error, status } = useChat({
     messages: INITIAL_MESSAGES,
@@ -214,7 +214,7 @@ export default function Home() {
 
   const theme = useMemo(
     () => createTheme({ palette: { mode: darkMode ? "dark" : "light" } }),
-    [darkMode]
+    [darkMode],
   );
 
   const handleSendMessage = async (message: string) => {
