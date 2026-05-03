@@ -23,9 +23,18 @@ css-quality: frontend-css-quality
 lighthouse: frontend-build frontend-lighthouse
 
 # Project-wide tools
+commitlint:
+	@echo "$(COLOR_BLUE_BG)Running commit message linting with commitlint...$(COLOR_RESET)"
+	@test -n "$(COMMIT_EDITMSG)" || (echo "Set COMMIT_EDITMSG=/path/to/commit-message-file" && exit 2)
+	prek run commitlint --stage commit-msg --commit-msg-filename "$(COMMIT_EDITMSG)"
+
 markdown-lint:
 	@echo "$(COLOR_BLUE_BG)Running markdown linting with rumdl...$(COLOR_RESET)"
 	uv tool run --from rumdl==0.1.86 rumdl check .
+
+security-scan:
+	@echo "$(COLOR_BLUE_BG)Running security scanning with Checkov...$(COLOR_RESET)"
+	uv tool run --from checkov==3.2.526 checkov --config-file .checkov.yaml
 
 file-naming:
 	@echo "$(COLOR_BLUE_BG)Running file naming checks with ls-lint...$(COLOR_RESET)"
@@ -38,7 +47,7 @@ hooks:
 # Quality assurance suites
 qa-backend: backend-lint backend-format backend-type-check backend-audit backend-test backend-type-coverage
 qa-frontend: frontend-lint frontend-format frontend-type-check frontend-test frontend-build frontend-audit frontend-fallow frontend-css-quality frontend-security-lint frontend-type-coverage
-qa: format lint type-check backend-validate-api-schema test fallow css-quality frontend-security-lint type-coverage file-naming
+qa: format lint type-check backend-validate-api-schema test fallow css-quality frontend-security-lint type-coverage file-naming security-scan
 
 # Run targets
 run: run-backend run-frontend
@@ -62,7 +71,7 @@ e2e-test:
 
 .PHONY: lint format type-check test type-coverage clean \
 	fallow css-quality lighthouse \
-	markdown-lint file-naming hooks \
+	commitlint markdown-lint security-scan file-naming hooks \
 	qa-backend qa-frontend qa \
 	run \
 	docker-build docker-up docker-down \

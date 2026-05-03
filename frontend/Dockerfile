@@ -13,4 +13,6 @@ COPY . .
 RUN pnpm run build
 EXPOSE 3000
 
+USER node
+
 CMD ["pnpm", "run", "start"]

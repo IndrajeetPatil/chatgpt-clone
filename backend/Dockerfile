@@ -15,10 +15,14 @@ COPY . /app/
 
 RUN uv sync --frozen --no-dev
 
+RUN addgroup --system app && adduser --system --ingroup app app
+
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     CORS_ALLOWED_ORIGINS='["http://localhost:3000"]'
 
 EXPOSE 8000
+
+USER app
 
 CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]
