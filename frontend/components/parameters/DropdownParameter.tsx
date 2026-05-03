@@ -1,5 +1,5 @@
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
-import { ChevronDown } from "lucide-react";
 import type React from "react";
 import { useId, useState } from "react";
 
@@ -40,7 +40,7 @@ function DropdownParameter<T extends string | number>({
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {icon}
-            <ChevronDown size={16} />
+            <ArrowDropDownIcon fontSize="small" />
           </Box>
         </IconButton>
       </Tooltip>
