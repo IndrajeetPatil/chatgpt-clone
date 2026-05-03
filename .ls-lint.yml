@@ -30,6 +30,7 @@ ignore:
   - .git
   - node_modules
   - .venv
+  - server/.venv
   - __pycache__
   - dist
   - coverage

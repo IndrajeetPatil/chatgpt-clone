@@ -1,13 +1,17 @@
 import json
 from http import HTTPStatus
 from random import choice
+from typing import TYPE_CHECKING
 
 from locust import HttpUser, between, task
+
+if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Callable
 
 
 class ChatAPIUser(HttpUser):
     # Wait between 1 to 5 seconds between tasks
-    wait_time = between(1, 5)
+    wait_time: Callable[..., float] = between(1, 5)
 
     def __init__(self, *args: object, **kwargs: object) -> None:
         super().__init__(*args, **kwargs)
@@ -25,10 +29,10 @@ class ChatAPIUser(HttpUser):
 
     @task(1)
     def chat_request(self) -> None:
-        model = choice(self.models)  # noqa: S311
-        temperature = choice(self.temperatures)  # noqa: S311
-        prompt = choice(self.test_prompts)  # noqa: S311
-        payload = {
+        model: str = choice(self.models)  # noqa: S311
+        temperature: str = choice(self.temperatures)  # noqa: S311
+        prompt: str = choice(self.test_prompts)  # noqa: S311
+        payload: dict[str, object] = {
             "messages": [
                 {
                     "role": "user",

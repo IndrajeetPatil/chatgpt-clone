@@ -9,7 +9,7 @@ style = "dash"
 
 [MD013]
 code_blocks = false
-tables = true
+tables = false
 headings = true
 
 [MD024]

@@ -10,16 +10,18 @@ from app.config import get_settings
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterator, Sequence
 
-    from openai.types.chat import ChatCompletionMessageParam
+    from openai import Stream
+    from openai.types.chat import ChatCompletionChunk, ChatCompletionMessageParam
 
+    from app.config import Settings
     from app.entities import AssistantModel, AssistantTemperature
 
-ChatMessage = dict[str, str]
+type ChatMessage = dict[str, str]
 
 
 @lru_cache(maxsize=1)
 def get_azure_openai_client() -> AzureOpenAI:
-    settings = get_settings()
+    settings: Settings = get_settings()
     return AzureOpenAI(
         azure_endpoint=settings.azure_openai_endpoint,
         api_version=settings.azure_openai_api_version,
@@ -34,22 +36,22 @@ def stream_azure_openai_response(
     model: AssistantModel,
     temperature: AssistantTemperature,
 ) -> Iterator[str]:
-    client = get_azure_openai_client()
-    start_time = time.time()
+    client: AzureOpenAI = get_azure_openai_client()
+    start_time: float = time.time()
 
-    stream = client.chat.completions.create(
+    stream: Stream[ChatCompletionChunk] = client.chat.completions.create(
         model=model.value,
         temperature=temperature.openai_value,
         messages=cast("Sequence[ChatCompletionMessageParam]", messages),
         stream=True,
     )
 
-    total_length = 0
+    total_length: int = 0
     for chunk in stream:
         if not chunk.choices:
             continue
 
-        content = chunk.choices[0].delta.content or ""
+        content: str = chunk.choices[0].delta.content or ""
         if content:
             total_length += len(content)
             yield content

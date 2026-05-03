@@ -252,8 +252,7 @@ describe("Home page", () => {
         {
           id: "a1",
           role: "assistant" as const,
-          // biome-ignore lint/suspicious/noExplicitAny: mock data for non-text part
-          parts: [{ type: "tool-invocation" as any, text: undefined as any }],
+          parts: [{ type: "step-start" }],
         },
       ],
     });

@@ -1,7 +1,11 @@
 from functools import lru_cache
+from typing import TYPE_CHECKING
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+if TYPE_CHECKING:
+    from typing import ClassVar
 
 
 class Settings(BaseSettings):
@@ -13,7 +17,10 @@ class Settings(BaseSettings):
         alias="CORS_ALLOWED_ORIGINS",
     )
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+    )
 
 
 @lru_cache(maxsize=1)

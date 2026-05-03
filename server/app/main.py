@@ -13,9 +13,11 @@ from app.entities import AssistantModel, AssistantTemperature, OpenAIMessageRole
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Iterator
 
-settings = get_settings()
+    from app.config import Settings
 
-app = FastAPI(
+settings: Settings = get_settings()
+
+app: FastAPI = FastAPI(
     title="chatbot-template backend",
     description="Streaming backend API for the chatbot template.",
     version="1.0.0",
@@ -68,7 +70,7 @@ def health() -> dict[str, str]:
     },
 )
 def chat(request: ChatRequest) -> StreamingResponse:
-    messages = _to_openai_messages(request.messages)
+    messages: list[ChatMessage] = _to_openai_messages(request.messages)
     logger.debug(
         "Received chat stream request with {} messages, model={}, temperature={}",
         len(messages),
@@ -87,7 +89,7 @@ def chat(request: ChatRequest) -> StreamingResponse:
 
 
 def _to_openai_messages(messages: list[UIMessage]) -> list[ChatMessage]:
-    openai_messages = [
+    openai_messages: list[ChatMessage] = [
         {"role": message.role.value, "content": message.text}
         for message in messages
         if message.text.strip()

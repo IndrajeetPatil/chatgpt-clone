@@ -2,6 +2,15 @@ import { expect, test } from "@playwright/test";
 import { getModelDisplay, getTemperatureDisplay } from "@/client/helpers";
 import { AssistantModel, AssistantTemperature } from "@/client/types/assistant";
 
+interface ChatBody {
+  model: string;
+  temperature: string;
+  messages: Array<{
+    role: string;
+    parts: Array<{ type: string; text: string }>;
+  }>;
+}
+
 test.describe("Chat Page Model and Temperature Combinations", () => {
   test("should return correct response for selected model and temperature", async ({
     page,
@@ -9,11 +18,11 @@ test.describe("Chat Page Model and Temperature Combinations", () => {
     const expectedResponse = "Test received! How can I assist you today?";
     await page.route("http://localhost:8000/api/v1/chat", async (route) => {
       const request = route.request();
-      const body = request.postDataJSON();
+      const body = request.postDataJSON() as ChatBody;
 
       expect(body.model).toBe(AssistantModel.MINI);
       expect(body.temperature).toBe(AssistantTemperature.DETERMINISTIC);
-      expect(body.messages.at(-1).parts).toEqual([
+      expect(body.messages[body.messages.length - 1].parts).toEqual([
         { type: "text", text: "test message" },
       ]);
 
