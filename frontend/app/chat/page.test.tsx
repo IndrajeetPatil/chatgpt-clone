@@ -158,6 +158,10 @@ describe("Home page", () => {
     setupChat();
   });
 
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   test("renders initial assistant message marked as first message", () => {
     render(<Home />);
     const msg = screen.getByTestId("assistant-message");

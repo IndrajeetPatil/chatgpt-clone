@@ -270,7 +270,10 @@ export default function Home() {
     AssistantTemperature.BALANCED,
   );
   const [darkMode, setDarkMode] = useState(
-    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
+    () =>
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
 
   useEffect(() => {
