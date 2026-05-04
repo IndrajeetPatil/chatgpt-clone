@@ -7,7 +7,8 @@ description: >
   include visual evidence after UI work.
 allowed-tools: >
   Bash(gh *), Bash(curl *), Bash(npx playwright*), Bash(lsof *),
-  Bash(pnpm *), Bash(kill *), Bash(sleep *), Bash(jq *)
+  Bash(pnpm *), Bash(kill *), Bash(sleep *), Bash(jq *),
+  Bash(seq *), Bash(cat *), Bash(date *)
 ---
 
 # frontend-pr-screenshot
@@ -39,24 +40,29 @@ if ! lsof -ti:3000 > /dev/null 2>&1; then
   cd frontend && pnpm run dev &
   DEV_PID=$!
   # Give it up to 30 s to become ready
+  READY=0
   for i in $(seq 1 30); do
-    curl -sf http://localhost:3000 > /dev/null 2>&1 && break
+    curl -sf http://localhost:3000 > /dev/null 2>&1 && READY=1 && break
     sleep 1
   done
+  if [ "$READY" -eq 0 ]; then
+    echo "Error: dev server did not become reachable within 30 s. Aborting."
+    exit 1
+  fi
 fi
 ```
 
 ### Step 3 — Take a screenshot with Playwright
 
 Use the Playwright CLI — it launches Chromium, navigates to the page,
-waits for the welcome message to appear (confirming the React app has
+waits for the chat input to appear (confirming the React app has
 fully rendered), then saves the screenshot.
 
 ```bash
 cd frontend && npx playwright screenshot \
   "http://localhost:3000/chat" \
   /tmp/frontend-screenshot.png \
-  --wait-for-selector "text=Hi, I am a chat bot"
+  --wait-for-selector "[aria-label='Message']"
 ```
 
 If Playwright is not installed, run:

@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-const CHAT_API = "http://localhost:8000/api/v1/chat";
+const CHAT_API =
+  process.env.VITE_CHAT_API_URL ?? "http://localhost:8000/api/v1/chat";
 
 test.describe("Visual regression", () => {
   test("initial page", async ({ page }) => {
