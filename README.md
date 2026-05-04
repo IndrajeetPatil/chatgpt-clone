@@ -28,6 +28,12 @@ details such as keyboard operability, visible focus states, loading and error
 states, reduced-motion support, resilient layout, semantic controls, and
 concise action copy.
 
+The project targets **WCAG 2.1 Level AA** compliance. Reviewers should test
+against WCAG 2.1 AA success criteria across the four POUR principles
+(Perceivable, Operable, Understandable, and Robust). Lighthouse CI enforces an
+accessibility score ≥ 95%, but automated checks do not cover every AA criterion,
+so manual verification is also required for new UI.
+
 ## Setup
 
 - Clone the repository

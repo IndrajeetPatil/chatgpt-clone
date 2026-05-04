@@ -135,9 +135,42 @@ function setupChat(
   });
 }
 
+class MockMediaQueryList extends EventTarget implements MediaQueryList {
+  readonly matches: boolean;
+  readonly media: string;
+  onchange:
+    | ((this: MediaQueryList, ev: MediaQueryListEvent) => unknown)
+    | null = null;
+
+  constructor(matches: boolean, media: string) {
+    super();
+    this.matches = matches;
+    this.media = media;
+  }
+
+  addListener(): void {}
+  removeListener(): void {}
+}
+
+function mockMatchMedia(prefersDark: boolean) {
+  vi.stubGlobal(
+    "matchMedia",
+    (query: string): MediaQueryList =>
+      new MockMediaQueryList(
+        prefersDark && query === "(prefers-color-scheme: dark)",
+        query,
+      ),
+  );
+}
+
 describe("Home page", () => {
   beforeEach(() => {
+    mockMatchMedia(true);
     setupChat();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   test("renders initial assistant message marked as first message", () => {
@@ -196,9 +229,15 @@ describe("Home page", () => {
     );
   });
 
-  test("starts in dark mode (toggle shows Switch to light mode)", () => {
+  test("starts in dark mode when system prefers dark", () => {
     render(<Home />);
     expect(screen.getByLabelText("Switch to light mode")).toBeInTheDocument();
+  });
+
+  test("starts in light mode when system prefers light", () => {
+    mockMatchMedia(false);
+    render(<Home />);
+    expect(screen.getByLabelText("Switch to dark mode")).toBeInTheDocument();
   });
 
   test("toggles from dark to light mode", () => {

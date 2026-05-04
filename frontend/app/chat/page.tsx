@@ -269,7 +269,11 @@ export default function Home() {
   const [temperature, setTemperature] = useState<AssistantTemperature>(
     AssistantTemperature.BALANCED,
   );
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() =>
+    typeof window !== "undefined" && typeof window.matchMedia === "function"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : false,
+  );
 
   useEffect(() => {
     syncBrowserTheme(darkMode);
