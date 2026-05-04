@@ -1,48 +1,34 @@
-# Agents
+# Chatbot Template
 
-Minimal full-stack chatbot: React frontend + FastAPI backend,
-streamed via Azure OpenAI GPT-4o.
-
-## Architecture
-
-```text
-frontend/   React + Vite + Vercel AI SDK + Material UI
-backend/     FastAPI + openai + loguru
-```
+Full-stack chatbot: React frontend + FastAPI backend, streamed via Azure OpenAI GPT-4o.
 
 ## Setup
 
 ```bash
-# Backend
-cd backend && uv sync --frozen
-
-# Frontend
-cd frontend && pnpm install --frozen-lockfile
+cd backend && uv sync --frozen          # Python 3.14, uv ≥ 0.11.2
+cd frontend && pnpm install --frozen-lockfile  # Node.js 24, pnpm 11.0.4
 ```
 
-Requires `backend/.env` (see `backend/.env.example`).
+Copy `backend/.env.example` → `backend/.env` and fill in Azure OpenAI credentials before running.
 
 ## Commands
 
 ```bash
-make qa              # full quality suite (format, lint, type-check, test, coverage)
-make test            # unit tests only
-make format          # auto-format all code
-make lint            # lint all code
-make type-check      # static type checking
-make run             # start both servers locally
-docker-compose up    # run via Docker
+make qa          # full suite: format, lint, type-check, test, coverage, security — run before every commit
+make test        # unit tests only
+make format      # auto-format (Ruff + Biome)
+make lint        # lint (Ruff + Biome + ESLint)
+make type-check  # static types (ty + tsc)
+make run         # start both servers (frontend :3000, backend :8000, Swagger :8000/docs)
+docker-compose up
 ```
 
-- Frontend: `http://localhost:3000`
-- Backend: `http://localhost:8000`
-- Swagger: `http://localhost:8000/docs`
+## Hard constraints
 
-## Constraints
-
-- Backend test coverage must stay at 100%; frontend ≥ 90% statements/functions/lines
-  and ≥ 75% branches.
-- Type annotation coverage must be 100% on both sides.
-- File names must pass `ls-lint` (`make file-naming`).
-- Pre-commit hooks enforced via `prek` — run `make hooks` to check all files.
-- Always run `make qa` before committing.
+- **Backend coverage**: 100% lines + branches (`fail_under = 100` in pyproject.toml).
+- **Frontend coverage**: ≥ 90% statements/functions/lines, ≥ 75% branches.
+- **Type coverage**: 100% on both sides (`ty` for Python, `type-coverage --strict` for TypeScript).
+- **File naming**: enforced by `ls-lint` — backend `snake_case`, components `PascalCase`, e2e specs `kebab-case`.
+- **Commit messages**: conventional commits format (enforced by `commitlint`).
+- **Pre-commit hooks**: managed by `prek` — run `make hooks` to verify all files pass.
+- **No new `any` types** and no `dangerouslySetInnerHTML` — ESLint will block these.
