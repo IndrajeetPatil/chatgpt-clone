@@ -66,12 +66,6 @@ describe("UserMessage", () => {
     });
   });
 
-  it("renders user message with person icon correctly", () => {
-    const testContent = "Hello, world!";
-    const { asFragment } = render(<UserMessage content={testContent} />);
-    expect(asFragment()).toMatchSnapshot();
-  });
-
   it("renders in dark mode", () => {
     mockUseTheme.mockReturnValue({
       palette: {

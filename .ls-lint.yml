@@ -40,3 +40,4 @@ ignore:
   - frontend/app/fonts
   - frontend/components/messages/__snapshots__
   - frontend/components/parameters/__snapshots__
+  - frontend/e2e-tests/__snapshots__
