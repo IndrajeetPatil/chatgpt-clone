@@ -24,19 +24,19 @@ class Settings(BaseSettings):
     )
 
     @model_validator(mode="after")
-    def validate_azure_settings(self) -> Settings:
+    def validate_azure_settings(self) -> "Settings":
         if not self.testing:
-            missing = [
+            missing: list[str] = [
                 name
                 for name, value in [
                     ("AZURE_OPENAI_ENDPOINT", self.azure_openai_endpoint),
                     ("AZURE_OPENAI_API_KEY", self.azure_openai_api_key),
                     ("AZURE_OPENAI_API_VERSION", self.azure_openai_api_version),
                 ]
-                if not value
+                if not value.strip()
             ]
             if missing:
-                msg = f"Missing required Azure OpenAI settings: {', '.join(missing)}"
+                msg: str = f"Missing required Azure OpenAI settings: {', '.join(missing)}"
                 raise ValueError(msg)
         return self
 
