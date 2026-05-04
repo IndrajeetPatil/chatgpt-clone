@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 if TYPE_CHECKING:
@@ -16,11 +16,31 @@ class Settings(BaseSettings):
         default_factory=lambda: ["http://localhost:3000"],
         alias="CORS_ALLOWED_ORIGINS",
     )
+    testing: bool = Field(default=False, alias="TESTING")
 
     model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
         env_file=".env",
         extra="ignore",
     )
+
+    @model_validator(mode="after")
+    def validate_azure_settings(self) -> Settings:
+        if not self.testing:
+            missing: list[str] = [
+                name
+                for name, value in [
+                    ("AZURE_OPENAI_ENDPOINT", self.azure_openai_endpoint),
+                    ("AZURE_OPENAI_API_KEY", self.azure_openai_api_key),
+                    ("AZURE_OPENAI_API_VERSION", self.azure_openai_api_version),
+                ]
+                if not value.strip()
+            ]
+            if missing:
+                msg: str = (
+                    f"Missing required Azure OpenAI settings: {', '.join(missing)}"
+                )
+                raise ValueError(msg)
+        return self
 
 
 @lru_cache(maxsize=1)
