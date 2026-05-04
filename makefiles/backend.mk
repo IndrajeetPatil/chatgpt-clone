@@ -5,7 +5,7 @@ PYTEST=uv run pytest app tests --verbose
 PYCOVERAGE=uv run coverage run -m pytest app tests && uv run coverage report && uv run coverage html && uv run coverage xml
 PYTYPECOVERAGE=uv run python -m typecoverage app tests locustfile.py --recursive --exit-nonzero-on-issues
 FASTAPI_RUNSERVER=uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
-OPENAPI_SCHEMA=uv run python -c "from app.main import app; app.openapi()"
+OPENAPI_SCHEMA=TESTING=true uv run python -c "from app.main import app; app.openapi()"
 LOCUST=uv run locust -H http://127.0.0.1:8000/
 
 backend-lint:
