@@ -13,7 +13,8 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./e2e-tests",
-  snapshotPathTemplate: "{testDir}/__snapshots__/{testFileName}/{arg}{ext}",
+  snapshotPathTemplate:
+    "{testDir}/__snapshots__/{projectName}/{testFileName}/{arg}{ext}",
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
