@@ -135,8 +135,26 @@ function setupChat(
   });
 }
 
+function mockMatchMedia(prefersDark: boolean) {
+  vi.stubGlobal(
+    "matchMedia",
+    (query: string): MediaQueryList =>
+      ({
+        matches: prefersDark && query === "(prefers-color-scheme: dark)",
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      }) as unknown as MediaQueryList,
+  );
+}
+
 describe("Home page", () => {
   beforeEach(() => {
+    mockMatchMedia(true);
     setupChat();
   });
 
@@ -196,9 +214,15 @@ describe("Home page", () => {
     );
   });
 
-  test("starts in dark mode (toggle shows Switch to light mode)", () => {
+  test("starts in dark mode when system prefers dark", () => {
     render(<Home />);
     expect(screen.getByLabelText("Switch to light mode")).toBeInTheDocument();
+  });
+
+  test("starts in light mode when system prefers light", () => {
+    mockMatchMedia(false);
+    render(<Home />);
+    expect(screen.getByLabelText("Switch to dark mode")).toBeInTheDocument();
   });
 
   test("toggles from dark to light mode", () => {
