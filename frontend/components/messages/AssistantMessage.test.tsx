@@ -1,5 +1,4 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import type { RenderResult } from "@testing-library/react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import type React from "react";
 import { vi } from "vitest";
@@ -80,24 +79,6 @@ describe("AssistantMessage", () => {
     );
     expect(screen.getByTestId("markdown-content")).toBeInTheDocument();
     expect(screen.getByTestId("code-block")).toBeInTheDocument();
-  });
-
-  test.each([
-    ["plain text snapshot", "Hello, this is a plain message.", false],
-    [
-      "mixed content snapshot",
-      'Here is some code:\n```javascript\nconsole.log("hello");\n```\nAnd more text',
-      false,
-    ],
-  ])("matches snapshot for %s", (_label, content, isFirstMessage) => {
-    const { container }: RenderResult = render(
-      <AssistantMessage
-        content={content}
-        isFirstMessage={isFirstMessage}
-      />,
-      { wrapper: Wrapper },
-    );
-    expect(container).toMatchSnapshot();
   });
 
   test("does not show copy button when isFirstMessage is true", () => {

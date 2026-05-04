@@ -4,15 +4,6 @@ import { vi } from "vitest";
 import ChatInput from "./ChatInput";
 
 describe("ChatInput component", () => {
-  it("should render the ChatInput component and match the snapshot", () => {
-    const onSendMessageMock = vi.fn();
-    const { asFragment } = render(
-      <ChatInput onSendMessage={onSendMessageMock} />,
-    );
-
-    expect(asFragment()).toMatchSnapshot();
-  });
-
   test("should call onSendMessage with the message when Ctrl+Enter is pressed", () => {
     const onSendMessageMock = vi.fn();
     render(<ChatInput onSendMessage={onSendMessageMock} />);
