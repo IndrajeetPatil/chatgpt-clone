@@ -1,9 +1,14 @@
-# Code Quality Review — Claude Sonnet 4.6
+# Code Quality Review — Claude Opus 4.7
 
-**Reviewer**: Claude Sonnet 4.6 (`claude-sonnet-4-6`)\
+**Reviewer**: Claude Opus 4.7 (`claude-opus-4-7`), building on a
+prior pass by Claude Sonnet 4.6 (`claude-sonnet-4-6`)\
 **Date**: 2026-05-04\
 **Scope**: Full codebase — React 19 frontend + FastAPI backend,
 streamed via Azure OpenAI
+
+> Sections 1–10 below are the Sonnet 4.6 baseline review, retained
+> verbatim. The **Opus 4.7 Re-review** addendum at the bottom records
+> corrections, missed issues, and revised scores from the newer model.
 
 ---
 
@@ -452,3 +457,95 @@ rather than errors of commission.
 5. **Add a circuit breaker**: Repeated Azure OpenAI failures currently
    result in repeated timeouts. A circuit breaker (`pybreaker`) would
    fail fast after a threshold and recover automatically.
+
+---
+
+## Addendum — Opus 4.7 Re-review (2026-05-04)
+
+The Sonnet 4.6 review above is largely accurate and well-structured. The
+sections below record where I agree, where I'd correct it, and what it
+missed after re-reading the source.
+
+### Factual corrections
+
+- **Setting name is wrong**: §6 references `Settings.cors_origins`. The
+  actual field is `cors_allowed_origins` (see `backend/app/config.py:15`
+  and `backend/app/main.py:29`). Minor, but a reader copy-pasting the
+  name would hit an `AttributeError`.
+- **"Generic 500 on non-OpenAI exceptions" is misleading** (§5
+  weakness): the route returns a `StreamingResponse`, so by the time
+  `_stream_chat` raises, FastAPI has already flushed `200 OK` headers.
+  The connection terminates mid-stream — the client does not see a
+  clean 500 with a JSON body. This is a more serious correctness gap
+  than Sonnet implies and deserves its own bullet: **streaming errors
+  are unobservable to the frontend except as a truncated body**. The
+  current `Alert` in `page.tsx:147` may not even fire reliably for
+  mid-stream failures, depending on how `useChat` surfaces transport
+  errors.
+- **"Empty messages rejected with HTTP 400 before any API call"** (§5)
+  is only partly true: `_to_openai_messages` *silently drops* messages
+  whose text is whitespace-only and only raises 400 if **all** are
+  empty (`backend/app/main.py:92-105`). A request mixing valid and
+  whitespace messages succeeds with the whitespace ones discarded — no
+  warning, no log. Worth flagging as a quiet-failure footgun.
+
+### Issues Sonnet 4.6 missed
+
+1. **`max_retries=5` is non-configurable** (`azure_client.py:32`).
+   Hard-coded retry counts that can't be tuned per environment are an
+   anti-pattern — staging may want fewer, batch jobs more. Push it to
+   `Settings`.
+2. **No request timeout on the Azure client**. The SDK default is
+   600 s. A wedged upstream connection will hold a worker for ten
+   minutes. Set `timeout=` explicitly.
+3. **`@lru_cache` on the Azure client is process-wide and not
+   thread-safe by intent**. Fine for the current single-worker dev
+   setup, but under `uvicorn --workers N` each worker gets its own
+   client (acceptable). The risk is that test isolation requires
+   `get_azure_openai_client.cache_clear()` — not obvious from the call
+   site. Sonnet praised the same pattern on `get_settings` without
+   noting that the client variant has different implications
+   (network state, not just config).
+4. **`UIMessage.content: str | None` is doubly-permissive**:
+   `entities.py`-side schema accepts both `content` (legacy) and
+   `parts` (Vercel AI SDK shape). There's no validator ensuring at
+   least one is populated; `text` returns `""` when both are missing,
+   which then gets filtered out by `_to_openai_messages`. The contract
+   would be cleaner as a discriminated union.
+5. **`renderMessage` strips non-text parts silently** (`page.tsx:94`).
+   If the SDK ever yields a non-text part (tool call, image), it's
+   coerced to `""`. Should at minimum log or assert.
+6. **CORS uses `allow_methods=["*"], allow_headers=["*"]`** without
+   `allow_credentials`. Permissive but not catastrophic; Sonnet's §6
+   praised CORS without auditing the wildcards.
+7. **No Python `from __future__ import annotations`** anywhere, despite
+   targeting 3.14. Not a bug — just inconsistent with the otherwise
+   strict typing posture. (Arguably unnecessary on 3.14, so skip if
+   intentional.)
+
+### Where I'd adjust the scores
+
+| Dimension       | Sonnet 4.6 | Opus 4.7 | Reason                                          |
+|-----------------|-----------:|---------:|-------------------------------------------------|
+| Error Handling  |        8.5 |      7.5 | Streaming-error opacity + silent message drop   |
+| Security        |        9.0 |      8.5 | No rate limit + no body-size cap is more weight |
+| Performance     |        8.0 |      8.0 | Agree                                           |
+| Documentation   |        8.5 |      8.0 | No ADRs feels heavier on a template repo        |
+| **Overall**     |    **9.2** |  **8.9** | Still strong; closer to "very good," not "near-perfect" |
+
+Sonnet's 9.2 is generous. The codebase is genuinely high-quality, but
+the streaming-error path and missing rate limiting are load-bearing
+omissions for anything past localhost. I'd land at **8.9 / 10**.
+
+### Additional recommendations
+
+6. **Surface streaming errors to the client as a sentinel token or
+   trailer** so the frontend can distinguish "stream ended cleanly"
+   from "stream aborted." Without this, the `Alert` in `MessageList`
+   is best-effort.
+7. **Validate `UIMessage` with a model validator** that requires
+   exactly one of `content` or non-empty `parts`. Eliminates the dual
+   representation at the boundary.
+8. **Log token usage via the OpenAI streaming `usage` chunk**
+   (`stream_options={"include_usage": True}`). Cheap, accurate, and
+   removes the character-count proxy Sonnet flagged.
