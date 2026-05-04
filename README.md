@@ -21,6 +21,13 @@ The UI is built with [Material
 UI](https://mui.com/material-ui/getting-started/) components and follows
 Google's Material Design.
 
+Frontend interface work uses Vercel's [Web Interface
+Guidelines](https://vercel.com/design/guidelines) as the review baseline for
+new and changed UI. Treat those guidelines as the target for interaction
+details such as keyboard operability, visible focus states, loading and error
+states, reduced-motion support, resilient layout, semantic controls, and
+concise action copy.
+
 ## Setup
 
 - Clone the repository
@@ -74,6 +81,12 @@ To validate Lighthouse scores against thresholds locally:
 ``` bash
 make lighthouse
 ```
+
+Lighthouse covers automated performance, accessibility, best-practices, and
+SEO checks. New UI changes should still be reviewed against the Vercel Web
+Interface Guidelines, because many interaction, content, and layout details
+require manual judgment. The guidelines are an implementation target, not a
+blanket claim that every existing screen is already fully compliant.
 
 To remove all build artifacts and tool caches for a clean slate (useful
 for testing cold-cache behaviour):
