@@ -1,7 +1,5 @@
-FROM python:3.14-slim-trixie@sha256:44dd04494ee8f3b538294360e7c4b3acb87c8268e4d0a4828a6500b1eff50061
+FROM python:3.14-slim-trixie@sha256:44dd04494ee8f3b538294360e7c4b3acb87c8268e4d0a4828a6500b1eff50061 AS builder
 
-# Install system dependencies and build tools first
-# Clean up apt cache in the same layer to keep image size down
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
@@ -11,9 +9,16 @@ COPY --from=ghcr.io/astral-sh/uv:0.12.0@sha256:606e70c71c852d03f611b1e56a195d086
 
 WORKDIR /app
 
-COPY . /app/
+COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen --no-dev
+
+FROM python:3.14-slim-trixie@sha256:44dd04494ee8f3b538294360e7c4b3acb87c8268e4d0a4828a6500b1eff50061 AS runtime
+
+WORKDIR /app
+
+COPY --from=builder /app/.venv /app/.venv
+COPY app /app/app
 
 RUN addgroup --system app && adduser --system --ingroup app app
 
