@@ -34,14 +34,17 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends ca-certificates curl
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin "$TRIVY_VERSION"
+          curl -sfL "https://raw.githubusercontent.com/aquasecurity/trivy/${TRIVY_VERSION}/contrib/install.sh" | sudo sh -s -- -b /usr/local/bin "$TRIVY_VERSION"
           trivy --version
 
       - name: Create .env file
+        # This job only smoke-tests that the containers build and start; it never
+        # issues a chat request, so no real Azure credentials are needed. Using
+        # dummy placeholders keeps secrets out of PR-controlled build/run steps.
         run: |
-          echo AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }} >> backend/.env
-          echo AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }} >> backend/.env
-          echo AZURE_OPENAI_API_VERSION=${{ secrets.AZURE_OPENAI_API_VERSION }} >> backend/.env
+          echo AZURE_OPENAI_ENDPOINT=https://example.invalid/ >> backend/.env
+          echo AZURE_OPENAI_API_KEY=dummy-key >> backend/.env
+          echo AZURE_OPENAI_API_VERSION=2024-09-01-preview >> backend/.env
 
       - name: Build services
         run: |

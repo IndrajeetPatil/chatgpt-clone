@@ -21,6 +21,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 _MAX_MESSAGES = 50
 _MAX_MESSAGE_CHARS = 32_000
+_MAX_PARTS = 50
 
 settings: Settings = get_settings()
 
@@ -64,12 +65,20 @@ def _parse_message_text(content: str | None, parts: list[TextPart]) -> str:
 class UIMessage(BaseModel):
     role: OpenAIMessageRole
     content: str | None = Field(default=None, max_length=_MAX_MESSAGE_CHARS)
-    parts: list[TextPart] = Field(default_factory=list)
+    parts: list[TextPart] = Field(default_factory=list, max_length=_MAX_PARTS)
 
     @model_validator(mode="after")
     def validate_content_or_parts(self) -> UIMessage:
         if self.content is None and not self.parts:
             msg: str = "At least one of 'content' or 'parts' must be provided."
+            raise ValueError(msg)
+        # Each part is capped individually, but the joined result must also stay
+        # within the per-message limit so a request can't concatenate many parts
+        # into an oversized payload forwarded to Azure.
+        if len(self.text) > _MAX_MESSAGE_CHARS:
+            msg = (
+                f"Joined message text must not exceed {_MAX_MESSAGE_CHARS} characters."
+            )
             raise ValueError(msg)
         return self
 
