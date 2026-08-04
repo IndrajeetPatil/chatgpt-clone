@@ -74,8 +74,15 @@ class UIMessage(BaseModel):
             raise ValueError(msg)
         # Each part is capped individually, but the joined result must also stay
         # within the per-message limit so a request can't concatenate many parts
-        # into an oversized payload forwarded to Azure.
-        if len(self.text) > _MAX_MESSAGE_CHARS:
+        # into an oversized payload forwarded to Azure. Sum the part lengths
+        # instead of len(self.text) so an abusive payload is rejected without
+        # first materializing the fully-joined string.
+        aggregate_len: int = (
+            len(self.content)
+            if self.content is not None
+            else sum(len(part.text) for part in self.parts)
+        )
+        if aggregate_len > _MAX_MESSAGE_CHARS:
             msg = (
                 f"Joined message text must not exceed {_MAX_MESSAGE_CHARS} characters."
             )
