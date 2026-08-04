@@ -155,6 +155,40 @@ def test_post_chat_rejects_message_content_too_long(client: TestClient) -> None:
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
 
 
+def test_post_chat_rejects_too_many_parts(client: TestClient) -> None:
+    response: TestClientResponse = client.post(
+        "/api/v1/chat",
+        json={
+            "messages": [
+                {
+                    "role": "user",
+                    "parts": [{"type": "text", "text": "x"}] * 51,
+                },
+            ],
+        },
+    )
+
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
+
+
+def test_post_chat_rejects_aggregate_parts_too_long(client: TestClient) -> None:
+    response: TestClientResponse = client.post(
+        "/api/v1/chat",
+        json={
+            "messages": [
+                {
+                    "role": "user",
+                    # 4 parts of 10_000 chars = 40_000 > _MAX_MESSAGE_CHARS, even
+                    # though each individual part is within the per-part cap.
+                    "parts": [{"type": "text", "text": "x" * 10_000}] * 4,
+                },
+            ],
+        },
+    )
+
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
+
+
 def test_chat_endpoint_rate_limits_after_threshold(
     monkeypatch: pytest.MonkeyPatch,
     client: TestClient,
@@ -210,6 +244,17 @@ def test_ui_message_rejects_empty_content_and_parts() -> None:
         match="At least one of 'content' or 'parts' must be provided",
     ):
         UIMessage(role=OpenAIMessageRole.USER)
+
+
+def test_ui_message_rejects_aggregate_parts_too_long() -> None:
+    with pytest.raises(
+        ValidationError,
+        match="Joined message text must not exceed",
+    ):
+        UIMessage(
+            role=OpenAIMessageRole.USER,
+            parts=[TextPart(type="text", text="x" * 10_000)] * 4,
+        )
 
 
 def test_stream_chat_reraises_non_openai_exception(
