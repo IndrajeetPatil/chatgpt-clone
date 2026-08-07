@@ -26,8 +26,11 @@ except (FileNotFoundError, tomllib.TOMLDecodeError, KeyError, TypeError):
 print(str(version).removeprefix("=="))
 PY
 )
-curl -LsSf --retry 3 --retry-delay 2 --retry-all-errors \
-  https://astral.sh/uv/install.sh | UV_VERSION="${UV_VERSION}" sh
+curl -fsSLO --retry 3 --retry-delay 2 --retry-all-errors \
+  "https://github.com/astral-sh/uv/releases/download/${UV_VERSION}/uv-installer.sh"
+echo "58bee0cf8814385d5ffc2324e06d63db29de35ce8e740b9cadd2529bff929f50  uv-installer.sh" | sha256sum -c
+UV_VERSION="${UV_VERSION}" sh uv-installer.sh
+rm uv-installer.sh
 export PATH="$HOME/.local/bin:$PATH"
 # Verify the installed version matches the pinned version
 INSTALLED_UV_VERSION=$(uv --version)

@@ -34,7 +34,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends ca-certificates curl
-          curl -sfL "https://raw.githubusercontent.com/aquasecurity/trivy/${TRIVY_VERSION}/contrib/install.sh" | sudo sh -s -- -b /usr/local/bin "$TRIVY_VERSION"
+          curl -fsSLO "https://raw.githubusercontent.com/aquasecurity/trivy/${TRIVY_VERSION}/contrib/install.sh"
+          echo "e00df553be558995b994758bc8995956554a16937f456dc6615b0cc411bfec7a  install.sh" | sha256sum -c
+          sudo sh install.sh -b /usr/local/bin "$TRIVY_VERSION"
+          rm install.sh
           trivy --version
 
       - name: Create .env file

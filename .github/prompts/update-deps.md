@@ -47,11 +47,18 @@ If the Python version changes, update every backend runtime declaration together
 If the uv version changes, update the canonical declaration in:
 
 - `backend/pyproject.toml` (`[tool.uv]` `required-version`)
+- `backend/Dockerfile` (update the `uv` image tag and its `@sha256:` digest)
+- `.devcontainer/post-create.sh` (update the `uv-installer.sh` SHA checksum)
 
 The GitHub workflows read uv from `backend/pyproject.toml` via
 `astral-sh/setup-uv`'s `working-directory` input, and `.devcontainer/post-create.sh`
 derives the installed uv version from the same field. Do not mirror that version
 into workflow files.
+
+For any other third-party tools updated (e.g., Trivy in
+`.github/workflows/docker-compose.yml`), ensure their downloaded scripts or
+binaries are still pinned to specific versions and their SHA256 checksums are
+updated to match the new version.
 
 Do an online search and ensure that the public GitHub Actions used in
 `.github/workflows/` are still on the latest stable release. Actions are pinned
