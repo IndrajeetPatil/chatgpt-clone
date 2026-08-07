@@ -47,6 +47,9 @@ workflow link instead.
 
 ## Hard constraints
 
+- **Third-party tools**: All downloaded third-party tools, scripts,
+  and binaries must be pinned to specific versions and validated using
+  SHA256 checksums. Never download the latest or untagged versions.
 - **Backend coverage**: 100% lines + branches
   (`fail_under = 100` in `pyproject.toml`).
 - **Frontend coverage**: ≥ 90% statements/functions/lines,
