@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Any
 
-import httpx
+import httpx2
 import openai
 import pytest
 from fastapi import status
@@ -125,12 +125,15 @@ def test_api_exception(
         )
 
 
-def _make_request() -> httpx.Request:
-    return httpx.Request("POST", "https://example.openai.azure.com/")
+def _make_request() -> httpx2.Request:
+    return httpx2.Request("POST", "https://example.openai.azure.com/")
 
 
-def _make_response(status_code: int) -> httpx.Response:
-    return httpx.Response(status_code=status_code, request=_make_request())
+def _make_response(status_code: int) -> httpx2.Response:
+    return httpx2.Response(
+        status_code=status_code,
+        request=_make_request(),
+    )
 
 
 def test_openai_api_exceptions_are_reraised(

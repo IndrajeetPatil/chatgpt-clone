@@ -4,22 +4,21 @@ default_stages = ["pre-commit"]
 
 [[repos]]
 repo = "https://github.com/astral-sh/ruff-pre-commit"
-rev = "v0.16.2"
+rev = "v0.16.3"
 hooks = [
   { id = "ruff", args = ["--fix"] },
   { id = "ruff-format" },
 ]
 
 [[repos]]
-repo = "https://github.com/astral-sh/ty-pre-commit"
-rev = "v0.0.69"
+repo = "local"
 hooks = [
-  { id = "ty", args = ["--directory=backend", "--isolated"] },
+  { id = "ty", name = "ty", entry = "uv check --quiet --preview-features=check-command --ty-version=0.0.71 --directory=backend --isolated", language = "system", pass_filenames = false, types_or = ["python", "pyi", "jupyter"] },
 ]
 
 [[repos]]
 repo = "https://github.com/rvben/rumdl-pre-commit"
-rev = "v0.2.52"
+rev = "v0.2.55"
 hooks = [
   { id = "rumdl" },
 ]
