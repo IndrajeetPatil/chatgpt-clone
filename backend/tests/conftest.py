@@ -1,4 +1,4 @@
-import httpx
+import httpx2
 import openai
 import pytest
 from fastapi import status
@@ -8,12 +8,15 @@ from fastapi import status
 # not reject missing Azure credentials during collection.
 
 
-def _make_openai_request() -> httpx.Request:
-    return httpx.Request("POST", "https://example.openai.azure.com/")
+def _make_openai_request() -> httpx2.Request:
+    return httpx2.Request("POST", "https://example.openai.azure.com/")
 
 
-def _make_openai_response(status_code: int) -> httpx.Response:
-    return httpx.Response(status_code=status_code, request=_make_openai_request())
+def _make_openai_response(status_code: int) -> httpx2.Response:
+    return httpx2.Response(
+        status_code=status_code,
+        request=_make_openai_request(),
+    )
 
 
 # The concrete openai.APIError subclasses the client must re-raise unchanged.
