@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@11.18.0+sha512.33d83c77da82f49fba836925c6f1b841181ec3132b670639bd012f7075f5c7cf634c5f870147c19aae7478fac01df09d8892e880454896edd23ee9b33757563c",
+  "packageManager": "pnpm@11.22.0+sha512.1ff870c4c6133dfd88fb2afc46dd13d47f09c9794b438c6fdb47ca98caf3bc16381ee0be93a091b8e3824cf01f889f46d7d9e20910fb0be1ab0fb5baa80dd621",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 3000",
     "build": "rm -rf dist && vite build",
@@ -20,13 +20,13 @@
     "type-coverage": "type-coverage --strict --at-least 100"
   },
   "dependencies": {
-    "@ai-sdk/react": "^4.0.68",
+    "@ai-sdk/react": "^4.0.73",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.3.1",
     "@mui/material": "^9.3.1",
     "@mui/utils": "^9.3.0",
-    "ai": "^7.0.65",
+    "ai": "^7.0.70",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",
@@ -59,22 +59,22 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@typescript-eslint/parser": "^8.67.0",
-    "@vitejs/plugin-react": "^6.0.5",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitejs/plugin-react": "^6.1.0",
+    "@vitest/coverage-v8": "^4.1.11",
     "axe-core": "^4.13.0",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^10.8.1",
     "eslint-plugin-no-unsanitized": "^4.1.5",
     "eslint-plugin-react-dom": "^5.18.6",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "fallow": "^3.16.0",
+    "fallow": "^3.17.0",
     "fast-check": "^4.9.0",
     "globals": "^17.11.0",
     "http-status-codes": "^2.3.0",
     "jsdom": "^30.0.1",
     "type-coverage": "^2.30.1",
-    "typescript": "^7.0.2",
-    "vite": "^8.2.1",
-    "vitest": "^4.1.10"
+    "typescript": "^6.0.3",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }
