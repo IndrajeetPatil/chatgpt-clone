@@ -100,6 +100,5 @@ At the end, create a ready-for-review PR with the `gh` CLI
 - what code was deleted or collapsed,
 - how you ensured the refactoring stayed regression-free.
 
-
 The PR should make the case that the repository is now easier to maintain
 because it owns less custom code.
