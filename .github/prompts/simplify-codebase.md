@@ -1,5 +1,5 @@
 ---
-agent: 'agent'
+name: 'simplify-codebase'
 description: 'Simplify the codebase safely by removing avoidable custom code and adopting proven dependency capabilities.'
 ---
 
