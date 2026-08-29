@@ -10,6 +10,10 @@ include makefiles/backend.mk
 include makefiles/frontend.mk
 
 CHECKOV_VERSION := 3.2.526
+# Minimum codex-security CLI the codex-security target was validated against. The
+# scan-id parsing below relies on `scans show --filter-output scanId`, so refuse
+# to run against an older CLI whose flags/output may differ.
+CODEX_SECURITY_MIN_VERSION := 0.1.23
 
 # Dependency updates
 update-deps:
@@ -60,25 +64,44 @@ security-scan:
 # referenced by its scanId; findings live in the scan directory and are read
 # with `codex-security scans show <scanId>`.
 #
+# The recipe creates a fresh branch off origin/main and scans THAT tree, so the
+# findings, the fixes, and the eventual PR all refer to the same baseline no
+# matter which branch you invoke it from. The branch name is unique per run so
+# repeated invocations do not collide.
+#
 # SECURITY: this spawns an autonomous agent with `--dangerously-skip-permissions`,
 # which removes Claude Code's command-approval boundary. The scan report and the
 # source it inspects are attacker-influenceable, so a prompt-injection payload
 # could misuse your shell or `gh` credentials. Run this ONLY in an isolated,
 # ephemeral environment with no production secrets beyond a scoped GITHUB token
-# and, ideally, restricted network egress.
+# and, ideally, restricted network egress. codex-security and claude must already
+# be installed; the recipe refuses to run an unexpectedly old codex-security CLI.
 codex-security:
 	@echo "$(COLOR_BLUE_BG)Running codex-security scan...$(COLOR_RESET)"
 	@echo "$(COLOR_BLUE_BG)WARNING: spawns an autonomous agent with --dangerously-skip-permissions; run only in an isolated, credential-limited sandbox.$(COLOR_RESET)"
 	@set -eu; \
+	command -v codex-security >/dev/null 2>&1 || { echo "codex-security is not installed or not on PATH." >&2; exit 1; }; \
+	command -v claude >/dev/null 2>&1 || { echo "claude (Claude Code) is not installed or not on PATH." >&2; exit 1; }; \
+	cs_version="$$(codex-security --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"; \
+	if [ -z "$$cs_version" ]; then echo "Could not determine the codex-security version." >&2; exit 1; fi; \
+	if [ "$$(printf '%s\n%s\n' "$(CODEX_SECURITY_MIN_VERSION)" "$$cs_version" | sort -V | head -n1)" != "$(CODEX_SECURITY_MIN_VERSION)" ]; then \
+		echo "codex-security $$cs_version is older than the required $(CODEX_SECURITY_MIN_VERSION); its flags/output may differ." >&2; \
+		exit 1; \
+	fi; \
+	echo "$(COLOR_BLUE_BG)Preparing a clean branch off origin/main to scan and fix...$(COLOR_RESET)"; \
+	git fetch origin; \
+	branch="codex-security-fixes-$$(date +%Y%m%d%H%M%S)"; \
+	git checkout -b "$$branch" origin/main; \
+	echo "$(COLOR_BLUE_BG)Scanning branch $$branch...$(COLOR_RESET)"; \
 	codex-security scan . --model gpt-5.6-sol --effort high; \
 	scan_id="$$(codex-security scans show --filter-output scanId | tr -d '[:space:]')"; \
 	if [ -z "$$scan_id" ]; then \
 		echo "Could not determine the completed codex-security scan id." >&2; \
 		exit 1; \
 	fi; \
-	echo "$(COLOR_BLUE_BG)Scan complete: $$scan_id$(COLOR_RESET)"; \
+	echo "$(COLOR_BLUE_BG)Scan complete: $$scan_id (branch $$branch)$(COLOR_RESET)"; \
 	echo "$(COLOR_BLUE_BG)Spawning Claude Code to triage and fix findings...$(COLOR_RESET)"; \
-	claude --dangerously-skip-permissions -p "Follow the instructions in .github/prompts/codex-security.md to triage the codex-security findings, fix the ones worth fixing, and open a pull request. The completed scan id is $$scan_id; read its findings with 'codex-security scans show $$scan_id'."
+	claude --dangerously-skip-permissions -p "Follow the instructions in .github/prompts/codex-security.md to triage the codex-security findings, fix the ones worth fixing, and open a pull request. You are already on a dedicated branch '$$branch' created from origin/main, and the scan ran against this exact tree, so make all fixes here and do not create another branch. The completed scan id is $$scan_id; read its findings with 'codex-security scans show $$scan_id'."
 
 file-naming:
 	@echo "$(COLOR_BLUE_BG)Running file naming checks with ls-lint...$(COLOR_RESET)"

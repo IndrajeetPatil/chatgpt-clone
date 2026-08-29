@@ -8,6 +8,29 @@ description: Triage codex-security scan findings and fix the ones worth fixing
 Run a `codex-security` scan of this repository, triage the findings, fix the
 ones that are genuinely worth fixing, and open a pull request with the changes.
 
+## Work on a dedicated branch from the start
+
+Before you scan or modify **anything**, make sure you are on a dedicated branch
+created from the up-to-date default branch, so the scan, every fix, and every
+validation all run against the exact same tree the PR will submit:
+
+- **Launched by `make codex-security`?** The branch already exists — the make
+  target created it off `origin/main` and ran the scan against it. Confirm with
+  `git status` and stay on it; do **not** create another branch.
+- **Running this prompt standalone?** Create the branch yourself now, *before*
+  you run the scan or touch a file, with a name that is unique per run (include
+  a timestamp) so a repeat run does not collide with a leftover branch:
+
+  ```bash
+  git fetch origin
+  git checkout -b "codex-security-fixes-$(date +%Y%m%d%H%M%S)" origin/main
+  ```
+
+Do this up front — not at PR time. If you edit and validate files first and only
+then try to switch branches, Git refuses the checkout (your local changes would
+be overwritten). If your triage ends up making no changes, simply discard this
+branch (see below).
+
 ## Obtain the scan findings
 
 A `codex-security` scan does not produce a URL — it saves a scan (identified by
@@ -21,8 +44,8 @@ example by `make codex-security`), read that scan's findings with:
 codex-security scans show <scan-id>
 ```
 
-Otherwise, run the scan yourself from the repository root, then read the latest
-completed scan:
+Otherwise — running standalone, on the dedicated branch you just created — run
+the scan against that branch, then read the latest completed scan:
 
 ```bash
 codex-security scan . --model gpt-5.6-sol --effort high
@@ -32,22 +55,6 @@ codex-security scans show
 `codex-security scans show` lists the artifact file paths under `artifacts`;
 read `report.md` (or `findings.json`) in full before changing anything. Use
 `codex-security export` if you want SARIF or JSON for tooling.
-
-## Work on a dedicated branch from the start
-
-Before you modify **any** file, create a dedicated branch from the current
-default branch, so every fix and every validation runs against the exact tree
-the PR will submit:
-
-```bash
-git fetch origin
-git checkout -b codex-security-fixes origin/main
-```
-
-Do this up front — not at PR time. If you edit and validate files first and only
-then try to switch branches, Git refuses the checkout (your local changes would
-be overwritten) or you are forced to move unvalidated changes across trees. If
-your triage ends up making no changes, simply discard this branch (see below).
 
 ## Triage the findings — be skeptical, do not trust the scanner by default
 
@@ -130,13 +137,13 @@ broader gates before pushing:
 
 **If you made no code changes** — because every finding was a false positive,
 already mitigated, out of scope, or not worth the regression risk — do **not**
-open a pull request. There is nothing to merge: discard the working branch you
-created, report your triage (what you reviewed and why you rejected each
-finding), and stop.
+open a pull request. There is nothing to merge: discard the dedicated branch
+(delete it, or switch away and leave it unpushed), report your triage (what you
+reviewed and why you rejected each finding), and stop.
 
-Otherwise, commit the fixes on the dedicated branch you created up front so the
-PR contains only the security fixes and no unrelated commits. Keep the change set
-scoped to those fixes. Create a draft PR with the `gh` CLI (`gh pr create
+Otherwise, commit the fixes on the dedicated branch you have been working on, so
+the PR contains only the security fixes and no unrelated commits. Keep the change
+set scoped to those fixes. Create a draft PR with the `gh` CLI (`gh pr create
 --draft`), not the GitHub MCP server. In the PR body:
 
 - list each finding you fixed, with the file it affected and a one-line summary
