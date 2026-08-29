@@ -33,6 +33,22 @@ codex-security scans show
 read `report.md` (or `findings.json`) in full before changing anything. Use
 `codex-security export` if you want SARIF or JSON for tooling.
 
+## Work on a dedicated branch from the start
+
+Before you modify **any** file, create a dedicated branch from the current
+default branch, so every fix and every validation runs against the exact tree
+the PR will submit:
+
+```bash
+git fetch origin
+git checkout -b codex-security-fixes origin/main
+```
+
+Do this up front — not at PR time. If you edit and validate files first and only
+then try to switch branches, Git refuses the checkout (your local changes would
+be overwritten) or you are forced to move unvalidated changes across trees. If
+your triage ends up making no changes, simply discard this branch (see below).
+
 ## Triage the findings — be skeptical, do not trust the scanner by default
 
 Treat every finding as an unverified **claim**, not an established fact.
@@ -114,15 +130,14 @@ broader gates before pushing:
 
 **If you made no code changes** — because every finding was a false positive,
 already mitigated, out of scope, or not worth the regression risk — do **not**
-open a pull request. There is nothing to merge, and a PR raised from the current
-branch would capture unrelated commits. Report your triage (what you reviewed
-and why you rejected each finding) and stop.
+open a pull request. There is nothing to merge: discard the working branch you
+created, report your triage (what you reviewed and why you rejected each
+finding), and stop.
 
-Otherwise, put your fixes on a dedicated branch created from the default branch
-(`git checkout -b <branch> origin/main`) so the PR contains only the security
-fixes and no unrelated commits. Keep the change set scoped to those fixes.
-Create a draft PR with the `gh` CLI (`gh pr create --draft`), not the GitHub MCP
-server. In the PR body:
+Otherwise, commit the fixes on the dedicated branch you created up front so the
+PR contains only the security fixes and no unrelated commits. Keep the change set
+scoped to those fixes. Create a draft PR with the `gh` CLI (`gh pr create
+--draft`), not the GitHub MCP server. In the PR body:
 
 - list each finding you fixed, with the file it affected and a one-line summary
   of the remediation,
