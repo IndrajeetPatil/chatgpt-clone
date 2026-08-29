@@ -23,13 +23,17 @@ validation all run against the exact same tree the PR will submit:
 
   ```bash
   git fetch origin
+  # Start from a clean tree: git checkout -b otherwise carries any uncommitted or
+  # untracked changes onto the new branch, where they'd be scanned and could land
+  # in the fix commit. Abort instead so the branch is a pristine origin/main.
+  test -z "$(git status --porcelain)" || { echo "Working tree not clean; commit, stash, or remove local changes first." >&2; exit 1; }
   git checkout -b "codex-security-fixes-$(date +%Y%m%d%H%M%S)" origin/main
   ```
 
 Do this up front — not at PR time. If you edit and validate files first and only
 then try to switch branches, Git refuses the checkout (your local changes would
-be overwritten). If your triage ends up making no changes, simply discard this
-branch (see below).
+be overwritten) or silently carries them onto the new branch. If your triage ends
+up making no changes, simply discard this branch (see below).
 
 ## Obtain the scan findings
 
