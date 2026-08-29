@@ -59,8 +59,16 @@ security-scan:
 # ones, and opens a PR (see .github/prompts/codex-security.md). A scan is
 # referenced by its scanId; findings live in the scan directory and are read
 # with `codex-security scans show <scanId>`.
+#
+# SECURITY: this spawns an autonomous agent with `--dangerously-skip-permissions`,
+# which removes Claude Code's command-approval boundary. The scan report and the
+# source it inspects are attacker-influenceable, so a prompt-injection payload
+# could misuse your shell or `gh` credentials. Run this ONLY in an isolated,
+# ephemeral environment with no production secrets beyond a scoped GITHUB token
+# and, ideally, restricted network egress.
 codex-security:
 	@echo "$(COLOR_BLUE_BG)Running codex-security scan...$(COLOR_RESET)"
+	@echo "$(COLOR_BLUE_BG)WARNING: spawns an autonomous agent with --dangerously-skip-permissions; run only in an isolated, credential-limited sandbox.$(COLOR_RESET)"
 	@set -eu; \
 	codex-security scan . --model gpt-5.6-sol --effort high; \
 	scan_id="$$(codex-security scans show --filter-output scanId | tr -d '[:space:]')"; \
