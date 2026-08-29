@@ -54,6 +54,22 @@ security-scan:
 	@echo "$(COLOR_BLUE_BG)Running security scanning with Checkov...$(COLOR_RESET)"
 	uv tool run --from checkov==$(CHECKOV_VERSION) checkov --config-file .checkov.yaml
 
+# Agentic security review: scan with codex-security, then hand the report to a
+# spawned Claude Code that triages the findings, fixes the worthwhile ones, and
+# opens a PR (see .github/prompts/codex-security.md).
+codex-security:
+	@echo "$(COLOR_BLUE_BG)Running codex-security scan...$(COLOR_RESET)"
+	@set -eu; \
+	scan_output="$$(codex-security scan . --model gpt-5.6-sol --effort high | tee /dev/stderr)"; \
+	report_uri="$$(printf '%s\n' "$$scan_output" | grep -oE '(https?|file)://[^[:space:]]+' | tail -n1)"; \
+	if [ -z "$$report_uri" ]; then \
+		echo "Could not determine the codex-security report URI from the scan output." >&2; \
+		exit 1; \
+	fi; \
+	echo "$(COLOR_BLUE_BG)Report: $$report_uri$(COLOR_RESET)"; \
+	echo "$(COLOR_BLUE_BG)Spawning Claude Code to triage and fix findings...$(COLOR_RESET)"; \
+	claude --dangerously-skip-permissions -p "Follow the instructions in .github/prompts/codex-security.md to triage the codex-security findings, fix the ones worth fixing, and open a pull request. The codex-security report for this run is available at: $$report_uri"
+
 file-naming:
 	@echo "$(COLOR_BLUE_BG)Running file naming checks with ls-lint...$(COLOR_RESET)"
 	ls-lint
@@ -90,7 +106,7 @@ e2e-test:
 .PHONY: update-deps upgrade-deps \
 	lint format type-check test type-coverage clean \
 	fallow css-quality contrast-audit lighthouse \
-	tooling-check commitlint markdown-lint security-scan file-naming hooks \
+	tooling-check commitlint markdown-lint security-scan codex-security file-naming hooks \
 	qa-backend qa-frontend qa \
 	run \
 	docker-build docker-up docker-down \
