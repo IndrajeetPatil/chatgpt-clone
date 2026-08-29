@@ -18,7 +18,7 @@ update-deps:
 	@echo "$(COLOR_BLUE_BG)Updating frontend Node dependencies...$(COLOR_RESET)"
 	cd ./frontend && pnpm update
 	@echo "$(COLOR_BLUE_BG)Updating prek hook revisions...$(COLOR_RESET)"
-	prek auto-update
+	prek update --freeze
 
 upgrade-deps: update-deps
 
