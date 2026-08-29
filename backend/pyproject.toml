@@ -5,7 +5,7 @@ description = "FastAPI backend service for streaming Azure OpenAI GPT-4o respons
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "fastapi[standard]>=0.136.1",
+    "fastapi[standard]>=0.141.1",
     "loguru>=0.7.3",
     "openai>=2.34.0",
     "pydantic-settings>=2.14.0",
@@ -18,13 +18,13 @@ dev = [
     "coverage>=7.13.5",
     "httpx2>=2.3.0",
     "hypothesis>=6.122.0",
-    "locust>=2.43.4",
+    "locust>=2.46.4",
     "prek>=0.3.12",
     "pytest-env>=1.1.5",
     "pytest-random-order>=1.2.0",
     "pytest>=9.0.3",
     "ruff>=0.15.20",
-    "ty>=0.0.47",
+    "ty>=0.0.74",
     "typecoverage>=1.0.1",
 ]
 
