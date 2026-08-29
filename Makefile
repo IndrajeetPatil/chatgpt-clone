@@ -93,6 +93,11 @@ codex-security:
 		echo "This target checks out a fresh branch off origin/main, and uncommitted (or untracked) changes would be carried onto it and scanned/committed as if they were part of the fix." >&2; \
 		exit 1; \
 	fi; \
+	prompt_src=".github/prompts/codex-security.md"; \
+	if [ ! -f "$$prompt_src" ]; then echo "Prompt $$prompt_src not found in the current checkout." >&2; exit 1; fi; \
+	prompt_copy="$$(mktemp)"; \
+	trap 'rm -f "$$prompt_copy"' EXIT; \
+	cp "$$prompt_src" "$$prompt_copy"; \
 	echo "$(COLOR_BLUE_BG)Preparing a clean branch off origin/main to scan and fix...$(COLOR_RESET)"; \
 	git fetch origin; \
 	branch="codex-security-fixes-$$(date +%Y%m%d%H%M%S)"; \
@@ -106,7 +111,7 @@ codex-security:
 	fi; \
 	echo "$(COLOR_BLUE_BG)Scan complete: $$scan_id (branch $$branch)$(COLOR_RESET)"; \
 	echo "$(COLOR_BLUE_BG)Spawning Claude Code to triage and fix findings...$(COLOR_RESET)"; \
-	claude --dangerously-skip-permissions -p "Follow the instructions in .github/prompts/codex-security.md to triage the codex-security findings, fix the ones worth fixing, and open a pull request. You are already on a dedicated branch '$$branch' created from origin/main, and the scan ran against this exact tree, so make all fixes here and do not create another branch. The completed scan id is $$scan_id; read its findings with 'codex-security scans show $$scan_id'."
+	claude --dangerously-skip-permissions -p "Follow the instructions in the file $$prompt_copy (a preserved copy of this repository's .github/prompts/codex-security.md, kept outside the checkout because the working tree was switched to origin/main and that path may not exist there yet) to triage the codex-security findings, fix the ones worth fixing, and open a pull request. You are already on a dedicated branch '$$branch' created from origin/main, and the scan ran against this exact tree, so make all fixes here and do not create another branch. The completed scan id is $$scan_id; read its findings with 'codex-security scans show $$scan_id'."
 
 file-naming:
 	@echo "$(COLOR_BLUE_BG)Running file naming checks with ls-lint...$(COLOR_RESET)"
