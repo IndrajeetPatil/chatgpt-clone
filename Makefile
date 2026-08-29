@@ -88,6 +88,11 @@ codex-security:
 		echo "codex-security $$cs_version is older than the required $(CODEX_SECURITY_MIN_VERSION); its flags/output may differ." >&2; \
 		exit 1; \
 	fi; \
+	if [ -n "$$(git status --porcelain)" ]; then \
+		echo "Working tree is not clean; commit, stash, or remove local changes first." >&2; \
+		echo "This target checks out a fresh branch off origin/main, and uncommitted (or untracked) changes would be carried onto it and scanned/committed as if they were part of the fix." >&2; \
+		exit 1; \
+	fi; \
 	echo "$(COLOR_BLUE_BG)Preparing a clean branch off origin/main to scan and fix...$(COLOR_RESET)"; \
 	git fetch origin; \
 	branch="codex-security-fixes-$$(date +%Y%m%d%H%M%S)"; \
