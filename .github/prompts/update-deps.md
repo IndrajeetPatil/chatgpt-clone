@@ -55,10 +55,39 @@ The GitHub workflows read uv from `backend/pyproject.toml` via
 derives the installed uv version from the same field. Do not mirror that version
 into workflow files.
 
+Refresh the pinned Docker base image digests even when the image tag does not
+change. Every `FROM` (and `COPY --from`) in `backend/Dockerfile` and
+`frontend/Dockerfile` is pinned as `<image>:<tag>@sha256:<digest>`; the digest
+freezes the exact bytes, so OS security patches published by Debian/Node under
+the same tag are only picked up when the digest is re-pinned. For each pinned
+image (`python:<version>-slim-trixie`, `ghcr.io/astral-sh/uv:<version>`,
+`node:<version>-trixie-slim`, `debian:trixie-slim`), pull the current tag and
+update the `@sha256:` digest to the latest published one, keeping the human
+readable tag intact. This is the mechanism that clears OS-package CVEs (e.g.
+`perl-base`, `zlib`, `libsqlite3`) from the Trivy scan, so do it before
+reconciling `.trivyignore.yaml` below.
+
 For any other third-party tools updated (e.g., Trivy in
 `.github/workflows/docker-compose.yml`), ensure their downloaded scripts or
 binaries are still pinned to specific versions and their SHA256 checksums are
 updated to match the new version.
+
+Reconcile `.trivyignore.yaml` against a fresh scan. After the base-image digests
+are re-pinned, rebuild the images and run the same scan CI uses — for each image
+from `docker compose config --images`, `trivy image --scanners vuln --pkg-types
+os,library --severity CRITICAL --ignorefile .trivyignore.yaml`. Then:
+
+- Drop any suppression whose CVE the refreshed base images no longer report at
+  CRITICAL (it has been fixed or the vulnerable package is gone) — do not carry
+  dead entries.
+- For CVEs still flagged with no fixed version (`affected` / `fix_deferred` in
+  Debian trixie), extend `expired_at` to the next review window rather than
+  deleting the entry, and keep the `statement` accurate.
+- The `expired_at` dates are a time-bomb: once past, Trivy stops suppressing and
+  the `Docker Build Checks` workflow fails on the next `main` run even with no
+  code change. Always advance them as part of this dependency update so the
+  review cadence stays aligned with the update cadence. Confirm the CI scan
+  command exits 0 for every image before finishing.
 
 `make update-deps` runs `prek update --freeze`, which refreshes each prek hook to
 its latest tag but records the resolved **commit SHA** in `rev` with a

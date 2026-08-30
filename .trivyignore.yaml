@@ -1,18 +1,11 @@
 vulnerabilities:
-  - id: CVE-2023-45853
+  - id: CVE-2026-13221
     purls:
-      - pkg:deb/debian/zlib1g
-    expired_at: "2026-08-05T00:00:00Z"
-    statement: Debian trixie marks this zlib vulnerability as will_not_fix in the current base images.
-  - id: CVE-2025-7458
-    purls:
-      - pkg:deb/debian/libsqlite3-0
-    expired_at: "2026-08-05T00:00:00Z"
-    statement: Trivy reports no fixed Debian trixie package version in the current base images.
-  - id: CVE-2026-33845
-    purls:
-      - pkg:deb/debian/libgnutls30
-    expired_at: "2026-08-05T00:00:00Z"
+      - pkg:deb/debian/libperl5.40
+      - pkg:deb/debian/perl
+      - pkg:deb/debian/perl-base
+      - pkg:deb/debian/perl-modules-5.40
+    expired_at: "2026-11-30T00:00:00Z"
     statement: Trivy reports no fixed Debian trixie package version in the current base images.
   - id: CVE-2026-42496
     purls:
@@ -20,7 +13,7 @@ vulnerabilities:
       - pkg:deb/debian/perl
       - pkg:deb/debian/perl-base
       - pkg:deb/debian/perl-modules-5.40
-    expired_at: "2026-08-30T00:00:00Z"
+    expired_at: "2026-11-30T00:00:00Z"
     statement: Trivy reports no fixed Debian trixie package version in the current base images.
   - id: CVE-2026-8376
     purls:
@@ -28,26 +21,5 @@ vulnerabilities:
       - pkg:deb/debian/perl
       - pkg:deb/debian/perl-base
       - pkg:deb/debian/perl-modules-5.40
-    expired_at: "2026-08-30T00:00:00Z"
-    statement: Trivy reports no fixed Debian trixie package version in the current base images.
-  - id: CVE-2026-43185
-    purls:
-      - pkg:deb/debian/linux-libc-dev
-    expired_at: "2026-08-30T00:00:00Z"
-    statement: Trivy reports no fixed Debian trixie package version in the current base images.
-  - id: CVE-2026-13221
-    purls:
-      - pkg:deb/debian/libperl5.40
-      - pkg:deb/debian/perl
-      - pkg:deb/debian/perl-base
-      - pkg:deb/debian/perl-modules-5.40
-    expired_at: "2026-08-30T00:00:00Z"
-    statement: Trivy reports no fixed Debian trixie package version in the current base images.
-  - id: CVE-2026-57433
-    purls:
-      - pkg:deb/debian/libperl5.40
-      - pkg:deb/debian/perl
-      - pkg:deb/debian/perl-base
-      - pkg:deb/debian/perl-modules-5.40
-    expired_at: "2026-08-30T00:00:00Z"
+    expired_at: "2026-11-30T00:00:00Z"
     statement: Trivy reports no fixed Debian trixie package version in the current base images.
