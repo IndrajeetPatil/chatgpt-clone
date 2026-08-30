@@ -60,6 +60,12 @@ For any other third-party tools updated (e.g., Trivy in
 binaries are still pinned to specific versions and their SHA256 checksums are
 updated to match the new version.
 
+`make update-deps` runs `prek update --freeze`, which refreshes each prek hook to
+its latest tag but records the resolved **commit SHA** in `rev` with a
+`# frozen: <tag>` comment. Keep the hooks in `prek.toml` pinned this way — the
+same SHA-pinning convention the repo uses for GitHub Actions. Never rewrite a
+frozen `rev` back to a bare mutable tag.
+
 Do an online search and ensure that the public GitHub Actions used in
 `.github/workflows/` are still on the latest stable release. Actions are pinned
 by full commit SHA with a `# vX.Y.Z` comment; when updating, replace both the SHA

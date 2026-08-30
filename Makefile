@@ -10,6 +10,10 @@ include makefiles/backend.mk
 include makefiles/frontend.mk
 
 CHECKOV_VERSION := 3.2.526
+# Minimum codex-security CLI the codex-security target was validated against. The
+# scan-id parsing below relies on `scans show --filter-output scanId`, so refuse
+# to run against an older CLI whose flags/output may differ.
+CODEX_SECURITY_MIN_VERSION := 0.1.23
 
 # Dependency updates
 update-deps:
@@ -18,7 +22,7 @@ update-deps:
 	@echo "$(COLOR_BLUE_BG)Updating frontend Node dependencies...$(COLOR_RESET)"
 	cd ./frontend && pnpm update
 	@echo "$(COLOR_BLUE_BG)Updating prek hook revisions...$(COLOR_RESET)"
-	prek auto-update
+	prek update --freeze
 
 upgrade-deps: update-deps
 
@@ -53,6 +57,61 @@ markdown-lint:
 security-scan:
 	@echo "$(COLOR_BLUE_BG)Running security scanning with Checkov...$(COLOR_RESET)"
 	uv tool run --from checkov==$(CHECKOV_VERSION) checkov --config-file .checkov.yaml
+
+# Agentic security review: scan with codex-security, then hand the completed
+# scan to a spawned Claude Code that triages the findings, fixes the worthwhile
+# ones, and opens a PR (see .github/prompts/codex-security.md). A scan is
+# referenced by its scanId; findings live in the scan directory and are read
+# with `codex-security scans show <scanId>`.
+#
+# The recipe creates a fresh branch off origin/main and scans THAT tree, so the
+# findings, the fixes, and the eventual PR all refer to the same baseline no
+# matter which branch you invoke it from. The branch name is unique per run so
+# repeated invocations do not collide.
+#
+# SECURITY: this spawns an autonomous agent with `--dangerously-skip-permissions`,
+# which removes Claude Code's command-approval boundary. The scan report and the
+# source it inspects are attacker-influenceable, so a prompt-injection payload
+# could misuse your shell or `gh` credentials. Run this ONLY in an isolated,
+# ephemeral environment with no production secrets beyond a scoped GITHUB token
+# and, ideally, restricted network egress. codex-security and claude must already
+# be installed; the recipe refuses to run an unexpectedly old codex-security CLI.
+codex-security:
+	@echo "$(COLOR_BLUE_BG)Running codex-security scan...$(COLOR_RESET)"
+	@echo "$(COLOR_BLUE_BG)WARNING: spawns an autonomous agent with --dangerously-skip-permissions; run only in an isolated, credential-limited sandbox.$(COLOR_RESET)"
+	@set -eu; \
+	command -v codex-security >/dev/null 2>&1 || { echo "codex-security is not installed or not on PATH." >&2; exit 1; }; \
+	command -v claude >/dev/null 2>&1 || { echo "claude (Claude Code) is not installed or not on PATH." >&2; exit 1; }; \
+	cs_version="$$(codex-security --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"; \
+	if [ -z "$$cs_version" ]; then echo "Could not determine the codex-security version." >&2; exit 1; fi; \
+	if [ "$$(printf '%s\n%s\n' "$(CODEX_SECURITY_MIN_VERSION)" "$$cs_version" | sort -V | head -n1)" != "$(CODEX_SECURITY_MIN_VERSION)" ]; then \
+		echo "codex-security $$cs_version is older than the required $(CODEX_SECURITY_MIN_VERSION); its flags/output may differ." >&2; \
+		exit 1; \
+	fi; \
+	if [ -n "$$(git status --porcelain)" ]; then \
+		echo "Working tree is not clean; commit, stash, or remove local changes first." >&2; \
+		echo "This target checks out a fresh branch off origin/main, and uncommitted (or untracked) changes would be carried onto it and scanned/committed as if they were part of the fix." >&2; \
+		exit 1; \
+	fi; \
+	prompt_src=".github/prompts/codex-security.md"; \
+	if [ ! -f "$$prompt_src" ]; then echo "Prompt $$prompt_src not found in the current checkout." >&2; exit 1; fi; \
+	prompt_copy="$$(mktemp)"; \
+	trap 'rm -f "$$prompt_copy"' EXIT; \
+	cp "$$prompt_src" "$$prompt_copy"; \
+	echo "$(COLOR_BLUE_BG)Preparing a clean branch off origin/main to scan and fix...$(COLOR_RESET)"; \
+	git fetch origin; \
+	branch="codex-security-fixes-$$(date +%Y%m%d%H%M%S)"; \
+	git checkout -b "$$branch" origin/main; \
+	echo "$(COLOR_BLUE_BG)Scanning branch $$branch...$(COLOR_RESET)"; \
+	codex-security scan . --model gpt-5.6-sol --effort high; \
+	scan_id="$$(codex-security scans show --filter-output scanId | tr -d '[:space:]')"; \
+	if [ -z "$$scan_id" ]; then \
+		echo "Could not determine the completed codex-security scan id." >&2; \
+		exit 1; \
+	fi; \
+	echo "$(COLOR_BLUE_BG)Scan complete: $$scan_id (branch $$branch)$(COLOR_RESET)"; \
+	echo "$(COLOR_BLUE_BG)Spawning Claude Code to triage and fix findings...$(COLOR_RESET)"; \
+	claude --dangerously-skip-permissions -p "Follow the instructions in the file $$prompt_copy (a preserved copy of this repository's .github/prompts/codex-security.md, kept outside the checkout because the working tree was switched to origin/main and that path may not exist there yet) to triage the codex-security findings, fix the ones worth fixing, and open a pull request. You are already on a dedicated branch '$$branch' created from origin/main, and the scan ran against this exact tree, so make all fixes here and do not create another branch. The completed scan id is $$scan_id; read its findings with 'codex-security scans show $$scan_id'."
 
 file-naming:
 	@echo "$(COLOR_BLUE_BG)Running file naming checks with ls-lint...$(COLOR_RESET)"
@@ -90,7 +149,7 @@ e2e-test:
 .PHONY: update-deps upgrade-deps \
 	lint format type-check test type-coverage clean \
 	fallow css-quality contrast-audit lighthouse \
-	tooling-check commitlint markdown-lint security-scan file-naming hooks \
+	tooling-check commitlint markdown-lint security-scan codex-security file-naming hooks \
 	qa-backend qa-frontend qa \
 	run \
 	docker-build docker-up docker-down \
