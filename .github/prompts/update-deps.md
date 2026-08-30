@@ -75,7 +75,11 @@ updated to match the new version.
 Reconcile `.trivyignore.yaml` against a fresh scan. After the base-image digests
 are re-pinned, rebuild the images and run the same scan CI uses — for each image
 from `docker compose config --images`, `trivy image --scanners vuln --pkg-types
-os,library --severity CRITICAL --ignorefile .trivyignore.yaml`. Then:
+os,library --severity CRITICAL --exit-code 1 --ignorefile .trivyignore.yaml`.
+The `--exit-code 1` flag matches CI (`.github/workflows/docker-compose.yml`) and
+is what makes the scan actually fail on a CRITICAL — without it Trivy exits 0
+even when it reports findings, so the exit-code confirmation below would falsely
+pass. Then:
 
 - Drop any suppression whose CVE the refreshed base images no longer report at
   CRITICAL (it has been fixed or the vulnerable package is gone) — do not carry
