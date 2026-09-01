@@ -84,7 +84,7 @@ codex-security:
 	command -v claude >/dev/null 2>&1 || { echo "claude (Claude Code) is not installed or not on PATH." >&2; exit 1; }; \
 	cs_version="$$(codex-security --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"; \
 	if [ -z "$$cs_version" ]; then echo "Could not determine the codex-security version." >&2; exit 1; fi; \
-	if [ "$$(printf '%s\n%s\n' "$(CODEX_SECURITY_MIN_VERSION)" "$$cs_version" | sort -V | head -n1)" != "$(CODEX_SECURITY_MIN_VERSION)" ]; then \
+	if [ "$$(printf '%s\n%s\n' "$(CODEX_SECURITY_MIN_VERSION)" "$$cs_version" | sort -t. -k1,1n -k2,2n -k3,3n | head -n1)" != "$(CODEX_SECURITY_MIN_VERSION)" ]; then \
 		echo "codex-security $$cs_version is older than the required $(CODEX_SECURITY_MIN_VERSION); its flags/output may differ." >&2; \
 		exit 1; \
 	fi; \
@@ -95,13 +95,13 @@ codex-security:
 	fi; \
 	prompt_src=".github/prompts/codex-security.md"; \
 	if [ ! -f "$$prompt_src" ]; then echo "Prompt $$prompt_src not found in the current checkout." >&2; exit 1; fi; \
-	prompt_copy="$$(mktemp)"; \
+	prompt_copy="$$(mktemp "$${TMPDIR:-/tmp}/codex-security-prompt.XXXXXX")"; \
 	trap 'rm -f "$$prompt_copy"' EXIT; \
 	cp "$$prompt_src" "$$prompt_copy"; \
 	echo "$(COLOR_BLUE_BG)Preparing a clean branch off origin/main to scan and fix...$(COLOR_RESET)"; \
 	git fetch origin; \
 	branch="codex-security-fixes-$$(date +%Y%m%d%H%M%S)"; \
-	git checkout -b "$$branch" origin/main; \
+	git checkout --no-track -b "$$branch" origin/main; \
 	echo "$(COLOR_BLUE_BG)Scanning branch $$branch...$(COLOR_RESET)"; \
 	codex-security scan . --model gpt-5.6-sol --effort high; \
 	scan_id="$$(codex-security scans show --filter-output scanId | tr -d '[:space:]')"; \
