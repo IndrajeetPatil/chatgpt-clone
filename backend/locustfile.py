@@ -29,11 +29,8 @@ class ChatAPIUser(HttpUser):
 
     @task(1)
     def chat_request(self) -> None:
-        # ruff: ignore[suspicious-non-cryptographic-random-usage] Load-test input selection is not security-sensitive.
         model: str = choice(self.models)
-        # ruff: ignore[suspicious-non-cryptographic-random-usage] Load-test input selection is not security-sensitive.
         temperature: str = choice(self.temperatures)
-        # ruff: ignore[suspicious-non-cryptographic-random-usage] Load-test input selection is not security-sensitive.
         prompt: str = choice(self.test_prompts)
         payload: dict[str, object] = {
             "messages": [

@@ -61,6 +61,10 @@ max-statements = 20
     # slowapi requires the endpoint parameter named `request`; it never appears in the body
     "unused-function-argument",
 ]
+"locustfile.py" = [
+    # load-test input selection is not security-sensitive
+    "suspicious-non-cryptographic-random-usage",
+]
 "test_*.py" = [
     # autouse fixtures are intentional for test isolation
     "pytest-fixture-autouse",
