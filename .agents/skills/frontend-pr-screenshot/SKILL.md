@@ -8,8 +8,7 @@ description: >
 allowed-tools: >
   Bash(gh *), Bash(git *), Bash(curl *), Bash(npx playwright*),
   Bash(lsof *), Bash(pnpm *), Bash(kill *), Bash(sleep *),
-  Bash(seq *), Bash(cp *), Bash(mkdir *), Bash(cat *),
-  Bash(date *), Bash(printf *)
+  Bash(seq *), Bash(cat *), Bash(date *), Bash(printf *)
 ---
 
 # frontend-pr-screenshot
@@ -23,7 +22,6 @@ Posts a live screenshot of the frontend chat app to the active GitHub PR.
 ```bash
 PR_NUMBER=$(gh pr view --json number -q '.number' 2>/dev/null)
 # If this fails, tell the user to open a PR first and stop.
-REPO=$(gh repo view --json nameWithOwner -q '.nameWithOwner')
 ```
 
 ### 2 — Ensure dev server on port 3000
@@ -57,39 +55,28 @@ cd frontend && npx playwright screenshot \
 
 Install if missing: `pnpm exec playwright install chromium --with-deps`
 
-### 4 — Upload screenshot to a GitHub release
+### 4 — Post PR comment
 
-Do NOT commit screenshots to the repo (`.github/pr-assets/` is gitignored).
-Upload as a release asset to a dedicated `pr-screenshots` release instead.
-
-```bash
-gh release view pr-screenshots &>/dev/null || \
-  gh release create pr-screenshots --title "PR Screenshots" \
-    --notes "Auto-generated assets for PR review" --latest=false
-
-FILENAME="frontend-screenshot-pr-${PR_NUMBER}.png"
-cp /tmp/frontend-screenshot.png "/tmp/${FILENAME}"
-gh release upload pr-screenshots "/tmp/${FILENAME}" --clobber
-
-IMAGE_URL="https://github.com/${REPO}/releases/download/pr-screenshots/${FILENAME}"
-sleep 2 && curl -sfI -L "$IMAGE_URL"   # verify URL resolves
-```
-
-### 5 — Post PR comment
+`gh pr comment --attach` (gh ≥ 2.99.0) uploads the local file and rewrites the
+matching Markdown reference in place, so no release asset or public URL is
+needed. Do NOT commit screenshots to the repo (`.github/pr-assets/` is
+gitignored).
 
 ```bash
 DATE_UTC=$(date -u '+%Y-%m-%d %H:%M UTC')
-gh pr comment "$PR_NUMBER" --body "$(cat <<EOF
+gh pr comment "$PR_NUMBER" \
+  --attach '/tmp/frontend-screenshot.png#App screenshot' \
+  --body "$(cat <<EOF
 ## Frontend Screenshot
 
-![App screenshot](${IMAGE_URL})
+![App screenshot](/tmp/frontend-screenshot.png)
 
 > Captured from /chat — ${DATE_UTC}
 EOF
 )"
 ```
 
-### 6 — Clean up
+### 5 — Clean up
 
 If you started the dev server in step 2:
 
