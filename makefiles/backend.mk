@@ -15,7 +15,7 @@ backend-lint:
 backend-format:
 	@echo "$(COLOR_BLUE_BG)Running backend formatting...$(COLOR_RESET)"
 	cd $(BACKEND_DIR) && find . -name '*.py' -not -path './.venv/*' -print0 | xargs -0 uv run add-trailing-comma --exit-zero-even-if-changed
-	cd $(BACKEND_DIR) && uv run ruff format .
+	cd $(BACKEND_DIR) && uv run ruff format . ../README.md ../AGENTS.md ../.github/prompts
 
 backend-type-check:
 	@echo "$(COLOR_BLUE_BG)Running backend static type checking with ty...$(COLOR_RESET)"

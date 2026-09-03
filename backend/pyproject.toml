@@ -40,6 +40,7 @@ ignore = []
 fix = true
 preview = true
 unsafe-fixes = true
+extend-include = ["*.md"]
 line-length = 88
 indent-width = 4
 

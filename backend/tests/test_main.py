@@ -18,7 +18,8 @@ if TYPE_CHECKING:  # pragma: no cover
 
 @pytest.fixture(autouse=True)
 def _reset_rate_limiter() -> None:
-    limiter._storage.reset()  # ruff:ignore[private-member-access]
+    # ruff: ignore[private-member-access] Tests reset internal state for isolation.
+    limiter._storage.reset()
 
 
 @pytest.fixture
