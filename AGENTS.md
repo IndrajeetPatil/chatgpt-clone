@@ -10,8 +10,8 @@ streamed via Azure OpenAI GPT-4o.
 ## Setup
 
 ```bash
-cd backend && uv sync --frozen          # Python 3.14, uv 0.12.5
-cd frontend && pnpm install --frozen-lockfile  # Node.js 24, pnpm 11.22.0
+cd backend && uv sync --frozen          # Python 3.14, uv 0.12.10
+cd frontend && pnpm install --frozen-lockfile  # Node.js 24, pnpm 11.25.0
 ```
 
 Copy `backend/.env.example` → `backend/.env` and fill in
