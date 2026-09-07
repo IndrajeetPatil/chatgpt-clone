@@ -22,11 +22,16 @@ failures, coverage regressions, or lint failures introduced by the upgrades.
 If the pnpm version changes, update the canonical declaration in:
 
 - `frontend/package.json` (`packageManager`)
+- `frontend/Dockerfile` (update the `ghcr.io/pnpm/pnpm` image tag and its
+  `@sha256:` digest)
+- `.devcontainer/post-create.sh` (update both native release archive SHA256
+  checksums)
 
 The GitHub workflows read pnpm from `frontend/package.json` via
-`pnpm/action-setup`'s `package_json_file` input, and the devcontainer uses
-Corepack to install the same pinned version. Do not add or reintroduce hard-coded
-pnpm versions in workflow files.
+`pnpm/action-setup`'s `package_json_file` input. The frontend image copies the
+native binary from pnpm's pinned official image, and the devcontainer derives
+the native release version from `packageManager`. Do not add or reintroduce
+hard-coded pnpm versions in workflow files.
 
 If the Node.js version changes, update every runtime declaration together:
 
@@ -63,11 +68,11 @@ change. Every `FROM` (and `COPY --from`) in `backend/Dockerfile` and
 freezes the exact bytes, so OS security patches published by Debian/Node under
 the same tag are only picked up when the digest is re-pinned. For each pinned
 image (`python:<version>-slim-trixie`, `ghcr.io/astral-sh/uv:<version>`,
-`node:<version>-trixie-slim`, `debian:trixie-slim`), pull the current tag and
-update the `@sha256:` digest to the latest published one, keeping the human
-readable tag intact. This is the mechanism that clears OS-package CVEs (e.g.
-`perl-base`, `zlib`, `libsqlite3`) from the Trivy scan, so do it before
-reconciling `.trivyignore.yaml` below.
+`ghcr.io/pnpm/pnpm:<version>`, `node:<version>-trixie-slim`,
+`debian:trixie-slim`), pull the current tag and update the `@sha256:` digest to
+the latest published one, keeping the human readable tag intact. This is the
+mechanism that clears OS-package CVEs (e.g. `perl-base`, `zlib`, `libsqlite3`)
+from the Trivy scan, so do it before reconciling `.trivyignore.yaml` below.
 
 For any other third-party tools updated (e.g., Trivy in
 `.github/workflows/docker-compose.yml`), ensure their downloaded scripts or

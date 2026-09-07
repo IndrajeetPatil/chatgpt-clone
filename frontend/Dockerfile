@@ -1,7 +1,8 @@
+FROM ghcr.io/pnpm/pnpm:12.3.4@sha256:b81d53184f670fe19d1a33f9d5041907d314b31d596838e8133cbd83d45be043 AS pnpm
+
 FROM node:24-trixie-slim@sha256:50c3b2f6988dfc307b86e5301d69611af31f4789bdf232863b07d3b02fe55ae0 AS builder
 
-# Activate the package manager declared in package.json.
-RUN corepack enable
+COPY --from=pnpm /opt/pnpm/pnpm /usr/local/bin/pnpm
 
 WORKDIR /app
 
