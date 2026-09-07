@@ -21,14 +21,14 @@ of them in one go — not just the specific line the reviewer flagged.
 
 For pnpm, the canonical version lives in `frontend/package.json`
 (`packageManager`). The workflows read it via `pnpm/action-setup`'s
-`package_json_file` input, and `.devcontainer/post-create.sh` derives the local
-install version from the same field. Do not mirror pnpm versions into workflow
-files.
+`package_json_file` input, and `.devcontainer/post-create.sh` uses Corepack to
+install the same pinned version. Do not mirror pnpm versions into workflow files.
 
-For Node.js, the canonical version lives in `frontend/.nvmrc` and must stay in
-sync with the `node:<version>-trixie-slim` builder image in
-`frontend/Dockerfile`. The workflows use `node-version-file:
-"frontend/.nvmrc"`.
+For Node.js, the canonical runtime declaration lives in `frontend/package.json`
+(`devEngines.runtime.version`). Keep `frontend/.nvmrc`, the
+`node:<version>-trixie-slim` builder image in `frontend/Dockerfile`, and the Node
+feature in `.devcontainer/devcontainer.json` aligned with it. The workflows use
+the runtime resolved by pnpm; do not add a redundant `actions/setup-node` step.
 
 For Python, keep `backend/pyproject.toml`, `backend/uv.lock`, and
 `backend/Dockerfile` aligned. For uv, the canonical version lives in
