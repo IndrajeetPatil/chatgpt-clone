@@ -68,6 +68,14 @@ cd frontend
 pnpm install --frozen-lockfile
 ```
 
+pnpm 12 reads the Node.js 24 runtime declaration from `package.json`. Package
+scripts therefore use the project runtime automatically, even when a different
+Node.js version is installed globally.
+
+`make update-deps` also checks for registry-provided revisions of already locked
+package versions, allowing patched artifacts to be adopted without changing the
+declared dependency version.
+
 - Run the services:
 
 ``` bash
@@ -102,8 +110,8 @@ REST API can be interactively explored using FastAPI's Swagger UI:
 |----------------|----------------|-----------------|
 | Python         | `backend/.python-version` / `backend/pyproject.toml` | 3.14 |
 | uv             | `backend/pyproject.toml` / `backend/Dockerfile` | 0.12.10 |
-| Node.js        | `frontend/.nvmrc` / frontend Docker image | 24 |
-| pnpm           | `frontend/package.json` / CI workflows | 11.25.0 |
+| Node.js        | `frontend/package.json` / `frontend/.nvmrc` / frontend Docker image | 24 |
+| pnpm           | `frontend/package.json` / CI workflows | 12.3.4 |
 
 ## Quality Assurance
 

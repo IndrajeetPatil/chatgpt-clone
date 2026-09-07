@@ -42,37 +42,9 @@ echo "${INSTALLED_UV_VERSION}" | grep -qF "${UV_VERSION}" || {
 # ──────────────────────────────────────────────────────────────────────────────
 # pnpm — Node.js package manager (version locked to frontend/package.json)
 # ──────────────────────────────────────────────────────────────────────────────
-PNPM_VERSION=$(
-  node <<'JS'
-const fs = require("node:fs");
-
-try {
-  const pkg = JSON.parse(fs.readFileSync("./frontend/package.json", "utf8"));
-  const packageManager = pkg.packageManager;
-  const match =
-    typeof packageManager === "string"
-      ? packageManager.match(/^pnpm@([^+]+)/)
-      : null;
-
-  if (!match) {
-    throw new Error("missing or malformed packageManager field");
-  }
-
-  process.stdout.write(match[1]);
-} catch {
-  console.error(
-    "ERROR: could not read pnpm version from frontend/package.json packageManager",
-  );
-  process.exit(1);
-}
-JS
-)
-npm install -g "pnpm@${PNPM_VERSION}"
-INSTALLED_PNPM_VERSION=$(pnpm --version)
-echo "${INSTALLED_PNPM_VERSION}" | grep -qF "${PNPM_VERSION}" || {
-  echo "ERROR: pnpm version mismatch — expected ${PNPM_VERSION}, got ${INSTALLED_PNPM_VERSION}"
-  exit 1
-}
+corepack enable
+(cd frontend && corepack install)
+(cd frontend && pnpm --version)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ls-lint — file-naming linter

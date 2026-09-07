@@ -21,6 +21,8 @@ update-deps:
 	cd ./backend && uv lock --upgrade && uv sync
 	@echo "$(COLOR_BLUE_BG)Updating frontend Node dependencies...$(COLOR_RESET)"
 	cd ./frontend && pnpm update
+	@echo "$(COLOR_BLUE_BG)Refreshing registry package revisions...$(COLOR_RESET)"
+	cd ./frontend && pnpm update --patches
 	@echo "$(COLOR_BLUE_BG)Updating prek hook revisions...$(COLOR_RESET)"
 	prek update --freeze
 

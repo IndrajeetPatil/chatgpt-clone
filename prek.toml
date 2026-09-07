@@ -18,7 +18,7 @@ hooks = [
 
 [[repos]]
 repo = "https://github.com/rvben/rumdl-pre-commit"
-rev = "3624c2a51b58917a148513d482f615414110647d"  # frozen: v0.2.65
+rev = "2fecbf66b37cc6d7a0d1edddbe164e3d516eee2b"  # frozen: v0.2.68
 hooks = [
   { id = "rumdl" },
 ]
@@ -52,7 +52,7 @@ repo = "builtin"
 hooks = [
   { id = "trailing-whitespace", exclude = "\\.snap$" },
   { id = "end-of-file-fixer" },
-  { id = "check-yaml" },
+  { id = "check-yaml", args = ["--allow-multiple-documents"] },
   { id = "check-toml" },
   { id = "check-json", exclude = "^\\.vscode/" },
   { id = "check-merge-conflict" },

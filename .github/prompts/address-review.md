@@ -21,9 +21,8 @@ of them in one go — not just the specific line the reviewer flagged.
 
 For pnpm, the canonical version lives in `frontend/package.json`
 (`packageManager`). The workflows read it via `pnpm/action-setup`'s
-`package_json_file` input, and `.devcontainer/post-create.sh` derives the local
-install version from the same field. Do not mirror pnpm versions into workflow
-files.
+`package_json_file` input, and `.devcontainer/post-create.sh` uses Corepack to
+install the same pinned version. Do not mirror pnpm versions into workflow files.
 
 For Node.js, the canonical version lives in `frontend/.nvmrc` and must stay in
 sync with the `node:<version>-trixie-slim` builder image in

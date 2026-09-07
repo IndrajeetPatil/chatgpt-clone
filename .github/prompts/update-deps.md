@@ -6,8 +6,8 @@ description: Update dependencies and ensure the codebase is compatible with the 
 # Update Dependencies and Refactor Codebase
 
 Run `make update-deps` to refresh backend uv dependencies, frontend pnpm
-dependencies, and prek hook revisions. Then iterate until the full local quality
-gate passes:
+dependencies, registry package revisions, and prek hook revisions. Then iterate
+until the full local quality gate passes:
 
 - `make qa`
 - `make frontend-build`
@@ -24,19 +24,21 @@ If the pnpm version changes, update the canonical declaration in:
 - `frontend/package.json` (`packageManager`)
 
 The GitHub workflows read pnpm from `frontend/package.json` via
-`pnpm/action-setup`'s `package_json_file` input, and `.devcontainer/post-create.sh`
-derives the installed pnpm version from the same field. Do not add or reintroduce
-hard-coded pnpm versions in workflow files.
+`pnpm/action-setup`'s `package_json_file` input, and the devcontainer uses
+Corepack to install the same pinned version. Do not add or reintroduce hard-coded
+pnpm versions in workflow files.
 
 If the Node.js version changes, update every runtime declaration together:
 
+- `frontend/package.json` (`devEngines.runtime.version`)
 - `frontend/.nvmrc`
 - `frontend/Dockerfile` (`node:<version>-trixie-slim`)
 - `.devcontainer/devcontainer.json`
   (`ghcr.io/devcontainers/features/node` `version`)
 
-The GitHub workflows read Node from `frontend/.nvmrc`; do not add a separate
-hard-coded workflow Node version unless the workflow design changes.
+The GitHub workflows use the runtime resolved from `frontend/package.json` by
+pnpm. Do not add a separate hard-coded workflow Node version or a redundant
+`actions/setup-node` step unless the workflow design changes.
 
 If the Python version changes, update every backend runtime declaration together:
 
@@ -99,10 +101,10 @@ its latest tag but records the resolved **commit SHA** in `rev` with a
 same SHA-pinning convention the repo uses for GitHub Actions. Never rewrite a
 frozen `rev` back to a bare mutable tag.
 
-Do an online search and ensure that the public GitHub Actions used in
-`.github/workflows/` are still on the latest stable release. Actions are pinned
-by full commit SHA with a `# vX.Y.Z` comment; when updating, replace both the SHA
-and the version comment with the latest stable release.
+Review the GitHub Action changes made by pnpm and verify that public actions in
+`.github/workflows/` remain pinned by full commit SHA with a matching `# vX.Y.Z`
+comment. Investigate any action pnpm could not read instead of silently leaving
+an outdated mutable reference.
 
 Once the dependency update is green, review relevant changelogs and current
 documentation for upgraded libraries. Apply small compatibility simplifications
