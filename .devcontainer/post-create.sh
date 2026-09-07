@@ -42,54 +42,9 @@ echo "${INSTALLED_UV_VERSION}" | grep -qF "${UV_VERSION}" || {
 # ──────────────────────────────────────────────────────────────────────────────
 # pnpm — Node.js package manager (version locked to frontend/package.json)
 # ──────────────────────────────────────────────────────────────────────────────
-PNPM_VERSION=$(
-  python3 - <<'PY'
-from pathlib import Path
-import json
-import re
-import sys
-
-try:
-    package_json = json.loads(Path("frontend/package.json").read_text())
-    package_manager = package_json["packageManager"]
-    match = re.fullmatch(r"pnpm@([^+]+)(?:\+sha512\..+)?", package_manager)
-    if match is None:
-        raise ValueError("packageManager must pin pnpm with an exact version")
-except (FileNotFoundError, json.JSONDecodeError, KeyError, TypeError, ValueError) as error:
-    print(f"ERROR: could not read pnpm version from frontend/package.json: {error}", file=sys.stderr)
-    raise SystemExit(1)
-
-print(match.group(1))
-PY
-)
-PNPM_MACHINE=$(uname -m)
-case "$PNPM_MACHINE" in
-  x86_64)
-    PNPM_ARCH="x64"
-    PNPM_SHA256="9705e5704b4679fb503c963a18d1ac4f105e39aafafca8a2ed346facdf820cd0"
-    ;;
-  aarch64 | arm64)
-    PNPM_ARCH="arm64"
-    PNPM_SHA256="95e71a2a30bbc0b77511f95cf096779068dcad6ffcbbfdf0cd4dde9de2b2b97c"
-    ;;
-  *)
-    echo "ERROR: unsupported pnpm architecture: $PNPM_MACHINE" >&2
-    exit 1
-    ;;
-esac
-PNPM_ARCHIVE="/tmp/pnpm-linux-${PNPM_ARCH}.tar.gz"
-curl -fsSL --retry 3 --retry-delay 2 --retry-all-errors \
-  "https://github.com/pnpm/pnpm/releases/download/v${PNPM_VERSION}/pnpm-linux-${PNPM_ARCH}.tar.gz" \
-  -o "$PNPM_ARCHIVE"
-echo "${PNPM_SHA256}  ${PNPM_ARCHIVE}" | sha256sum -c
-tar -xzf "$PNPM_ARCHIVE" -C /tmp pnpm
-sudo install -m 0755 /tmp/pnpm /usr/local/bin/pnpm
-rm "$PNPM_ARCHIVE" /tmp/pnpm
-INSTALLED_PNPM_VERSION=$(pnpm --version)
-if [ "$INSTALLED_PNPM_VERSION" != "$PNPM_VERSION" ]; then
-  echo "ERROR: pnpm version mismatch — expected ${PNPM_VERSION}, got ${INSTALLED_PNPM_VERSION}" >&2
-  exit 1
-fi
+corepack enable
+(cd frontend && corepack install)
+(cd frontend && pnpm --version)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ls-lint — file-naming linter
