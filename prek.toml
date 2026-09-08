@@ -11,9 +11,10 @@ hooks = [
 ]
 
 [[repos]]
-repo = "local"
+repo = "https://github.com/astral-sh/ty-pre-commit"
+rev = "43e9f3c39824fb2ba2a475aa8cbcc2c8f02eef67"  # frozen: v0.0.79
 hooks = [
-  { id = "ty", name = "ty", entry = "uv check --quiet --preview-features=check-command --ty-version=0.0.79 --directory=backend --isolated", language = "system", pass_filenames = false, types_or = ["python", "pyi", "jupyter"] },
+  { id = "ty", args = ["--directory=backend", "--isolated"] },
 ]
 
 [[repos]]

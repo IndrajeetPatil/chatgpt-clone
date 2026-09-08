@@ -96,22 +96,13 @@ exclude = [".venv", "build", "dist"]
 python-version = "3.14"
 
 [tool.ty.rules]
-blanket-ignore-comment = "error"
-disjoint-cast = "error"
+all = "error"
 division-by-zero = "warn"
-dynamic-function-decorator-return = "error"
-missing-direct-dependency = "error"
-missing-override-decorator = "error"
-missing-type-argument = "error"
 possibly-missing-attribute = "warn"
 possibly-missing-import = "warn"
 possibly-unresolved-reference = "warn"
 redundant-condition-strict = "warn"
-unsound-assignment = "error"
-unsound-return-statement = "error"
-unsound-yield = "error"
 unsupported-dynamic-base = "warn"
-unused-ignore-comment = "error"
 
 [tool.ty.analysis]
 strict-equality-semantics = true
