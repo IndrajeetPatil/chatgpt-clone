@@ -8,7 +8,7 @@ from openai import AzureOpenAI
 
 from app.config import get_settings
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
 
     from openai import Stream

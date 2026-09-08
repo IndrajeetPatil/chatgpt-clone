@@ -8,7 +8,7 @@ from fastapi import status
 from app.azure_client import get_azure_openai_client, stream_azure_openai_response
 from app.entities import AssistantModel, AssistantTemperature
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
 

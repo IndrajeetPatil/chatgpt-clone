@@ -1,3 +1,5 @@
+from typing import cast
+
 import httpx2
 import openai
 import pytest
@@ -47,4 +49,4 @@ OPENAI_API_ERRORS: list[openai.APIError] = [
 
 @pytest.fixture(params=OPENAI_API_ERRORS, ids=lambda exc: type(exc).__name__)
 def openai_api_error(request: pytest.FixtureRequest) -> openai.APIError:
-    return request.param
+    return cast("openai.APIError", request.param)

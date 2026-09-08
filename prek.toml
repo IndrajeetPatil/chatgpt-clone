@@ -13,7 +13,7 @@ hooks = [
 [[repos]]
 repo = "local"
 hooks = [
-  { id = "ty", name = "ty", entry = "uv check --quiet --preview-features=check-command --ty-version=0.0.73 --directory=backend --isolated", language = "system", pass_filenames = false, types_or = ["python", "pyi", "jupyter"] },
+  { id = "ty", name = "ty", entry = "uv check --quiet --preview-features=check-command --ty-version=0.0.79 --directory=backend --isolated", language = "system", pass_filenames = false, types_or = ["python", "pyi", "jupyter"] },
 ]
 
 [[repos]]

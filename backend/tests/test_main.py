@@ -9,7 +9,7 @@ from app.config import Settings
 from app.entities import AssistantModel, AssistantTemperature, OpenAIMessageRole
 from app.main import TextPart, UIMessage, app, limiter
 
-if TYPE_CHECKING:  # pragma: no cover
+if TYPE_CHECKING:
     from collections.abc import Iterator
 
     import openai
@@ -18,8 +18,7 @@ if TYPE_CHECKING:  # pragma: no cover
 
 @pytest.fixture(autouse=True)
 def _reset_rate_limiter() -> None:
-    # ruff: ignore[private-member-access] Tests reset internal state for isolation.
-    limiter._storage.reset()
+    limiter.reset()
 
 
 @pytest.fixture
