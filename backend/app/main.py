@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Literal, cast
 
 import openai
 from fastapi import FastAPI, HTTPException, Request, status
@@ -14,8 +14,8 @@ from app.azure_client import ChatMessage, stream_azure_openai_response
 from app.config import get_settings
 from app.entities import AssistantModel, AssistantTemperature, OpenAIMessageRole
 
-if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Iterator
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterator
 
     from app.config import Settings
 
@@ -100,6 +100,15 @@ class ChatRequest(BaseModel):
     temperature: AssistantTemperature = AssistantTemperature.BALANCED
 
 
+def _typed_limit[**P, R](
+    limit_value: Callable[[], str],
+) -> Callable[[Callable[P, R]], Callable[P, R]]:
+    return cast(
+        "Callable[[Callable[P, R]], Callable[P, R]]",
+        limiter.limit(limit_value),
+    )
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
@@ -115,7 +124,7 @@ def health() -> dict[str, str]:
         },
     },
 )
-@limiter.limit(lambda: settings.chat_rate_limit)
+@_typed_limit(lambda: settings.chat_rate_limit)
 def chat(request: Request, body: ChatRequest) -> StreamingResponse:
     messages: list[ChatMessage] = _to_openai_messages(body.messages)
     logger.debug(

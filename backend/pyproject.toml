@@ -6,8 +6,10 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "fastapi[standard]>=0.141.1",
+    "limits>=5.8.0",
     "loguru>=0.7.3",
     "openai>=2.34.0",
+    "pydantic>=2.13.5",
     "pydantic-settings>=2.14.0",
     "slowapi>=0.1.9",
 ]
@@ -26,7 +28,7 @@ dev = [
     "pytest-random-order>=1.2.0",
     "pytest>=9.0.3",
     "ruff>=0.15.20",
-    "ty>=0.0.74",
+    "ty>=0.0.79",
     "typecoverage>=1.0.1",
 ]
 
@@ -92,6 +94,28 @@ exclude = [".venv", "build", "dist"]
 
 [tool.ty.environment]
 python-version = "3.14"
+
+[tool.ty.rules]
+blanket-ignore-comment = "error"
+disjoint-cast = "error"
+division-by-zero = "warn"
+dynamic-function-decorator-return = "error"
+missing-direct-dependency = "error"
+missing-override-decorator = "error"
+missing-type-argument = "error"
+possibly-missing-attribute = "warn"
+possibly-missing-import = "warn"
+possibly-unresolved-reference = "warn"
+redundant-condition-strict = "warn"
+unsound-assignment = "error"
+unsound-return-statement = "error"
+unsound-yield = "error"
+unsupported-dynamic-base = "warn"
+unused-ignore-comment = "error"
+
+[tool.ty.analysis]
+strict-equality-semantics = true
+strict-generic-narrowing = true
 
 [tool.coverage.run]
 branch = true

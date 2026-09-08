@@ -3,6 +3,7 @@ BACKEND_DIR=./backend
 # Backend tool commands
 PYTEST=uv run pytest app tests --verbose
 PYCOVERAGE=uv run coverage run -m pytest app tests && uv run coverage report && uv run coverage html && uv run coverage xml
+PYTYPECHECK=TY_UV=1 uv run ty check
 PYTYPECOVERAGE=uv run python -m typecoverage app tests locustfile.py --recursive --exit-nonzero-on-issues
 FASTAPI_RUNSERVER=uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
 OPENAPI_SCHEMA=TESTING=true uv run python -c "from app.main import app; app.openapi()"
@@ -19,7 +20,7 @@ backend-format:
 
 backend-type-check:
 	@echo "$(COLOR_BLUE_BG)Running backend static type checking with ty...$(COLOR_RESET)"
-	cd $(BACKEND_DIR) && uv run ty check
+	cd $(BACKEND_DIR) && $(PYTYPECHECK)
 
 backend-audit:
 	@echo "$(COLOR_BLUE_BG)Auditing backend dependencies...$(COLOR_RESET)"
