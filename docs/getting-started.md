@@ -9,12 +9,13 @@ container, which installs the toolchain for you.
 
 | Runtime / tool | Current version | Source of truth                                                           |
 | -------------- | --------------- | ------------------------------------------------------------------------- |
-| Python         | 3.14            | `backend/.python-version`, `backend/pyproject.toml`                       |
-| uv             | 0.12.23         | `backend/pyproject.toml`; Docker and installer pins must match            |
+| Python         | 3.15            | `backend/.python-version`, `backend/pyproject.toml`                       |
+| uv             | 0.13.0          | `backend/pyproject.toml`; Docker and installer pins must match            |
 | Vite+ (`vp`)   | 1.1.0           | `frontend/pnpm-workspace.yaml`; installer, Docker, and CI pins must match |
 | Node.js        | 26.10.0         | `frontend/.node-version`; Vite+ provisions it                             |
 | pnpm           | 12.4.1          | `frontend/package.json` (`packageManager`); Vite+ provisions it           |
 | Make and Bash  | System tools    | Required by the development commands                                      |
+| C compiler     | System tool     | Builds Brotli for Locust; see below                                       |
 
 - Install Vite+ with `bash frontend/scripts/install-vp.sh`, which downloads the
   pinned release, verifies its SHA256 checksum, and adds `~/.vite-plus/bin` to
@@ -24,6 +25,11 @@ container, which installs the toolchain for you.
   `cd frontend && vp exec playwright install --with-deps chromium`.
 - Contributor hooks also need the pinned `ls-lint` binary on `PATH`; see
   [tooling requirements](development.md#file-naming).
+- Brotli, which Locust needs through `geventhttpclient`, publishes no CPython 3.15
+  wheels yet, so `make setup` builds it from source
+  ([google/brotli#1583](https://github.com/google/brotli/pull/1583)). Install a
+  C compiler first: Xcode Command Line Tools on macOS, or `build-essential` on
+  Debian and Ubuntu. The development container and CI runners already have one.
 
 ## Setup and configuration
 
