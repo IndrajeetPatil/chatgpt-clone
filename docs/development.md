@@ -199,6 +199,13 @@ storage, and clipboard behave as they do for users; tests import from
 restored before each test, the coverage thresholds above apply, and coverage
 artifacts stay in `frontend/coverage/` for CI uploads.
 
+Files and tests run in random order (`sequence.shuffle`), matching the backend's
+`--random-order`, and every run prints its seed. To replay a failure, pass that
+seed to the failing file, for example
+`cd frontend && vp test client/helpers.test.ts --sequence.seed=1791891680450`.
+The seed fixes the order of tests within a file; browser mode does not replay
+the order of files.
+
 Vitest 5 clears mock call history before each test by default. Configure hook
 return values in `beforeEach`, since clearing calls preserves implementations.
 Use `vi.mock(import("..."), { spy: true })` and `vi.mocked()` for module exports

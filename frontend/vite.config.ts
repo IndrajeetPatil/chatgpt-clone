@@ -137,6 +137,9 @@ export default defineConfig({
     exclude: ["**/node_modules/**", "**/dist/**", "**/e2e-tests/**"],
     // Undo `vi.spyOn` before each test so spies on browser APIs cannot leak.
     restoreMocks: true,
+    // Shuffle files and tests on every run, like the backend's
+    // `--random-order`, so order dependencies surface in CI.
+    sequence: { shuffle: true },
     setupFiles: ["./vitest.setup.ts"],
   },
   fmt: {
