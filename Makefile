@@ -9,9 +9,9 @@ endif
 include makefiles/backend.mk
 include makefiles/frontend.mk
 
-CHECKOV_VERSION := 3.3.17
-# Match the previous action's scanner, pinned by digest to prevent tag drift.
-GITLEAKS_IMAGE := zricethezav/gitleaks:v8.24.3@sha256:e1b35e12a8c6fa8901f060459cfb6b2fc4c484d3afbe3b029733a3bbfab07055
+CHECKOV_VERSION := 3.3.29
+# Pinned by digest to prevent tag drift.
+GITLEAKS_IMAGE := zricethezav/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
 # Minimum codex-security CLI the codex-security target was validated against. The
 # scan-id parsing below relies on `scans show --filter-output scanId`, so refuse
 # to run against an older CLI whose flags/output may differ.
@@ -77,11 +77,11 @@ commitlint:
 
 markdown-lint:
 	@echo "$(COLOR_BLUE_BG)Running markdown linting with rumdl...$(COLOR_RESET)"
-	uv tool run --from rumdl==0.2.73 rumdl check .
+	uv tool run --from rumdl==0.3.0 rumdl check .
 
 markdown-format:
 	@echo "$(COLOR_BLUE_BG)Formatting Markdown with rumdl...$(COLOR_RESET)"
-	uv tool run --from rumdl==0.2.73 rumdl fmt .
+	uv tool run --from rumdl==0.3.0 rumdl fmt .
 
 security-scan:
 	@echo "$(COLOR_BLUE_BG)Running security scanning with Checkov...$(COLOR_RESET)"
