@@ -1,14 +1,13 @@
-from typing import TYPE_CHECKING, Annotated, Literal, cast
+from typing import TYPE_CHECKING, Annotated, Literal
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from limits.storage import MemoryStorage
+from limits.strategies import FixedWindowRateLimiter
 from pydantic import BaseModel, Field, model_validator
-from slowapi import Limiter
-from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 lazy from fastapi import HTTPException, Request, status
-lazy from fastapi.responses import JSONResponse
+lazy from limits import parse
 lazy from loguru import logger
 
 from app.config import get_settings
@@ -17,8 +16,6 @@ lazy from app.azure_client import ChatMessage, stream_azure_openai_response
 lazy from app.entities import OpenAIMessageRole
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
     from app.config import Settings
 
 _MAX_MESSAGES = 50
@@ -32,7 +29,7 @@ RESPONSE_FORMAT_INSTRUCTIONS: str = (
 
 settings: Settings = get_settings()
 
-limiter: Limiter = Limiter(key_func=get_remote_address)
+limiter: FixedWindowRateLimiter = FixedWindowRateLimiter(MemoryStorage())
 
 app: FastAPI = FastAPI(
     title="chatbot-template backend",
@@ -40,22 +37,12 @@ app: FastAPI = FastAPI(
     version="1.0.0",
 )
 
-app.state.limiter = limiter
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.exception_handler(RateLimitExceeded)
-def rate_limit_handler(_request: Request, _exc: RateLimitExceeded) -> JSONResponse:
-    return JSONResponse(
-        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-        content={"detail": "Rate limit exceeded. Please try again later."},
-    )
 
 
 class TextPart(BaseModel):
@@ -102,13 +89,15 @@ class ChatRequest(BaseModel):
     reasoning_effort: ReasoningEffort = ReasoningEffort.LOW
 
 
-def _typed_limit[**P, R](
-    limit_value: Callable[[], str],
-) -> Callable[[Callable[P, R]], Callable[P, R]]:
-    return cast(
-        "Callable[[Callable[P, R]], Callable[P, R]]",
-        limiter.limit(limit_value),
-    )
+def _enforce_rate_limit(request: Request) -> None:
+    # Called from the endpoint body rather than as a dependency so that requests
+    # rejected by validation never consume the client's quota.
+    client_address: str = request.client.host if request.client else "127.0.0.1"
+    if not limiter.hit(parse(settings.chat_rate_limit), client_address):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Rate limit exceeded. Please try again later.",
+        )
 
 
 @app.get("/health")
@@ -126,8 +115,8 @@ def health() -> dict[str, str]:
         },
     },
 )
-@_typed_limit(lambda: settings.chat_rate_limit)
 def chat(request: Request, body: ChatRequest) -> StreamingResponse:
+    _enforce_rate_limit(request)
     messages: list[ChatMessage] = _to_openai_messages(body.messages)
     logger.debug(
         "Received chat stream request with {} messages, model={}, reasoning_effort={}",

@@ -11,7 +11,6 @@ dependencies = [
   "openai>=3.19.2",
   "pydantic>=2.13.5",
   "pydantic-settings>=2.15.0",
-  "slowapi>=0.1.10",
 ]
 
 [dependency-groups]
@@ -63,10 +62,6 @@ max-returns = 3
 max-statements = 20
 
 [tool.ruff.lint.per-file-ignores]
-"app/main.py" = [
-  # slowapi requires the endpoint parameter named `request`; it never appears in the body
-  "unused-function-argument",
-]
 "locustfile.py" = [
   # load-test input selection is not security-sensitive
   "suspicious-non-cryptographic-random-usage",
@@ -146,8 +141,6 @@ testpaths = ["tests"]
 env = ["D:TESTING=true"]
 filterwarnings = [
   "error",
-  # slowapi 0.1.10 calls asyncio.iscoroutinefunction, deprecated in Python 3.14
-  "ignore:'asyncio.iscoroutinefunction' is deprecated:DeprecationWarning",
   # inline-snapshot reports unfixable snapshots via plain Warning subclasses,
   # which "error" would turn into failures instead of advisory messages.
   "default::inline_snapshot.syntax_warnings.InlineSnapshotInfo",
