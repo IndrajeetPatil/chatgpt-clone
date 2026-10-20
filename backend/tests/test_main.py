@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
 
     from httpx2 import Response as TestClientResponse
+    from starlette.types import ASGIApp, Receive, Scope, Send
 
     from app.azure_client import ChatMessage
     from app.entities import AssistantModel, ReasoningEffort
@@ -21,7 +22,7 @@ type Payload = dict[str, Any]
 
 @pytest.fixture(autouse=True)
 def _reset_rate_limiter() -> None:
-    limiter.reset()
+    limiter.storage.reset()
 
 
 @pytest.fixture
@@ -278,16 +279,33 @@ def test_post_chat_rejects_whitespace_only_conversation(client: TestClient) -> N
     assert response.json() == {"detail": "At least one text message is required."}
 
 
-def test_post_chat_rate_limits_after_threshold(
-    monkeypatch: pytest.MonkeyPatch,
-    client: TestClient,
-    forwarded: list[Payload],
-) -> None:
+@pytest.fixture
+def low_rate_limit(monkeypatch: pytest.MonkeyPatch) -> None:
     # `settings` is frozen, so swap the whole module-global instance (which the
-    # rate-limit lambda reads at call time) instead of mutating it in place.
+    # rate limiter reads at call time) instead of mutating it in place.
     low_limit: Settings = Settings(testing=True, chat_rate_limit="1/minute")
     monkeypatch.setattr("app.main.settings", low_limit)
 
+
+async def _without_client_address(scope: Scope, receive: Receive, send: Send) -> None:
+    """Serve `app` as an ASGI server that omits the client address would, such as
+    one listening on a Unix socket."""
+    await app({**scope, "client": None}, receive, send)
+
+
+@pytest.mark.parametrize(
+    "asgi_app",
+    [
+        pytest.param(app, id="client-address"),
+        pytest.param(_without_client_address, id="no-client-address"),
+    ],
+)
+def test_post_chat_rate_limits_after_threshold(
+    low_rate_limit: None,
+    forwarded: list[Payload],
+    asgi_app: ASGIApp,
+) -> None:
+    client: TestClient = TestClient(asgi_app)
     payload: Payload = {"messages": [HI]}
     assert client.post("/api/v1/chat", json=payload).status_code == status.HTTP_200_OK
 
@@ -295,6 +313,37 @@ def test_post_chat_rate_limits_after_threshold(
 
     assert response.status_code == status.HTTP_429_TOO_MANY_REQUESTS
     assert response.json() == {"detail": "Rate limit exceeded. Please try again later."}
+    assert len(forwarded) == 1
+
+
+def test_post_chat_rate_limits_each_client_address_separately(
+    low_rate_limit: None,
+    forwarded: list[Payload],
+) -> None:
+    for host in ("203.0.113.7", "203.0.113.8"):
+        response: TestClientResponse = TestClient(app, client=(host, 50000)).post(
+            "/api/v1/chat",
+            json={"messages": [HI]},
+        )
+        assert response.status_code == status.HTTP_200_OK
+
+    assert len(forwarded) == 2
+
+
+def test_post_chat_invalid_requests_do_not_consume_rate_limit(
+    low_rate_limit: None,
+    client: TestClient,
+    forwarded: list[Payload],
+) -> None:
+    invalid: TestClientResponse = client.post("/api/v1/chat", json={"messages": []})
+    assert invalid.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
+
+    response: TestClientResponse = client.post(
+        "/api/v1/chat",
+        json={"messages": [HI]},
+    )
+
+    assert response.status_code == status.HTTP_200_OK
     assert len(forwarded) == 1
 
 
