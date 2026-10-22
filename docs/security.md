@@ -35,6 +35,8 @@ Preserve these restrictions when changing rendering or transport. See the
 - Validate SHA256 checksums; never download latest or untagged tools.
 - Keep image digests, installer checksums (including `install-vp.sh`),
   lockfiles, and documentation aligned.
+- The backend runtime removes unused system pip and its vendored packages;
+  application dependencies come from the builder's frozen uv environment.
 
 ## Automated scans
 

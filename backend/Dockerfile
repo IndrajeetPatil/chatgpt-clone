@@ -15,7 +15,10 @@ WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 COPY app /app/app
 
-RUN addgroup --system app && adduser --system --ingroup app app
+# Dependencies are installed by uv in the builder; omit unused system pip and
+# its separately vendored packages from the runtime image.
+RUN python -m pip uninstall --yes pip \
+    && addgroup --system app && adduser --system --ingroup app app
 
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
