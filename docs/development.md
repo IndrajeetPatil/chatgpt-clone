@@ -61,6 +61,13 @@ Make targets remain available for focused work.
 JSON, and TOML files formatted by the frontend's Oxfmt; CI checks both with
 `FMT_ARGS=--check`. rumdl enforces aligned table columns in lint, QA, and hooks.
 
+Backend formatting first fixes missing trailing commas with Ruff's
+`missing-trailing-comma` (COM812) rule, then runs `ruff format`. This preserves
+intentional multiline layouts without a separate comma-formatting dependency.
+COM812 also runs in backend lint and the Ruff pre-commit hook. Ruff warns about
+combining this rule with its formatter; it is enabled intentionally here to add
+commas before formatting can collapse those layouts.
+
 ## Cleaning and rebuilding
 
 Stop development servers and test runs, then run:

@@ -15,7 +15,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "add-trailing-comma>=4.0.0",
   "coverage>=7.16.1",
   "deptry>=0.25.1",
   "httpx2>=2.13.1",
@@ -51,7 +50,9 @@ indent-width = 4
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["missing-trailing-comma", "CPY", "D", "DOC"]
+# Keep missing-trailing-comma enabled to preserve intentional multiline layouts.
+# backend-format applies its fixes before the formatter can collapse those lines.
+ignore = ["CPY", "D", "DOC"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 5
